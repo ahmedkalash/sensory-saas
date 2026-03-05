@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "*",
+        "carlos-meneses/laravel-mpdf": "*",
         "filament/filament": "~4.8.1",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",

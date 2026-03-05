@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Dimension;
+use App\Models\Measurement;
+use App\Models\Question;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,11 +17,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        Measurement::truncate();
+        Question::truncate();
+        Dimension::truncate();
+        $this->call([
+            AdminSeeder::class,
+            AuditoryMeasurementSeeder::class,
+            TactileMeasurementSeeder::class,
+            VestibularMeasurementSeeder::class,
+            ProprioceptiveMeasurementSeeder::class,
+            OlfactoryMeasurementSeeder::class,
+            GustatoryMeasurementSeeder::class,
+            VisualMeasurementSeeder::class,
+            DemoEvaluationSeeder::class,
         ]);
     }
 }

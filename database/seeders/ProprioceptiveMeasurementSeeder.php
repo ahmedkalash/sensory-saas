@@ -9,7 +9,7 @@ class ProprioceptiveMeasurementSeeder extends Seeder
 {
     public function run(): void
     {
-        $m = Measurement::create(['name' => 'مقياس اضطراب الحس العضلي']);
+        $m = Measurement::create(['name' => 'مقياس أنماط الحس العضلي']);
 
         $this->seedDim1($m);
         $this->seedDim2($m);

@@ -9,7 +9,7 @@ class TactileMeasurementSeeder extends Seeder
 {
     public function run(): void
     {
-        $m = Measurement::create(['name' => 'مقياس اضطراب المعالجة اللمسية']);
+        $m = Measurement::create(['name' => 'مقياس أنماط المعالجة اللمسية']);
 
         $this->seedDim1($m);
         $this->seedDim2($m);

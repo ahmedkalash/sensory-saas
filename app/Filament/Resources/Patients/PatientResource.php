@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Patients;
 
+use App\Filament\Resources\Patients\Pages\EditPatient;
 use App\Filament\Resources\Patients\Pages\ManagePatients;
 use App\Models\Patient;
 use BackedEnum;
@@ -10,6 +11,9 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -25,25 +29,25 @@ class PatientResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationLabel = 'المرضى';
+    protected static ?string $navigationLabel = 'الأطفال';
 
-    protected static ?string $modelLabel = 'مريض';
+    protected static ?string $modelLabel = 'طفل';
 
-    protected static ?string $pluralModelLabel = 'المرضى';
+    protected static ?string $pluralModelLabel = 'الأطفال';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('اسم المريض')
+                    ->label('اسم الطفل')
                     ->required()
                     ->maxLength(255),
-                \Filament\Forms\Components\DatePicker::make('dob')
+                DatePicker::make('dob')
                     ->label('تاريخ الميلاد')
                     ->required()
                     ->maxDate(now()),
-                \Filament\Forms\Components\Select::make('gender')
+                Select::make('gender')
                     ->label('الجنس')
                     ->options([
                         'ذكر' => 'ذكر',
@@ -65,7 +69,7 @@ class PatientResource extends Resource
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
-                    ->label('اسم المريض')
+                    ->label('اسم الطفل')
                     ->searchable(),
                 TextColumn::make('dob')
                     ->label('تاريخ الميلاد')
@@ -75,12 +79,10 @@ class PatientResource extends Resource
                     ->label('الجنس'),
                 TextColumn::make('school')
                     ->label('المدرسة/المركز')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable(),
                 TextColumn::make('grade')
                     ->label('الصف الدراسي')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -101,6 +103,7 @@ class PatientResource extends Resource
     {
         return [
             'index' => ManagePatients::route('/'),
+            'edit' => Pages\EditPatient::route('/{record}/edit'),
         ];
     }
 }

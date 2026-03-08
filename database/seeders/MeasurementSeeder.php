@@ -12,6 +12,7 @@ class MeasurementSeeder extends Seeder
     public function run(): void
     {
         // Truncate in FK-safe order
+        // only in dev env, delete in production
         Question::query()->delete();
         Dimension::query()->delete();
         Measurement::query()->delete();

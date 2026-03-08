@@ -9,7 +9,7 @@ class GustatoryMeasurementSeeder extends Seeder
 {
     public function run(): void
     {
-        $m = Measurement::create(['name' => 'مقياس أنماط المعالجة التذوقية']);
+        $m = Measurement::create(['name' => 'مقياس أنماط الاستجابة التذوقية']);
 
         $this->seedDim1($m);
         $this->seedDim2($m);

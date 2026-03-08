@@ -24,7 +24,7 @@ class EvaluationReportTest extends TestCase
         $patient = Patient::factory()->create(['name' => 'John Doe']);
         $this->evaluation = Evaluation::factory()->create([
             'patient_id' => $patient->id,
-            'evaluation_date' => now()->startOfDay()
+            'evaluation_date' => now()->startOfDay(),
         ]);
 
         // Dimension 1: 9 Questions, all Score 0 (OK)
@@ -74,11 +74,11 @@ class EvaluationReportTest extends TestCase
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/pdf');
 
-        $expectedFilename = 'تقرير_' . $this->evaluation->patient->name . '_' . $this->evaluation->evaluation_date->format('Y-m-d') . '.pdf';
+        $expectedFilename = 'تقرير_'.$this->evaluation->patient->name.'_'.$this->evaluation->evaluation_date->format('Y-m-d').'.pdf';
 
         $response->assertHeader(
             'Content-Disposition',
-            'attachment; filename="' . $expectedFilename . '"'
+            'attachment; filename="'.$expectedFilename.'"'
         );
     }
 
@@ -111,7 +111,7 @@ class EvaluationReportTest extends TestCase
         // Create an evaluation with 0 answers
         $emptyEvaluation = Evaluation::factory()->create([
             'patient_id' => $this->evaluation->patient_id,
-            'evaluation_date' => now()->startOfDay()
+            'evaluation_date' => now()->startOfDay(),
         ]);
 
         $responseHtml = $this->get(route('evaluations.report.html', $emptyEvaluation->id));
@@ -143,7 +143,7 @@ class EvaluationReportTest extends TestCase
         $patient = Patient::factory()->create(['name' => 'John & Jane Doe']);
         $evaluation = Evaluation::factory()->create([
             'patient_id' => $patient->id,
-            'evaluation_date' => now()->startOfDay()
+            'evaluation_date' => now()->startOfDay(),
         ]);
 
         $response = $this->get(route('evaluations.report', $evaluation->id));
@@ -157,7 +157,7 @@ class EvaluationReportTest extends TestCase
         $patient = Patient::factory()->create(['name' => 'أحمد محمد علي']);
         $evaluation = Evaluation::factory()->create([
             'patient_id' => $patient->id,
-            'evaluation_date' => now()->startOfDay()
+            'evaluation_date' => now()->startOfDay(),
         ]);
 
         $response = $this->get(route('evaluations.report', $evaluation->id));
@@ -165,8 +165,8 @@ class EvaluationReportTest extends TestCase
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/pdf');
 
-        $expectedFilename = 'تقرير_' . $patient->name . '_' . $evaluation->evaluation_date->format('Y-m-d') . '.pdf';
-        $response->assertHeader('Content-Disposition', 'attachment; filename="' . $expectedFilename . '"');
+        $expectedFilename = 'تقرير_'.$patient->name.'_'.$evaluation->evaluation_date->format('Y-m-d').'.pdf';
+        $response->assertHeader('Content-Disposition', 'attachment; filename="'.$expectedFilename.'"');
     }
 
     public function test_pdf_report_with_very_long_patient_name()
@@ -175,7 +175,7 @@ class EvaluationReportTest extends TestCase
         $patient = Patient::factory()->create(['name' => $longName]);
         $evaluation = Evaluation::factory()->create([
             'patient_id' => $patient->id,
-            'evaluation_date' => now()->startOfDay()
+            'evaluation_date' => now()->startOfDay(),
         ]);
 
         $response = $this->get(route('evaluations.report', $evaluation->id));
@@ -189,7 +189,7 @@ class EvaluationReportTest extends TestCase
         $patient = Patient::factory()->create(['name' => 'No Weaknesses Patient']);
         $evaluation = Evaluation::factory()->create([
             'patient_id' => $patient->id,
-            'evaluation_date' => now()->startOfDay()
+            'evaluation_date' => now()->startOfDay(),
         ]);
 
         $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
@@ -215,7 +215,7 @@ class EvaluationReportTest extends TestCase
         $patient = Patient::factory()->create(['name' => 'All Weaknesses Patient']);
         $evaluation = Evaluation::factory()->create([
             'patient_id' => $patient->id,
-            'evaluation_date' => now()->startOfDay()
+            'evaluation_date' => now()->startOfDay(),
         ]);
 
         $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
@@ -250,7 +250,7 @@ class EvaluationReportTest extends TestCase
         $patient = Patient::factory()->create(['name' => 'RTL Test Patient']);
         $evaluation = Evaluation::factory()->create([
             'patient_id' => $patient->id,
-            'evaluation_date' => now()->startOfDay()
+            'evaluation_date' => now()->startOfDay(),
         ]);
 
         $response = $this->get(route('evaluations.report.html', $evaluation->id));

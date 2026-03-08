@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Measurement::truncate();
-        Question::truncate();
-        Dimension::truncate();
+        Measurement::truncate(); // todo handel it properly
+        Question::truncate(); // todo handel it properly
+        Dimension::truncate(); // todo handel it properly
         $this->call([
             AdminSeeder::class,
             AuditoryMeasurementSeeder::class,

@@ -9,7 +9,7 @@ class VestibularMeasurementSeeder extends Seeder
 {
     public function run(): void
     {
-        $m = Measurement::create(['name' => 'مقياس أنماط الحس الدهليزي']);
+        $m = Measurement::create(['name' => 'مقياس أنماط استجابه الحس الدهليزي']);
 
         $this->seedDim1($m);
         $this->seedDim2($m);

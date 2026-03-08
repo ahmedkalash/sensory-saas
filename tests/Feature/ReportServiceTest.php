@@ -24,7 +24,7 @@ class ReportServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new ReportService(new EvaluationService());
+        $this->service = new ReportService(new EvaluationService);
     }
 
     public function test_build_report_data_structures_correctly_and_filters_weaknesses()
@@ -36,7 +36,7 @@ class ReportServiceTest extends TestCase
         $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
         $dimension = Dimension::factory()->create([
             'measurement_id' => $measurement->id,
-            'name' => 'Test Dimension'
+            'name' => 'Test Dimension',
         ]);
 
         // Create 1 question with score = 1 (Not a weakness)
@@ -108,7 +108,7 @@ class ReportServiceTest extends TestCase
     public function test_handles_empty_database_measurements()
     {
         $evaluation = Evaluation::factory()->create([
-            'patient_id' => Patient::factory()->create()->id
+            'patient_id' => Patient::factory()->create()->id,
         ]);
 
         $reflection = new ReflectionClass(ReportService::class);
@@ -384,7 +384,7 @@ class ReportServiceTest extends TestCase
             'score' => Score::Never,
         ]);
 
-        $html = $this->service->renderHtml($evaluation);
+        $html = $this->service->renderGeneralReportHtml($evaluation);
 
         $this->assertStringContainsString('تقرير التقييم الشامل للمعالجة الحسية', $html);
         $this->assertStringContainsString('Test Patient', $html);

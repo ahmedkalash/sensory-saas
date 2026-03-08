@@ -18,13 +18,14 @@ class EvaluationServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new EvaluationService();
+        $this->service = new EvaluationService;
     }
 
     private function createDimensionWithQuestions(int $count): Dimension
     {
         $dimension = Dimension::factory()->create();
         Question::factory()->count($count)->create(['dimension_id' => $dimension->id]);
+
         return $dimension;
     }
 

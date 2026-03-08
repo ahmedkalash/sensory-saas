@@ -61,12 +61,14 @@ class ModelsTest extends TestCase
         $patient = Patient::factory()->create();
         $measurement = Measurement::factory()->create();
         $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id]);
-        $question = Question::factory()->create(['dimension_id' => $dimension->id]);
+        $questions = Question::factory()->count(5)->create(['dimension_id' => $dimension->id]);
 
-        EvaluationAnswer::factory()->count(5)->create([
-            'evaluation_id' => $evaluation->id,
-            'question_id' => $question->id,
-        ]);
+        foreach ($questions as $q) {
+            EvaluationAnswer::factory()->create([
+                'evaluation_id' => $evaluation->id,
+                'question_id' => $q->id,
+            ]);
+        }
 
         $this->assertEquals(5, $evaluation->answers()->count());
         $this->assertInstanceOf(EvaluationAnswer::class, $evaluation->answers->first());

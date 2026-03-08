@@ -36,6 +36,7 @@ class DemoEvaluationSeeder extends Seeder
         $evaluation1 = Evaluation::create([
             'patient_id' => $patient1->id,
             'specialist_name' => 'د. خالد عبدالله',
+            'title' => 'التقييم المبدئي الشامل',
             'evaluation_date' => now()->subDays(2),
             'child_age' => '6 سنوات و 3 أشهر',
         ]);
@@ -43,6 +44,7 @@ class DemoEvaluationSeeder extends Seeder
         $evaluation2 = Evaluation::create([
             'patient_id' => $patient2->id,
             'specialist_name' => 'أ. نورة صالح',
+            'title' => 'متابعة ما بعد 3 أشهر',
             'evaluation_date' => now()->subDays(5),
             'child_age' => '8 سنوات و شهر',
         ]);
@@ -58,6 +60,7 @@ class DemoEvaluationSeeder extends Seeder
         $evaluation3 = Evaluation::create([
             'patient_id' => $patient3->id,
             'specialist_name' => 'د. سمر محمد',
+            'title' => 'التقييم الدوري السنوي',
             'evaluation_date' => now(),
             'child_age' => '7 سنوات و 5 أشهر',
         ]);

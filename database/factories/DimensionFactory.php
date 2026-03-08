@@ -17,7 +17,7 @@ class DimensionFactory extends Factory
     {
         return [
             'measurement_id' => Measurement::factory(),
-            'name' => fake()->word() . ' Dimension',
+            'name' => fake()->word().' Dimension',
         ];
     }
 }

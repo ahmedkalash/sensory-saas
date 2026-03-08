@@ -9,7 +9,7 @@ class OlfactoryMeasurementSeeder extends Seeder
 {
     public function run(): void
     {
-        $m = Measurement::create(['name' => 'مقياس أنماط المعالجة الشمية']);
+        $m = Measurement::create(['name' => 'مقياس أنماط الاستجابة الشمية']);
 
         $this->seedDim1($m);
         $this->seedDim2($m);

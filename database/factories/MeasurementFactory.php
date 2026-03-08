@@ -15,7 +15,7 @@ class MeasurementFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->word() . ' Scale',
+            'name' => fake()->word().' Scale',
         ];
     }
 }

@@ -28,7 +28,7 @@ class VisualMeasurementSeeder extends Seeder
     // ════════════════════════════════════════════════════════════════════════
     private function seedVisual(): void
     {
-        $m = Measurement::create(['name' => 'مقياس أنماط المعالجة البصرية']);
+        $m = Measurement::create(['name' => 'مقياس أنماط الاستجابة البصرية']);
 
         // ── البعد الأول : ضعف الاستجابة للمثيرات البصرية (11 questions) ──
         $this->seedDim1($m);

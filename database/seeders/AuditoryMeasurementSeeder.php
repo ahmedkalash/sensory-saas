@@ -9,7 +9,7 @@ class AuditoryMeasurementSeeder extends Seeder
 {
     public function run(): void
     {
-        $m = Measurement::create(['name' => 'مقياس أنماط المعالجة السمعية']);
+        $m = Measurement::create(['name' => 'مقياس أنماط الاستجابة السمعية']);
 
         $this->seedDim1($m);
         $this->seedDim2($m);

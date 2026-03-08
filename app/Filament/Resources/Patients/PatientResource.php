@@ -2,7 +2,8 @@
 
 namespace App\Filament\Resources\Patients;
 
-use App\Filament\Resources\Patients\Pages\ManagePatients;
+use App\Enums\PatientStatus;
+use App\Filament\Resources\Patients\Pages\ListPatients;
 use App\Models\Patient;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -55,6 +56,11 @@ class PatientResource extends Resource
                                 ->label('تاريخ الميلاد')
                                 ->required()
                                 ->maxDate(now()),
+                            Select::make('status')
+                                ->label('حالة الطفل')
+                                ->options(PatientStatus::class)
+                                ->default(PatientStatus::ACTIVE)
+                                ->required(),
                             Select::make('gender')
                                 ->label('الجنس')
                                 ->options([
@@ -99,6 +105,21 @@ class PatientResource extends Resource
                 TextColumn::make('name')
                     ->label('اسم الطفل')
                     ->searchable(),
+                TextColumn::make('status')
+                    ->label('الحالة')
+                    ->badge()
+                    ->action(
+                        Action::make('updateStatus')
+                            ->schema([
+                                Select::make('status')
+                                    ->label('حالة الطفل')
+                                    ->options(PatientStatus::class)
+                                    ->required(),
+                            ])
+                            ->action(function (Patient $record, array $data): void {
+                                $record->update(['status' => $data['status']]);
+                            }),
+                    ),
                 TextColumn::make('dob')
                     ->label('تاريخ الميلاد')
                     ->date('Y-m-d')
@@ -138,7 +159,7 @@ class PatientResource extends Resource
                             'eval_2' => $data['eval_2'],
                         ]);
                     })
-                 ->disabled(fn(Patient $record) => $record->evaluations()->count() < 2),
+                    ->disabled(fn(Patient $record) => $record->evaluations()->count() < 2),
                 EditAction::make()->label(''),
                 DeleteAction::make()->label(''),
                 ViewAction::make()->label(''),
@@ -153,7 +174,7 @@ class PatientResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ManagePatients::route('/'),
+            'index' => Pages\ListPatients::route('/'),
             'view' => Pages\ViewPatient::route('/{record}'),
             'edit' => Pages\EditPatient::route('/{record}/edit'),
         ];

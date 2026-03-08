@@ -17,12 +17,14 @@ class Patient extends Model
         'school',
         'grade',
         'medical_plan',
+        'status',
     ];
 
     protected function casts(): array
     {
         return [
             'dob' => 'date',
+            'status' => \App\Enums\PatientStatus::class,
         ];
     }
 

@@ -60,6 +60,10 @@ class PatientResource extends Resource
                 TextInput::make('grade')
                     ->label('الصف الدراسي')
                     ->maxLength(255),
+                RichEditor::make('medical_plan')
+                    ->label('الخطة العلاجية/الطبية')
+                    ->default('<p>الخطة الشهرية</p><table><tbody><tr><th rowspan="1" colspan="1"><p>الهدف</p></th><th rowspan="1" colspan="1" data-colwidth="398"><p>الإستجابة</p></th><th rowspan="1" colspan="1" data-colwidth="342"><p>المتبقي</p></th></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr></tbody></table><p></p><p>نسبة النجاح المحققة للمجال ككل = ... %</p><p></p>')
+                    ->columnSpanFull(),
             ]);
     }
 

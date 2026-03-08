@@ -34,13 +34,16 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('/')
-            ->login()
             ->sidebarCollapsibleOnDesktop()
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->userMenuItems([
+                'profile' => \Filament\Actions\Action::make('profile')->visible(false),
+                'logout' => \Filament\Actions\Action::make('logout')->visible(false),
+            ])
             ->pages([
                 Pages\Dashboard::class,
             ])
@@ -59,9 +62,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-            ])
-            ->authMiddleware([
-                Authenticate::class,
+                \App\Http\Middleware\AutoLoginMiddleware::class,
             ]);
     }
 }

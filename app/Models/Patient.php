@@ -16,6 +16,7 @@ class Patient extends Model
         'gender',
         'school',
         'grade',
+        'medical_plan',
     ];
 
     protected function casts(): array

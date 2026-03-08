@@ -17,14 +17,12 @@ class Evaluation extends Model
         'title',
         'evaluation_date',
         'child_age',
-        'draft_answers',
     ];
 
     protected function casts(): array
     {
         return [
             'evaluation_date' => 'date',
-            'draft_answers' => 'array',
         ];
     }
 

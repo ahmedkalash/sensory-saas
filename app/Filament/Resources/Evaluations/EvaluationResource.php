@@ -14,7 +14,9 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
@@ -97,7 +99,7 @@ class EvaluationResource extends Resource
             ]);
 
         foreach ($measurements as $measurement) {
-            $totalQuestionsForScale = $measurement->dimensions->sum(fn ($d) => $d->questions->count());
+            $totalQuestionsForScale = $measurement->dimensions->sum(fn($d) => $d->questions->count());
             $questionIndex = 1;
 
             foreach ($measurement->dimensions as $dimension) {
@@ -122,9 +124,14 @@ class EvaluationResource extends Resource
                                     Score::Often->value => Score::Often->label(),
                                     Score::Always->value => Score::Always->label(),
                                 ])
+                                ->dehydrated(false)
                                 ->required(),
+                            RichEditor::make("draft_notes.{$question->id}")
+                                ->label('ملاحظات (اختياري)')
+                                ->dehydrated(false)
+                                ->columnSpanFull(),
                         ])
-                        ->visible(fn (Get $get) => $get('selected_scale') == $measurement->id);
+                        ->visible(fn(Get $get) => $get('selected_scale') == $measurement->id);
                     $questionIndex++;
                 }
             }
@@ -175,7 +182,7 @@ class EvaluationResource extends Resource
                     ->icon('heroicon-o-document-text')
                     ->color('info')
                     ->modalSubmitActionLabel('عرض')
-                    ->schema(fn (Evaluation $record) => [
+                    ->schema(fn(Evaluation $record) => [
                         Select::make('report_type')
                             ->label('نوع التقرير')
                             ->options(function () use ($record) {
@@ -205,7 +212,7 @@ class EvaluationResource extends Resource
                     ->icon('heroicon-o-document-text')
                     ->color('info')
                     ->modalSubmitActionLabel('عرض')
-                    ->schema(fn (Evaluation $record) => [
+                    ->schema(fn(Evaluation $record) => [
                         Select::make('report_type')
                             ->label('نوع التقرير')
                             ->options(function () use ($record) {
@@ -237,7 +244,7 @@ class EvaluationResource extends Resource
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('success')
                     ->modalSubmitActionLabel('تحميل')
-                    ->schema(fn (Evaluation $record) => [
+                    ->schema(fn(Evaluation $record) => [
                         Select::make('report_type')
                             ->label('نوع التقرير')
                             ->options(function () use ($record) {

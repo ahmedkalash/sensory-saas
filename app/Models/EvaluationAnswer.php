@@ -15,6 +15,7 @@ class EvaluationAnswer extends Model
         'evaluation_id',
         'question_id',
         'score',
+        'notes',
     ];
 
     protected function casts(): array

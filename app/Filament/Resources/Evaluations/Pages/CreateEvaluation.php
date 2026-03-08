@@ -15,7 +15,8 @@ class CreateEvaluation extends CreateRecord
     protected function afterCreate(): void
     {
         $evaluation = $this->record;
-        $draftAnswers = $evaluation->draft_answers ?? [];
+        $draftAnswers = $this->data['draft_answers'] ?? [];
+        $draftNotes = $this->data['draft_notes'] ?? [];
 
         $answerRecords = [];
         foreach ($draftAnswers as $questionId => $score) {
@@ -24,6 +25,7 @@ class CreateEvaluation extends CreateRecord
                     'evaluation_id' => $evaluation->id,
                     'question_id' => $questionId,
                     'score' => (int) $score,
+                    'notes' => $draftNotes[$questionId] ?? null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

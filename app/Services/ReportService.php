@@ -140,18 +140,18 @@ class ReportService
             /**@var Dimension $dimension*/
             foreach ($measurement->dimensions as $dimension) {
                 $dimensionAnswers = $dimension->questions
-                    ->map(fn ($q) => $answersByQuestion->get($q->id))
+                    ->map(fn($q) => $answersByQuestion->get($q->id))
                     ->filter();
 
                 // Total questions score (sum answers.score)
-                $totalScore = $dimensionAnswers->sum(fn ($a) => $a->score->value);
+                $totalScore = $dimensionAnswers->sum(fn($a) => $a->score->value);
 
                 // Dim severity
                 $severity = $this->evaluationService->getSeverity($dimension, $totalScore);
 
                 $weaknesses = $dimensionAnswers
-                    ->filter(fn ($a) => $a->score->value >= 2) // weakness(q_text) where answers.score >=2 (==2 or ==3)
-                    ->map(fn ($a) => [
+                    ->filter(fn($a) => $a->score->value >= 2) // weakness(q_text) where answers.score >=2 (==2 or ==3)
+                    ->map(fn($a) => [
                         'question_text' => $a->question->q_text,
                         'score_label' => $a->score->label(),
                         'recommendations' => $a->question->recommendations ?? [], // total recommendations for weak score questions (weakness)
@@ -161,11 +161,21 @@ class ReportService
                     ->values()
                     ->toArray();
 
+                $observations = $dimensionAnswers
+                    ->filter(fn($a) => !empty($a->notes))
+                    ->map(fn($a) => [
+                        'question_text' => $a->question->q_text,
+                        'notes' => $a->notes,
+                    ])
+                    ->values()
+                    ->toArray();
+
                 $dimensionResults[] = [
                     'name' => $dimension->name,
                     'total_score' => $totalScore,
                     'severity' => $severity,
                     'weaknesses' => $weaknesses,
+                    'observations' => $observations,
                 ];
             }
 

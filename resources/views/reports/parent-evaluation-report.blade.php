@@ -451,11 +451,12 @@
         @foreach ($measurements as $index => $measurement)
             @php
                 $hasWeaknesses = collect($measurement['dimensions'])->flatMap(fn($d) => $d['weaknesses'])->isNotEmpty();
+                $hasObservations = collect($measurement['dimensions'])->flatMap(fn($d) => $d['observations'] ?? [])->isNotEmpty();
             @endphp
 
             <div class="scale-card">
                 <div class="scale-card-header">
-                <h2>{{ $index + 1 }}. {{ $measurement['name'] }}</h2>
+                    <h2>{{ $index + 1 }}. {{ $measurement['name'] }}</h2>
                 </div>
 
                 <div class="scale-card-body">
@@ -465,45 +466,45 @@
                         <div class="dimension-block">
 
                             <div class="weakness-list">
-                            <h2>توصيات لولي الامر:</h2>
+                                <h2 style="color: #4f46e5; margin-bottom: 15px;">توصيات لولي الامر:</h2>
                                 @foreach ($measurement['dimensions'] as $dim)
-                                <h3>{{ $dim['name'] }}</h3>
+                                    <h3 style="color: #4f46e5; margin-bottom: 15px;">{{ $dim['name'] }}</h3>
                                     @foreach ($dim['weaknesses'] as $w)
                                         <div style="margin-bottom: 6px;">
                                             @foreach($w['recommendations'] as $recommendation)
-                                            - {{ $recommendation }}
+                                                - {{ $recommendation }}
                                             @endforeach
                                         </div>
                                     @endforeach
                                 @endforeach
 
-                            <h2>أهداف:</h2>
+                                <h2 style="color: #4f46e5; margin-bottom: 15px;">أهداف:</h2>
                                 @foreach ($measurement['dimensions'] as $dim)
-                                <h3>{{ $dim['name'] }}</h3>
+                                    <h3 style="color: #4f46e5; margin-bottom: 15px;">{{ $dim['name'] }}</h3>
                                     @foreach ($dim['weaknesses'] as $w)
                                         <div style="margin-bottom: 6px;">
                                             @foreach($w['goals'] as $goal)
-                                            - {{ $goal }}
+                                                - {{ $goal }}
                                             @endforeach
                                         </div>
                                     @endforeach
                                 @endforeach
 
-                            <h2>أنشطة:</h2>
+                                <h2 style="color: #4f46e5; margin-bottom: 15px;">أنشطة:</h2>
                                 @foreach ($measurement['dimensions'] as $dim)
-                                <h3>{{ $dim['name'] }}</h3>
+                                    <h3 style="color: #4f46e5; margin-bottom: 15px;">{{ $dim['name'] }}</h3>
                                     @foreach ($dim['weaknesses'] as $w)
                                         <div style="margin-bottom: 6px;">
                                             @foreach($w['activities'] as $activity)
-                                            - {{ $activity }}
+                                                - {{ $activity }}
                                             @endforeach
                                         </div>
                                     @endforeach
                                 @endforeach
                             </div>
                         </div>
-
                     @endif
+
                 </div>
 
 

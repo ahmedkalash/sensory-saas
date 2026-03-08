@@ -132,9 +132,35 @@ class DemoEvaluationSeeder extends Seeder
             EvaluationAnswer::insert($chunk);
         }
 
-        // Update draft_answers on the evaluations so the wizard can load them if edited
-        $evaluation1->update(['draft_answers' => $draftAnswers1]);
-        $evaluation2->update(['draft_answers' => $draftAnswers2]);
-        $evaluation3->update(['draft_answers' => $draftAnswers3]);
+        // 4. Create 3 historical evaluations per patient to demo Progress Tracking comparison
+        $allPatients = [$patient1, $patient2, $patient3];
+        $historicalAnswers = [];
+
+        foreach ($allPatients as $patient) {
+            for ($i = 1; $i <= 3; $i++) {
+                $historicalEval = Evaluation::create([
+                    'patient_id' => $patient->id,
+                    'specialist_name' => 'أخصائي تجريبي',
+                    'title' => 'متابعة دورية ' . $i,
+                    'evaluation_date' => now()->subMonths(5 - $i),
+                    'child_age' => '6 سنوات',
+                ]);
+
+                foreach ($questions as $questionId) {
+                    $randomScore = $scores[array_rand($scores)];
+                    $historicalAnswers[] = [
+                        'evaluation_id' => $historicalEval->id,
+                        'question_id' => $questionId,
+                        'score' => $randomScore,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+        }
+
+        foreach (array_chunk($historicalAnswers, 100) as $chunk) {
+            EvaluationAnswer::insert($chunk);
+        }
     }
 }

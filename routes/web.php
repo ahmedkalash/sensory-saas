@@ -21,9 +21,9 @@ Route::get('/evaluations/{evaluation}/parent_report', function (Evaluation $eval
     $reportService = app(ReportService::class);
     $measurementId = request('measurement_id');
     $mpdf = $reportService->generateParentReport($evaluation, $measurementId);
-// for testing only do not delete
-//    return response($reportService->renderParentReportHtml($evaluation, $measurementId))
-//        ->header('Content-Type', 'text/html; charset=utf-8');
+    // for testing only do not delete
+    //    return response($reportService->renderParentReportHtml($evaluation, $measurementId))
+    //        ->header('Content-Type', 'text/html; charset=utf-8');
     $filename = 'تقرير_' . ($evaluation->patient->name ?? 'طفل') . '_' . $evaluation->evaluation_date?->format('Y-m-d') . '.pdf';
 
     return response($mpdf->Output($filename, 'S'), 200, [
@@ -41,3 +41,6 @@ Route::get('/evaluations/{evaluation}/report/html', function (Evaluation $evalua
     return response($reportService->renderGeneralReportHtml($evaluation, $measurementId))
         ->header('Content-Type', 'text/html; charset=utf-8');
 })->name('evaluations.report.html');
+
+Route::get('/patients/{patient}/progress-report', [\App\Http\Controllers\ProgressReportController::class, 'download'])
+    ->name('reports.progress');

@@ -203,4 +203,100 @@ class ReportService
 
         return view('reports.parent-evaluation-report', $reportData)->render();
     }
+
+    /**
+     * @throws MpdfException
+     */
+    public function generateProgressReport(Evaluation $eval1, Evaluation $eval2): Mpdf
+    {
+        $html = $this->renderProgressReportHtml($eval1, $eval2);
+
+        $mpdf = $this->newMpdf();
+
+        $mpdf->WriteHTML($html);
+
+        return $mpdf;
+    }
+
+    public function renderProgressReportHtml(Evaluation $eval1, Evaluation $eval2): string
+    {
+        $eval1->load(['patient', 'answers.question.dimension.measurement']);
+        $eval2->load(['patient', 'answers.question.dimension.measurement']);
+
+        $reportData = $this->buildProgressReportData($eval1, $eval2);
+
+        return view('reports.progress-report', $reportData)->render();
+    }
+
+    private function buildProgressReportData(Evaluation $eval1, Evaluation $eval2): array
+    {
+        $data1 = $this->buildReportData($eval1);
+        $data2 = $this->buildReportData($eval2);
+
+        $measurements1 = collect($data1['measurements'])->keyBy('name');
+        $measurements2 = collect($data2['measurements'])->keyBy('name');
+
+        $comparisonResults = [];
+
+        foreach ($measurements1 as $name => $m1) {
+            if (! $measurements2->has($name)) {
+                continue; // Only compare scales that exist in both
+            }
+
+            $m2 = $measurements2->get($name);
+
+            $dims1 = collect($m1['dimensions'])->keyBy('name');
+            $dims2 = collect($m2['dimensions'])->keyBy('name');
+
+            $dimensionComparisons = [];
+            foreach ($dims1 as $dimName => $d1) {
+                if (! $dims2->has($dimName)) {
+                    continue; // Compare dimensions present in both
+                }
+
+                $d2 = $dims2->get($dimName);
+
+                $score1 = $d1['total_score'];
+                $score2 = $d2['total_score'];
+
+                // Lower score means fewer weaknesses (better state).
+                $status = 'ثابت';
+                $statusColor = '#6b7280'; // gray
+                $statusLabel = 'لا يوجد تغيير';
+
+                if ($score2 < $score1) {
+                    $status = 'تحسن';
+                    $statusColor = '#10b981'; // green
+                    $statusLabel = 'تحسن (-' . ($score1 - $score2) . ')';
+                } elseif ($score2 > $score1) {
+                    $status = 'تراجع';
+                    $statusColor = '#ef4444'; // red
+                    $statusLabel = 'تراجع (+' . ($score2 - $score1) . ')';
+                }
+
+                $dimensionComparisons[] = [
+                    'name' => $dimName,
+                    'score_1' => $score1,
+                    'severity_1' => $d1['severity'],
+                    'score_2' => $score2,
+                    'severity_2' => $d2['severity'],
+                    'status' => $status,
+                    'status_color' => $statusColor,
+                    'status_label' => $statusLabel,
+                ];
+            }
+
+            $comparisonResults[] = [
+                'name' => $name,
+                'dimensions' => $dimensionComparisons,
+            ];
+        }
+
+        return [
+            'patient' => $eval1->patient,
+            'eval1' => $eval1,
+            'eval2' => $eval2,
+            'measurements' => $comparisonResults,
+        ];
+    }
 }

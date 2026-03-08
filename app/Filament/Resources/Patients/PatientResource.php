@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Patients;
 
-use App\Filament\Resources\Patients\Pages\EditPatient;
 use App\Filament\Resources\Patients\Pages\ManagePatients;
 use App\Models\Patient;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -16,6 +16,9 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Livewire;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -38,32 +41,53 @@ class PatientResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(3)
             ->components([
-                TextInput::make('name')
-                    ->label('اسم الطفل')
-                    ->required()
-                    ->maxLength(255),
-                DatePicker::make('dob')
-                    ->label('تاريخ الميلاد')
-                    ->required()
-                    ->maxDate(now()),
-                Select::make('gender')
-                    ->label('الجنس')
-                    ->options([
-                        'ذكر' => 'ذكر',
-                        'أنثى' => 'أنثى',
-                    ])
-                    ->required(),
-                TextInput::make('school')
-                    ->label('المدرسة/المركز')
-                    ->maxLength(255),
-                TextInput::make('grade')
-                    ->label('الصف الدراسي')
-                    ->maxLength(255),
-                RichEditor::make('medical_plan')
-                    ->label('الخطة العلاجية/الطبية')
-                    ->default('<p>الخطة الشهرية</p><table><tbody><tr><th rowspan="1" colspan="1"><p>الهدف</p></th><th rowspan="1" colspan="1" data-colwidth="398"><p>الإستجابة</p></th><th rowspan="1" colspan="1" data-colwidth="342"><p>المتبقي</p></th></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr></tbody></table><p></p><p>نسبة النجاح المحققة للمجال ككل = ... %</p><p></p>')
-                    ->columnSpanFull(),
+                Group::make()
+                    ->columnSpan(['lg' => 1])
+                    ->schema([
+                        Section::make('المعلومات الأساسية')->schema([
+                            TextInput::make('name')
+                                ->label('اسم الطفل')
+                                ->required()
+                                ->maxLength(255),
+                            DatePicker::make('dob')
+                                ->label('تاريخ الميلاد')
+                                ->required()
+                                ->maxDate(now()),
+                            Select::make('gender')
+                                ->label('الجنس')
+                                ->options([
+                                    'ذكر' => 'ذكر',
+                                    'أنثى' => 'أنثى',
+                                ])
+                                ->required(),
+                            TextInput::make('school')
+                                ->label('المدرسة/المركز')
+                                ->maxLength(255),
+                            TextInput::make('grade')
+                                ->label('الصف الدراسي')
+                                ->maxLength(255),
+                        ])->columns(1),
+                    ]),
+
+                Group::make()
+                    ->columnSpan(['lg' => 2])
+                    ->schema([
+                        Section::make('مؤشر التقدم')
+                            ->schema([
+                                Livewire::make(\App\Filament\Resources\Patients\Widgets\PatientProgressChart::class)
+                            ])
+                    ]),
+
+                Section::make('الخطة العلاجية/الطبية')
+                    ->columnSpanFull()
+                    ->schema([
+                        RichEditor::make('medical_plan')
+                            ->label('')
+                            ->default('<p>الخطة الشهرية</p><table><tbody><tr><th rowspan="1" colspan="1"><p>الهدف</p></th><th rowspan="1" colspan="1" data-colwidth="398"><p>الإستجابة</p></th><th rowspan="1" colspan="1" data-colwidth="342"><p>المتبقي</p></th></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr><tr><td rowspan="1" colspan="1"><p></p></td><td rowspan="1" colspan="1" data-colwidth="398"><p></p></td><td rowspan="1" colspan="1" data-colwidth="342"><p></p></td></tr></tbody></table><p></p><p>نسبة النجاح المحققة للمجال ككل = ... %</p><p></p>')
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 
@@ -92,9 +116,32 @@ class PatientResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
-                ViewAction::make(),
+                Action::make('compare_evaluations')
+                    ->label('مقارنة التقييمات')
+                    ->icon('heroicon-o-chart-bar-square')
+                    ->color('info')
+                    ->schema([
+                        Select::make('eval_1')
+                            ->label('التقييم الأول (الأساس)')
+                            ->options(fn(Patient $record) => $record->evaluations()->pluck('title', 'id'))
+                            ->required(),
+                        Select::make('eval_2')
+                            ->label('التقييم الثاني (المتابعة)')
+                            ->options(fn(Patient $record) => $record->evaluations()->pluck('title', 'id'))
+                            ->required()
+                            ->different('eval_1'),
+                    ])
+                    ->action(function (array $data, Patient $record) {
+                        return redirect()->route('reports.progress', [
+                            'patient' => $record->id,
+                            'eval_1' => $data['eval_1'],
+                            'eval_2' => $data['eval_2'],
+                        ]);
+                    })
+                 ->disabled(fn(Patient $record) => $record->evaluations()->count() < 2),
+                EditAction::make()->label(''),
+                DeleteAction::make()->label(''),
+                ViewAction::make()->label(''),
             ])->recordAction('view')
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -107,6 +154,7 @@ class PatientResource extends Resource
     {
         return [
             'index' => ManagePatients::route('/'),
+            'view' => Pages\ViewPatient::route('/{record}'),
             'edit' => Pages\EditPatient::route('/{record}/edit'),
         ];
     }

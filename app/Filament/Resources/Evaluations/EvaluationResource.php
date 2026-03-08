@@ -120,7 +120,7 @@ class EvaluationResource extends Resource
                                 ->columns(4)
                                 ->options([
                                     Score::Never->value => Score::Never->label(),
-                                    Score::Sometimes->value => Score::Sometimes->label(),
+                                    Score::Sometimes->value => Score::Sometimes->label(), 
                                     Score::Often->value => Score::Often->label(),
                                     Score::Always->value => Score::Always->label(),
                                 ])

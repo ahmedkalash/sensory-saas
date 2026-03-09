@@ -43,7 +43,7 @@ class StatsOverview extends StatsOverviewWidget
                 ->description($description)
                 ->descriptionIcon($trendIcon)
                 ->color($trendColor),
-            Stat::make('البرامج مكتملة', $completedPrograms)
+            Stat::make('البرامج المكتملة', $completedPrograms)
                 ->description('إجمالي قصص النجاح')
                 ->descriptionIcon('heroicon-m-academic-cap')
                 ->color('info'),

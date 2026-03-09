@@ -17,6 +17,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
@@ -98,7 +99,7 @@ class EvaluationResource extends Resource
             ]);
 
         foreach ($measurements as $measurement) {
-            $totalQuestionsForScale = $measurement->dimensions->sum(fn ($d) => $d->questions->count());
+            $totalQuestionsForScale = $measurement->dimensions->sum(fn($d) => $d->questions->count());
             $questionIndex = 1;
 
             foreach ($measurement->dimensions as $dimension) {
@@ -113,9 +114,13 @@ class EvaluationResource extends Resource
                                 ->hiddenLabel()
                                 ->state(new HtmlString("<div class='evaluation-wizard-progress'>السؤال {$questionIndex} من {$totalQuestionsForScale}</div>")),
                             TextEntry::make("context_{$question->id}")
-                                ->label("{$measurement->name} - {$dimension->name}"),
-                            \Filament\Forms\Components\ToggleButtons::make("draft_answers.{$question->id}")
-                                ->label($question->q_text)
+                                ->hiddenLabel()
+                                ->state(new HtmlString("<div class='evaluation-context-badge'>{$measurement->name} &rsaquo; {$dimension->name}</div>")),
+                            TextEntry::make("question_text_{$question->id}")
+                                ->hiddenLabel()
+                                ->state(new HtmlString("<h2 style='font-size:1.5rem; font-weight:700; margin:0 0 0.75rem 0; color:#1e293b;'>{$question->q_text}</h2>")),
+                            ToggleButtons::make("draft_answers.{$question->id}")
+                                ->hiddenLabel()
                                 ->inline()
                                 ->options([
                                     Score::Never->value => Score::Never->label(),
@@ -143,7 +148,7 @@ class EvaluationResource extends Resource
                                 ->dehydrated(false)
                                 ->columnSpanFull(),
                         ])
-                        ->visible(fn (Get $get) => $get('selected_scale') == $measurement->id);
+                        ->visible(fn(Get $get) => $get('selected_scale') == $measurement->id);
                     $questionIndex++;
                 }
             }
@@ -198,7 +203,7 @@ class EvaluationResource extends Resource
                         ->icon('heroicon-o-document-text')
                         ->color('info')
                         ->modalSubmitActionLabel('عرض')
-                        ->schema(fn (Evaluation $record) => [
+                        ->schema(fn(Evaluation $record) => [
                             Select::make('report_type')
                                 ->label('نوع التقرير')
                                 ->options(function () use ($record) {
@@ -228,7 +233,7 @@ class EvaluationResource extends Resource
                         ->icon('heroicon-o-document-text')
                         ->color('info')
                         ->modalSubmitActionLabel('عرض')
-                        ->schema(fn (Evaluation $record) => [
+                        ->schema(fn(Evaluation $record) => [
                             Select::make('report_type')
                                 ->label('نوع التقرير')
                                 ->options(function () use ($record) {
@@ -258,7 +263,7 @@ class EvaluationResource extends Resource
                         ->icon('heroicon-o-document-arrow-down')
                         ->color('success')
                         ->modalSubmitActionLabel('تحميل')
-                        ->schema(fn (Evaluation $record) => [
+                        ->schema(fn(Evaluation $record) => [
                             Select::make('report_type')
                                 ->label('نوع التقرير')
                                 ->options(function () use ($record) {

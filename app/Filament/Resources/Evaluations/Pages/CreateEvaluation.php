@@ -104,7 +104,7 @@ class CreateEvaluation extends CreateRecord
                     }
 
                     $wizardSteps = [];
-                    $totalQuestionsForScale = $measurement->dimensions->sum(fn($d) => $d->questions->count());
+                    $totalQuestionsForScale = $measurement->dimensions->sum(fn ($d) => $d->questions->count());
                     $questionIndex = 1;
 
                     foreach ($measurement->dimensions as $dimension) {
@@ -112,7 +112,7 @@ class CreateEvaluation extends CreateRecord
                             $wizardSteps[] = Step::make("q_{$question->id}")
                                 ->label("Q{$questionIndex}")
                                 ->id("q_{$question->id}")
-                                ->icon(fn(Get $get) => $get("draft_answers.{$question->id}") !== null ? Heroicon::HandThumbUp : Heroicon::QuestionMarkCircle)
+                                ->icon(fn (Get $get) => $get("draft_answers.{$question->id}") !== null ? Heroicon::HandThumbUp : Heroicon::QuestionMarkCircle)
                                 ->completedIcon(Heroicon::HandThumbUp)
                                 ->schema([
                                     TextEntry::make("progress_{$question->id}")
@@ -178,7 +178,7 @@ class CreateEvaluation extends CreateRecord
         $draftNotes = $this->data['draft_notes'] ?? [];
 
         // Load all relevant questions with their full hierarchy in one query
-        $questionIds = array_keys(array_filter($draftAnswers, fn($s) => $s !== null));
+        $questionIds = array_keys(array_filter($draftAnswers, fn ($s) => $s !== null));
         $questions = Question::with('dimension.measurement')
             ->whereIn('id', $questionIds)
             ->get()

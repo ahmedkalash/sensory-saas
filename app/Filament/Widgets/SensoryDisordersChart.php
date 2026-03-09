@@ -28,11 +28,10 @@ class SensoryDisordersChart extends ChartWidget
 
         foreach ($measurements as $measurement) {
             // Count total questions scoring 2 (Often) or 3 (Always) for this measurement across all evaluations
-            $weaknessCount = \App\Models\EvaluationAnswer::whereHas('question', function ($query) use ($measurement) {
-                $query->whereHas('dimension', function ($q) use ($measurement) {
-                    $q->where('measurement_id', $measurement->id);
-                });
-            })->whereIn('score', [2, 3])->count();
+            $weaknessCount = \App\Models\EvaluationAnswer::query()
+                ->where('measurement_name', $measurement->name)
+                ->whereIn('score', [2, 3])
+                ->count();
 
             if ($weaknessCount > 0) {
                 $rawLabels[] = $measurement->name;

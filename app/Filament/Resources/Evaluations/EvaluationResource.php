@@ -11,7 +11,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
@@ -61,8 +60,8 @@ class EvaluationResource extends Resource
                     EditAction::make()->label('تعديل'),
                     Action::make('parent_report')
                         ->label('تقرير ولي الأمر')
-                        ->icon('heroicon-o-document-text')
-                        ->color('info')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('success')
                         ->modalSubmitActionLabel('عرض')
                         ->schema(fn (Evaluation $record) => [
                             Select::make('report_type')

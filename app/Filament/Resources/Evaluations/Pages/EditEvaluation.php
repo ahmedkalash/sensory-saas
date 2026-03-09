@@ -115,7 +115,7 @@ class EditEvaluation extends EditRecord
                         $wizardSteps[] = Step::make("a_{$answerId}")
                             ->label("Q{$answerIndex}")
                             ->id("a_{$answerId}")
-                            ->icon(fn(Get $get) => $get("draft_answers.{$answerId}") !== null ? Heroicon::HandThumbUp : Heroicon::QuestionMarkCircle)
+                            ->icon(fn (Get $get) => $get("draft_answers.{$answerId}") !== null ? Heroicon::HandThumbUp : Heroicon::QuestionMarkCircle)
                             ->completedIcon(Heroicon::HandThumbUp)
                             ->schema([
                                 TextEntry::make("progress_{$answerId}")

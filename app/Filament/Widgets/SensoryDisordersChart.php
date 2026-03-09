@@ -60,7 +60,7 @@ class SensoryDisordersChart extends ChartWidget
                         '#ef4444',
                         '#8b5cf6',
                         '#ec4899',
-                        '#6366f1'
+                        '#6366f1',
                     ],
                 ],
             ],

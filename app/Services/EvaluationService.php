@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Enums\Score;
 use App\Enums\Severity;
-use App\Models\Dimension;
 use InvalidArgumentException;
 
 class EvaluationService
@@ -12,11 +11,12 @@ class EvaluationService
     /**
      * Calculate severity level for a dimension based on total score.
      * Thresholds depend on the number of questions in the dimension.
+     *
+     * @param  int  $questionCount  The number of questions in the dimension (from snapshot).
+     * @param  int  $totalScore  The summed score for all answers in the dimension.
      */
-    public function getSeverity(Dimension $dimension, int $totalScore): Severity
+    public function getSeverity(int $questionCount, int $totalScore): Severity
     {
-        $questionCount = $dimension->questions()->count();
-
         $this->validateTotalScore($questionCount, $totalScore);
 
         if ($totalScore == Score::Never->value) {
@@ -40,6 +40,8 @@ class EvaluationService
         ) {
             return Severity::HIGH;
         }
+
+        return Severity::OK;
     }
 
     private function validateTotalScore(int $questionCount, int $totalScore): void

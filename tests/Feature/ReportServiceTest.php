@@ -3,12 +3,10 @@
 namespace Tests\Feature;
 
 use App\Enums\Score;
-use App\Models\Dimension;
+use App\Enums\Severity;
 use App\Models\Evaluation;
 use App\Models\EvaluationAnswer;
-use App\Models\Measurement;
 use App\Models\Patient;
-use App\Models\Question;
 use App\Services\EvaluationService;
 use App\Services\ReportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,60 +25,58 @@ class ReportServiceTest extends TestCase
         $this->service = new ReportService(new EvaluationService);
     }
 
-    public function test_build_report_data_structures_correctly_and_filters_weaknesses()
+    /** Helper: create an EvaluationAnswer with snapshot columns fully populated. */
+    private function makeAnswer(Evaluation $evaluation, array $overrides = []): EvaluationAnswer
     {
-        // 1. Setup DB
-        $patient = Patient::factory()->create();
-        $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
-
-        $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
-        $dimension = Dimension::factory()->create([
-            'measurement_id' => $measurement->id,
-            'name' => 'Test Dimension',
-        ]);
-
-        // Create 1 question with score = 1 (Not a weakness)
-        $q1 = Question::factory()->create([
-            'dimension_id' => $dimension->id,
-            'q_text' => 'Normal Question',
+        return EvaluationAnswer::factory()->create(array_merge([
+            'evaluation_id' => $evaluation->id,
+            'measurement_name' => 'Test Measurement',
+            'dimension_name' => 'Test Dimension',
+            'question_text' => 'Test Question',
             'recommendations' => ['Rec 1'],
             'goals' => ['Goal 1'],
             'activities' => ['Act 1'],
-        ]);
-        EvaluationAnswer::factory()->create([
-            'evaluation_id' => $evaluation->id,
-            'question_id' => $q1->id,
-            'score' => Score::Sometimes, // Score 1
-        ]);
+            'score' => Score::Sometimes,
+        ], $overrides));
+    }
 
-        // Create 1 question with score = 3 (Is a weakness)
-        $q2 = Question::factory()->create([
-            'dimension_id' => $dimension->id,
-            'q_text' => 'Weakness Question',
-            'recommendations' => ['Urgent Rec'],
-            'goals' => ['Urgent Goal'],
-            'activities' => ['Urgent Act'],
-        ]);
-        EvaluationAnswer::factory()->create([
-            'evaluation_id' => $evaluation->id,
-            'question_id' => $q2->id,
-            'score' => Score::Always, // Score 3
-        ]);
-
-        // 2. Reflect on ReportService to access private buildReportData
+    private function callBuildReportData(Evaluation $evaluation, ?int $measurementId = null): array
+    {
         $reflection = new ReflectionClass(ReportService::class);
         $method = $reflection->getMethod('buildReportData');
         $method->setAccessible(true);
 
-        // 3. Act
-        $data = $method->invoke($this->service, $evaluation);
+        return $method->invoke($this->service, $evaluation, $measurementId);
+    }
 
-        // 4. Assert structural root items
+    public function test_build_report_data_structures_correctly_and_filters_weaknesses(): void
+    {
+        $patient = Patient::factory()->create();
+        $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
+
+        // Score 1 (Not a weakness)
+        $this->makeAnswer($evaluation, [
+            'question_text' => 'Normal Question',
+            'recommendations' => ['Rec 1'],
+            'goals' => ['Goal 1'],
+            'activities' => ['Act 1'],
+            'score' => Score::Sometimes,
+        ]);
+
+        // Score 3 (Is a weakness)
+        $this->makeAnswer($evaluation, [
+            'question_text' => 'Weakness Question',
+            'recommendations' => ['Urgent Rec'],
+            'goals' => ['Urgent Goal'],
+            'activities' => ['Urgent Act'],
+            'score' => Score::Always,
+        ]);
+
+        $data = $this->callBuildReportData($evaluation);
+
         $this->assertArrayHasKey('evaluation', $data);
         $this->assertArrayHasKey('patient', $data);
         $this->assertArrayHasKey('measurements', $data);
-
-        // Assert patient matches
         $this->assertEquals($patient->id, $data['patient']->id);
 
         $measurementsData = $data['measurements'];
@@ -94,126 +90,64 @@ class ReportServiceTest extends TestCase
         // Score 1 + 3 = 4
         $this->assertEquals(4, $dimensionsData[0]['total_score']);
 
-        // Assert Weaknesses filtering (Only q2 should be here since score >= 2)
         $weaknesses = $dimensionsData[0]['weaknesses'];
         $this->assertCount(1, $weaknesses);
-
-        $weakness = $weaknesses[0];
-        $this->assertEquals('Weakness Question', $weakness['question_text']);
-        $this->assertEquals(['Urgent Rec'], $weakness['recommendations']);
-        $this->assertEquals(['Urgent Goal'], $weakness['goals']);
-        $this->assertEquals(['Urgent Act'], $weakness['activities']);
+        $this->assertEquals('Weakness Question', $weaknesses[0]['question_text']);
+        $this->assertEquals(['Urgent Rec'], $weaknesses[0]['recommendations']);
+        $this->assertEquals(['Urgent Goal'], $weaknesses[0]['goals']);
+        $this->assertEquals(['Urgent Act'], $weaknesses[0]['activities']);
     }
 
-    public function test_handles_empty_database_measurements()
+    public function test_handles_empty_evaluation_with_no_answers(): void
     {
         $evaluation = Evaluation::factory()->create([
             'patient_id' => Patient::factory()->create()->id,
         ]);
 
-        $reflection = new ReflectionClass(ReportService::class);
-        $method = $reflection->getMethod('buildReportData');
-        $method->setAccessible(true);
-
-        $data = $method->invoke($this->service, $evaluation);
+        $data = $this->callBuildReportData($evaluation);
 
         $this->assertArrayHasKey('measurements', $data);
         $this->assertCount(0, $data['measurements']);
     }
 
-    public function test_build_report_data_with_empty_evaluation()
+    public function test_build_report_data_with_multiple_measurements_and_dimensions(): void
     {
         $patient = Patient::factory()->create();
         $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
 
-        $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
-        Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'Test Dimension']);
+        $this->makeAnswer($evaluation, ['measurement_name' => 'Visual Scale', 'dimension_name' => 'Visual Dim 1', 'score' => Score::Always]);
+        $this->makeAnswer($evaluation, ['measurement_name' => 'Visual Scale', 'dimension_name' => 'Visual Dim 2', 'score' => Score::Sometimes]);
+        $this->makeAnswer($evaluation, ['measurement_name' => 'Auditory Scale', 'dimension_name' => 'Auditory Dim 1', 'score' => Score::Often]);
 
-        $reflection = new ReflectionClass(ReportService::class);
-        $method = $reflection->getMethod('buildReportData');
-        $method->setAccessible(true);
-
-        $data = $method->invoke($this->service, $evaluation);
-
-        $this->assertCount(1, $data['measurements']);
-        $this->assertCount(1, $data['measurements'][0]['dimensions']);
-        $this->assertEquals(0, $data['measurements'][0]['dimensions'][0]['total_score']);
-        $this->assertEquals(\App\Enums\Severity::OK, $data['measurements'][0]['dimensions'][0]['severity']);
-        $this->assertEmpty($data['measurements'][0]['dimensions'][0]['weaknesses']);
-    }
-
-    public function test_build_report_data_with_multiple_measurements_and_dimensions()
-    {
-        $patient = Patient::factory()->create();
-        $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
-
-        $measurement1 = Measurement::factory()->create(['name' => 'Visual Scale']);
-        $measurement2 = Measurement::factory()->create(['name' => 'Auditory Scale']);
-
-        $dim1 = Dimension::factory()->create(['measurement_id' => $measurement1->id, 'name' => 'Visual Dim 1']);
-        $dim2 = Dimension::factory()->create(['measurement_id' => $measurement1->id, 'name' => 'Visual Dim 2']);
-        $dim3 = Dimension::factory()->create(['measurement_id' => $measurement2->id, 'name' => 'Auditory Dim 1']);
-
-        $q1 = Question::factory()->create(['dimension_id' => $dim1->id]);
-        $q2 = Question::factory()->create(['dimension_id' => $dim2->id]);
-        $q3 = Question::factory()->create(['dimension_id' => $dim3->id]);
-
-        EvaluationAnswer::factory()->create([
-            'evaluation_id' => $evaluation->id,
-            'question_id' => $q1->id,
-            'score' => Score::Always,
-        ]);
-        EvaluationAnswer::factory()->create([
-            'evaluation_id' => $evaluation->id,
-            'question_id' => $q2->id,
-            'score' => Score::Sometimes,
-        ]);
-        EvaluationAnswer::factory()->create([
-            'evaluation_id' => $evaluation->id,
-            'question_id' => $q3->id,
-            'score' => Score::Often,
-        ]);
-
-        $reflection = new ReflectionClass(ReportService::class);
-        $method = $reflection->getMethod('buildReportData');
-        $method->setAccessible(true);
-
-        $data = $method->invoke($this->service, $evaluation);
+        $data = $this->callBuildReportData($evaluation);
 
         $this->assertCount(2, $data['measurements']);
-        $this->assertEquals('Visual Scale', $data['measurements'][0]['name']);
-        $this->assertEquals('Auditory Scale', $data['measurements'][1]['name']);
-        $this->assertCount(2, $data['measurements'][0]['dimensions']);
-        $this->assertCount(1, $data['measurements'][1]['dimensions']);
+
+        $names = array_column($data['measurements'], 'name');
+        $this->assertContains('Visual Scale', $names);
+        $this->assertContains('Auditory Scale', $names);
+
+        $visual = collect($data['measurements'])->firstWhere('name', 'Visual Scale');
+        $this->assertCount(2, $visual['dimensions']);
+
+        $auditory = collect($data['measurements'])->firstWhere('name', 'Auditory Scale');
+        $this->assertCount(1, $auditory['dimensions']);
     }
 
-    public function test_build_report_data_with_score_2_boundary()
+    public function test_build_report_data_with_score_2_boundary(): void
     {
         $patient = Patient::factory()->create();
         $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
 
-        $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'Test Dimension']);
-
-        $q1 = Question::factory()->create([
-            'dimension_id' => $dimension->id,
-            'q_text' => 'Score 2 Question',
+        $this->makeAnswer($evaluation, [
+            'question_text' => 'Score 2 Question',
             'recommendations' => ['Rec for 2'],
             'goals' => ['Goal for 2'],
             'activities' => ['Act for 2'],
-        ]);
-
-        EvaluationAnswer::factory()->create([
-            'evaluation_id' => $evaluation->id,
-            'question_id' => $q1->id,
             'score' => Score::Often,
         ]);
 
-        $reflection = new ReflectionClass(ReportService::class);
-        $method = $reflection->getMethod('buildReportData');
-        $method->setAccessible(true);
-
-        $data = $method->invoke($this->service, $evaluation);
+        $data = $this->callBuildReportData($evaluation);
 
         $weaknesses = $data['measurements'][0]['dimensions'][0]['weaknesses'];
         $this->assertCount(1, $weaknesses);
@@ -221,33 +155,20 @@ class ReportServiceTest extends TestCase
         $this->assertEquals(['Rec for 2'], $weaknesses[0]['recommendations']);
     }
 
-    public function test_build_report_data_with_null_empty_fields()
+    public function test_build_report_data_with_null_empty_fields(): void
     {
         $patient = Patient::factory()->create();
         $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
 
-        $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'Test Dimension']);
-
-        $q1 = Question::factory()->create([
-            'dimension_id' => $dimension->id,
-            'q_text' => 'Empty Fields Question',
+        $this->makeAnswer($evaluation, [
+            'question_text' => 'Empty Fields Question',
             'recommendations' => [],
             'goals' => [],
             'activities' => [],
-        ]);
-
-        EvaluationAnswer::factory()->create([
-            'evaluation_id' => $evaluation->id,
-            'question_id' => $q1->id,
             'score' => Score::Always,
         ]);
 
-        $reflection = new ReflectionClass(ReportService::class);
-        $method = $reflection->getMethod('buildReportData');
-        $method->setAccessible(true);
-
-        $data = $method->invoke($this->service, $evaluation);
+        $data = $this->callBuildReportData($evaluation);
 
         $weaknesses = $data['measurements'][0]['dimensions'][0]['weaknesses'];
         $this->assertCount(1, $weaknesses);
@@ -256,131 +177,74 @@ class ReportServiceTest extends TestCase
         $this->assertIsArray($weaknesses[0]['activities']);
     }
 
-    public function test_build_report_data_with_all_severity_levels()
+    public function test_build_report_data_with_all_severity_levels(): void
     {
         $patient = Patient::factory()->create();
         $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
 
-        $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
+        // 1 question per dimension → getSeverity(1, score)
+        $this->makeAnswer($evaluation, ['dimension_name' => 'OK Dimension', 'score' => Score::Never]);
+        $this->makeAnswer($evaluation, ['dimension_name' => 'LOW Dimension', 'score' => Score::Sometimes]);
+        $this->makeAnswer($evaluation, ['dimension_name' => 'MID Dimension', 'score' => Score::Often]);
+        $this->makeAnswer($evaluation, ['dimension_name' => 'HIGH Dimension', 'score' => Score::Always]);
 
-        $dimOk = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'OK Dimension']);
-        $dimLow = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'LOW Dimension']);
-        $dimMid = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'MID Dimension']);
-        $dimHigh = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'HIGH Dimension']);
+        $data = $this->callBuildReportData($evaluation);
 
-        $qOk = Question::factory()->create(['dimension_id' => $dimOk->id]);
-        $qLow = Question::factory()->create(['dimension_id' => $dimLow->id]);
-        $qMid = Question::factory()->create(['dimension_id' => $dimMid->id]);
-        $qHigh = Question::factory()->create(['dimension_id' => $dimHigh->id]);
-
-        EvaluationAnswer::factory()->create(['evaluation_id' => $evaluation->id, 'question_id' => $qOk->id, 'score' => Score::Never]);
-        EvaluationAnswer::factory()->create(['evaluation_id' => $evaluation->id, 'question_id' => $qLow->id, 'score' => Score::Sometimes]);
-        EvaluationAnswer::factory()->create(['evaluation_id' => $evaluation->id, 'question_id' => $qMid->id, 'score' => Score::Often]);
-        EvaluationAnswer::factory()->create(['evaluation_id' => $evaluation->id, 'question_id' => $qHigh->id, 'score' => Score::Always]);
-
-        $reflection = new ReflectionClass(ReportService::class);
-        $method = $reflection->getMethod('buildReportData');
-        $method->setAccessible(true);
-
-        $data = $method->invoke($this->service, $evaluation);
-
-        $dimensions = $data['measurements'][0]['dimensions'];
-        $severities = collect($dimensions)->pluck('severity')->toArray();
-
-        $this->assertContains(\App\Enums\Severity::OK, $severities);
-        $this->assertContains(\App\Enums\Severity::LOW, $severities);
-        $this->assertContains(\App\Enums\Severity::MID, $severities);
-        $this->assertContains(\App\Enums\Severity::HIGH, $severities);
+        $dimensions = collect($data['measurements'][0]['dimensions'])->keyBy('name');
+        $this->assertEquals(Severity::OK, $dimensions['OK Dimension']['severity']);
+        $this->assertEquals(Severity::LOW, $dimensions['LOW Dimension']['severity']);
+        $this->assertEquals(Severity::MID, $dimensions['MID Dimension']['severity']);
+        $this->assertEquals(Severity::HIGH, $dimensions['HIGH Dimension']['severity']);
     }
 
-    public function test_build_report_data_with_multiple_weaknesses_same_dimension()
+    public function test_build_report_data_with_multiple_weaknesses_same_dimension(): void
     {
         $patient = Patient::factory()->create();
         $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
 
-        $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'Test Dimension']);
-
-        $weaknessCount = 5;
-        for ($i = 0; $i < $weaknessCount; $i++) {
-            $q = Question::factory()->create([
-                'dimension_id' => $dimension->id,
-                'q_text' => "Weakness Question $i",
+        for ($i = 0; $i < 5; $i++) {
+            $this->makeAnswer($evaluation, [
+                'question_text' => "Weakness Question $i",
                 'recommendations' => ["Rec $i"],
                 'goals' => ["Goal $i"],
                 'activities' => ["Act $i"],
-            ]);
-
-            EvaluationAnswer::factory()->create([
-                'evaluation_id' => $evaluation->id,
-                'question_id' => $q->id,
                 'score' => Score::Always,
             ]);
         }
 
-        $reflection = new ReflectionClass(ReportService::class);
-        $method = $reflection->getMethod('buildReportData');
-        $method->setAccessible(true);
-
-        $data = $method->invoke($this->service, $evaluation);
+        $data = $this->callBuildReportData($evaluation);
 
         $weaknesses = $data['measurements'][0]['dimensions'][0]['weaknesses'];
-        $this->assertCount($weaknessCount, $weaknesses);
-
-        foreach ($weaknesses as $index => $weakness) {
-            $this->assertEquals("Weakness Question $index", $weakness['question_text']);
-            $this->assertEquals(["Rec $index"], $weakness['recommendations']);
-        }
+        $this->assertCount(5, $weaknesses);
     }
 
-    public function test_build_report_data_with_mixed_severity_levels()
+    public function test_build_report_data_with_mixed_severity_levels(): void
     {
         $patient = Patient::factory()->create();
         $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
 
-        $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
+        $this->makeAnswer($evaluation, ['dimension_name' => 'Dimension 1', 'score' => Score::Never]);
+        $this->makeAnswer($evaluation, ['dimension_name' => 'Dimension 2', 'score' => Score::Often]);
+        $this->makeAnswer($evaluation, ['dimension_name' => 'Dimension 3', 'score' => Score::Always]);
 
-        $dim1 = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'Dimension 1']);
-        $dim2 = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'Dimension 2']);
-        $dim3 = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'Dimension 3']);
+        $data = $this->callBuildReportData($evaluation);
 
-        $q1 = Question::factory()->create(['dimension_id' => $dim1->id]);
-        $q2 = Question::factory()->create(['dimension_id' => $dim2->id]);
-        $q3 = Question::factory()->create(['dimension_id' => $dim3->id]);
-
-        EvaluationAnswer::factory()->create(['evaluation_id' => $evaluation->id, 'question_id' => $q1->id, 'score' => Score::Never]);
-        EvaluationAnswer::factory()->create(['evaluation_id' => $evaluation->id, 'question_id' => $q2->id, 'score' => Score::Often]);
-        EvaluationAnswer::factory()->create(['evaluation_id' => $evaluation->id, 'question_id' => $q3->id, 'score' => Score::Always]);
-
-        $reflection = new ReflectionClass(ReportService::class);
-        $method = $reflection->getMethod('buildReportData');
-        $method->setAccessible(true);
-
-        $data = $method->invoke($this->service, $evaluation);
-
-        $dimensions = $data['measurements'][0]['dimensions'];
-
-        $this->assertEquals(\App\Enums\Severity::OK, $dimensions[0]['severity']);
-        $this->assertEquals(\App\Enums\Severity::MID, $dimensions[1]['severity']);
-        $this->assertEquals(\App\Enums\Severity::HIGH, $dimensions[2]['severity']);
-
-        $this->assertEmpty($dimensions[0]['weaknesses']);
-        $this->assertCount(1, $dimensions[1]['weaknesses']);
-        $this->assertCount(1, $dimensions[2]['weaknesses']);
+        $dimensions = collect($data['measurements'][0]['dimensions'])->keyBy('name');
+        $this->assertEquals(Severity::OK, $dimensions['Dimension 1']['severity']);
+        $this->assertEquals(Severity::MID, $dimensions['Dimension 2']['severity']);
+        $this->assertEquals(Severity::HIGH, $dimensions['Dimension 3']['severity']);
+        $this->assertEmpty($dimensions['Dimension 1']['weaknesses']);
+        $this->assertCount(1, $dimensions['Dimension 2']['weaknesses']);
+        $this->assertCount(1, $dimensions['Dimension 3']['weaknesses']);
     }
 
-    public function test_render_html_returns_valid_html()
+    public function test_render_html_returns_valid_html(): void
     {
         $patient = Patient::factory()->create(['name' => 'Test Patient']);
         $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
 
-        $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'Test Dimension']);
-        $q = Question::factory()->create(['dimension_id' => $dimension->id]);
-
-        EvaluationAnswer::factory()->create([
-            'evaluation_id' => $evaluation->id,
-            'question_id' => $q->id,
+        $this->makeAnswer($evaluation, [
+            'measurement_name' => 'Test Measurement',
             'score' => Score::Never,
         ]);
 

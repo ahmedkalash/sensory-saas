@@ -20,7 +20,7 @@ class EvaluationFactory extends Factory
             'specialist_name' => fake()->name(),
             'title' => fake()->sentence(3),
             'evaluation_date' => fake()->dateTimeBetween('-1 month', 'now')->format('Y-m-d'),
-            'child_age' => fake()->numberBetween(3, 10) . ' سنوات',
+            'child_age' => fake()->numberBetween(3, 10).' سنوات',
         ];
     }
 }

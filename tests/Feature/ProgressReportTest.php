@@ -37,7 +37,7 @@ class ProgressReportTest extends TestCase
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/pdf');
 
-        $expectedFilename = 'مقارنة_تقدم_' . $patient->name . '_' . now()->format('Y-m-d') . '.pdf';
-        $response->assertHeader('Content-Disposition', 'attachment; filename="' . $expectedFilename . '"');
+        $expectedFilename = 'مقارنة_تقدم_'.$patient->name.'_'.now()->format('Y-m-d').'.pdf';
+        $response->assertHeader('Content-Disposition', 'attachment; filename="'.$expectedFilename.'"');
     }
 }

@@ -2,12 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Models\Dimension;
+use App\Enums\Score;
 use App\Models\Evaluation;
 use App\Models\EvaluationAnswer;
-use App\Models\Measurement;
 use App\Models\Patient;
-use App\Models\Question;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -27,47 +25,41 @@ class EvaluationReportTest extends TestCase
             'evaluation_date' => now()->startOfDay(),
         ]);
 
-        // Dimension 1: 9 Questions, all Score 0 (OK)
-        $measurement1 = Measurement::factory()->create(['name' => 'Visual Scale']);
-        $dim1 = Dimension::factory()->create(['measurement_id' => $measurement1->id, 'name' => 'Visual Dim 1']);
-
+        // Dimension 1: 9 answers, all Score 0 (OK)
         for ($i = 0; $i < 9; $i++) {
-            $q = Question::factory()->create(['dimension_id' => $dim1->id]);
             EvaluationAnswer::factory()->create([
                 'evaluation_id' => $this->evaluation->id,
-                'question_id' => $q->id,
-                'score' => \App\Enums\Score::Never, // 0
+                'measurement_name' => 'Visual Scale',
+                'dimension_name' => 'Visual Dim 1',
+                'question_text' => "Visual Question $i",
+                'score' => Score::Never,
             ]);
         }
 
-        // Dimension 2: 9 Questions, all Score 3 (Severe)
-        $measurement2 = Measurement::factory()->create(['name' => 'Auditory Scale']);
-        $dim2 = Dimension::factory()->create(['measurement_id' => $measurement2->id, 'name' => 'Auditory Dim 1']);
-
-        $weaknessQ = Question::factory()->create([
-            'dimension_id' => $dim2->id,
-            'q_text' => 'This is a terrible weakness',
+        // Dimension 2: 9 answers, all Score 3 (Severe) — first one is a named weakness
+        EvaluationAnswer::factory()->create([
+            'evaluation_id' => $this->evaluation->id,
+            'measurement_name' => 'Auditory Scale',
+            'dimension_name' => 'Auditory Dim 1',
+            'question_text' => 'This is a terrible weakness',
             'recommendations' => ['Urgent Rec 1'],
             'goals' => ['Urgent Goal 1'],
             'activities' => ['Urgent Activity 1'],
-        ]);
-        EvaluationAnswer::factory()->create([
-            'evaluation_id' => $this->evaluation->id,
-            'question_id' => $weaknessQ->id,
-            'score' => \App\Enums\Score::Always, // 3
+            'score' => Score::Always,
         ]);
 
         for ($i = 0; $i < 8; $i++) {
-            $q = Question::factory()->create(['dimension_id' => $dim2->id]);
             EvaluationAnswer::factory()->create([
                 'evaluation_id' => $this->evaluation->id,
-                'question_id' => $q->id,
-                'score' => \App\Enums\Score::Always, // 3
+                'measurement_name' => 'Auditory Scale',
+                'dimension_name' => 'Auditory Dim 1',
+                'question_text' => "Auditory Question $i",
+                'score' => Score::Always,
             ]);
         }
     }
 
-    public function test_it_can_download_evaluation_report_as_pdf()
+    public function test_it_can_download_evaluation_report_as_pdf(): void
     {
         $response = $this->get(route('evaluations.report', $this->evaluation->id));
 
@@ -75,30 +67,25 @@ class EvaluationReportTest extends TestCase
         $response->assertHeader('Content-Type', 'application/pdf');
 
         $expectedFilename = 'تقرير_'.$this->evaluation->patient->name.'_'.$this->evaluation->evaluation_date->format('Y-m-d').'.pdf';
-
-        $response->assertHeader(
-            'Content-Disposition',
-            'attachment; filename="'.$expectedFilename.'"'
-        );
+        $response->assertHeader('Content-Disposition', 'attachment; filename="'.$expectedFilename.'"');
     }
 
-    public function test_it_can_view_evaluation_report_as_html_and_renders_correct_data()
+    public function test_it_can_view_evaluation_report_as_html_and_renders_correct_data(): void
     {
         $response = $this->get(route('evaluations.report.html', $this->evaluation->id));
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'text/html; charset=utf-8');
 
-        // Assert header is present
         $response->assertSee('تقرير التقييم الشامل للمعالجة الحسية');
         $response->assertSee($this->evaluation->patient->name);
 
-        // Assert Normal Dimension strings (Score 0)
+        // Normal dimension (Score 0)
         $response->assertSee('Visual Scale');
         $response->assertSee('لا توجد نقاط ضعف.');
         $response->assertSee('لا توجد نقاط ضعف في هذا المقياس.');
 
-        // Assert Severe Dimension strings (Score 3)
+        // Severe dimension (Score 3)
         $response->assertSee('Auditory Scale');
         $response->assertSee('This is a terrible weakness');
         $response->assertSee('Urgent Rec 1');
@@ -106,9 +93,8 @@ class EvaluationReportTest extends TestCase
         $response->assertSee('Urgent Activity 1');
     }
 
-    public function test_it_handles_zero_answers_elegantly()
+    public function test_it_handles_zero_answers_elegantly(): void
     {
-        // Create an evaluation with 0 answers
         $emptyEvaluation = Evaluation::factory()->create([
             'patient_id' => $this->evaluation->patient_id,
             'evaluation_date' => now()->startOfDay(),
@@ -116,29 +102,25 @@ class EvaluationReportTest extends TestCase
 
         $responseHtml = $this->get(route('evaluations.report.html', $emptyEvaluation->id));
         $responseHtml->assertStatus(200);
-
-        // All dimensions should show "No Weaknesses" because the score is effectively 0
         $responseHtml->assertSee('لا توجد نقاط ضعف.');
 
         $responsePdf = $this->get(route('evaluations.report', $emptyEvaluation->id));
         $responsePdf->assertStatus(200);
     }
 
-    public function test_report_returns_404_for_non_existent_evaluation()
+    public function test_report_returns_404_for_non_existent_evaluation(): void
     {
         $response = $this->get(route('evaluations.report', 99999));
-
         $response->assertStatus(404);
     }
 
-    public function test_html_report_returns_404_for_non_existent_evaluation()
+    public function test_html_report_returns_404_for_non_existent_evaluation(): void
     {
         $response = $this->get(route('evaluations.report.html', 99999));
-
         $response->assertStatus(404);
     }
 
-    public function test_pdf_report_with_special_characters_in_patient_name()
+    public function test_pdf_report_with_special_characters_in_patient_name(): void
     {
         $patient = Patient::factory()->create(['name' => 'John & Jane Doe']);
         $evaluation = Evaluation::factory()->create([
@@ -147,12 +129,11 @@ class EvaluationReportTest extends TestCase
         ]);
 
         $response = $this->get(route('evaluations.report', $evaluation->id));
-
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/pdf');
     }
 
-    public function test_pdf_report_with_arabic_patient_name()
+    public function test_pdf_report_with_arabic_patient_name(): void
     {
         $patient = Patient::factory()->create(['name' => 'أحمد محمد علي']);
         $evaluation = Evaluation::factory()->create([
@@ -161,7 +142,6 @@ class EvaluationReportTest extends TestCase
         ]);
 
         $response = $this->get(route('evaluations.report', $evaluation->id));
-
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/pdf');
 
@@ -169,7 +149,7 @@ class EvaluationReportTest extends TestCase
         $response->assertHeader('Content-Disposition', 'attachment; filename="'.$expectedFilename.'"');
     }
 
-    public function test_pdf_report_with_very_long_patient_name()
+    public function test_pdf_report_with_very_long_patient_name(): void
     {
         $longName = str_repeat('أحمد محمد علي ', 20);
         $patient = Patient::factory()->create(['name' => $longName]);
@@ -179,12 +159,11 @@ class EvaluationReportTest extends TestCase
         ]);
 
         $response = $this->get(route('evaluations.report', $evaluation->id));
-
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/pdf');
     }
 
-    public function test_html_report_with_no_weaknesses_at_all()
+    public function test_html_report_with_no_weaknesses_at_all(): void
     {
         $patient = Patient::factory()->create(['name' => 'No Weaknesses Patient']);
         $evaluation = Evaluation::factory()->create([
@@ -192,25 +171,21 @@ class EvaluationReportTest extends TestCase
             'evaluation_date' => now()->startOfDay(),
         ]);
 
-        $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => 'Test Dimension']);
-
         for ($i = 0; $i < 10; $i++) {
-            $q = Question::factory()->create(['dimension_id' => $dimension->id]);
             EvaluationAnswer::factory()->create([
                 'evaluation_id' => $evaluation->id,
-                'question_id' => $q->id,
-                'score' => \App\Enums\Score::Never,
+                'measurement_name' => 'Test Measurement',
+                'dimension_name' => 'Test Dimension',
+                'score' => Score::Never,
             ]);
         }
 
         $response = $this->get(route('evaluations.report.html', $evaluation->id));
-
         $response->assertStatus(200);
         $response->assertSee('لا توجد نقاط ضعف');
     }
 
-    public function test_html_report_with_all_dimensions_having_weaknesses()
+    public function test_html_report_with_all_dimensions_having_weaknesses(): void
     {
         $patient = Patient::factory()->create(['name' => 'All Weaknesses Patient']);
         $evaluation = Evaluation::factory()->create([
@@ -218,26 +193,19 @@ class EvaluationReportTest extends TestCase
             'evaluation_date' => now()->startOfDay(),
         ]);
 
-        $measurement = Measurement::factory()->create(['name' => 'Test Measurement']);
-
         for ($d = 0; $d < 3; $d++) {
-            $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id, 'name' => "Dimension $d"]);
-
             for ($i = 0; $i < 5; $i++) {
-                $q = Question::factory()->create([
-                    'dimension_id' => $dimension->id,
-                    'q_text' => "Weakness Question $i for Dimension $d",
-                ]);
                 EvaluationAnswer::factory()->create([
                     'evaluation_id' => $evaluation->id,
-                    'question_id' => $q->id,
-                    'score' => \App\Enums\Score::Always,
+                    'measurement_name' => 'Test Measurement',
+                    'dimension_name' => "Dimension $d",
+                    'question_text' => "Weakness Question $i for Dimension $d",
+                    'score' => Score::Always,
                 ]);
             }
         }
 
         $response = $this->get(route('evaluations.report.html', $evaluation->id));
-
         $response->assertStatus(200);
         $response->assertSee('Weakness Question');
         $response->assertSee('Dimension 0');
@@ -245,7 +213,7 @@ class EvaluationReportTest extends TestCase
         $response->assertSee('Dimension 2');
     }
 
-    public function test_html_report_contains_proper_rtl_direction()
+    public function test_html_report_contains_proper_rtl_direction(): void
     {
         $patient = Patient::factory()->create(['name' => 'RTL Test Patient']);
         $evaluation = Evaluation::factory()->create([
@@ -254,12 +222,11 @@ class EvaluationReportTest extends TestCase
         ]);
 
         $response = $this->get(route('evaluations.report.html', $evaluation->id));
-
         $response->assertStatus(200);
         $response->assertSee('dir="rtl"', escape: false);
     }
 
-    public function test_html_report_contains_patient_information()
+    public function test_html_report_contains_patient_information(): void
     {
         $patient = Patient::factory()->create([
             'name' => 'Complete Info Patient',
@@ -275,7 +242,6 @@ class EvaluationReportTest extends TestCase
         ]);
 
         $response = $this->get(route('evaluations.report.html', $evaluation->id));
-
         $response->assertStatus(200);
         $response->assertSee('Complete Info Patient');
         $response->assertSee('ذكر');

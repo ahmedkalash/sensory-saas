@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Patients\Pages;
 
 use App\Filament\Resources\Patients\PatientResource;
-use App\Filament\Resources\Patients\Widgets\PatientProgressChart;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 

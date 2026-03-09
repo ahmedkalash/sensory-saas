@@ -3,9 +3,11 @@
 namespace Database\Seeders;
 
 use App\Enums\Score;
+use App\Models\Dimension;
 use App\Models\Evaluation;
 use App\Models\EvaluationAnswer;
 use App\Models\Patient;
+use App\Models\Question;
 use Illuminate\Database\Seeder;
 
 class DemoEvaluationSeeder extends Seeder
@@ -65,63 +67,53 @@ class DemoEvaluationSeeder extends Seeder
             'child_age' => '7 سنوات و 5 أشهر',
         ]);
 
-        // 3. Generate random answers for all 310 questions
-        $questions = \App\Models\Question::pluck('id');
+        // 3. Load all questions with dimension + measurement for snapshots
+        $questions = Question::with('dimension.measurement')->get();
         $scores = [Score::Never->value, Score::Sometimes->value, Score::Often->value, Score::Always->value];
 
         $answers1 = [];
         $answers2 = [];
-        $answers3 = [];
-        $draftAnswers1 = [];
-        $draftAnswers2 = [];
-        $draftAnswers3 = [];
 
-        foreach ($questions as $questionId) {
-            $randomScore1 = $scores[array_rand($scores)];
-            $randomScore2 = $scores[array_rand($scores)];
+        foreach ($questions as $question) {
+            $snapshot = $this->buildSnapshot($question);
 
-            $draftAnswers1[$questionId] = $randomScore1;
-            $draftAnswers2[$questionId] = $randomScore2;
-
-            $answers1[] = [
+            $answers1[] = array_merge($snapshot, [
                 'evaluation_id' => $evaluation1->id,
-                'question_id' => $questionId,
-                'score' => $randomScore1,
+                'score' => $scores[array_rand($scores)],
                 'created_at' => now(),
                 'updated_at' => now(),
-            ];
+            ]);
 
-            $answers2[] = [
+            $answers2[] = array_merge($snapshot, [
                 'evaluation_id' => $evaluation2->id,
-                'question_id' => $questionId,
-                'score' => $randomScore2,
+                'score' => $scores[array_rand($scores)],
                 'created_at' => now(),
                 'updated_at' => now(),
-            ];
+            ]);
         }
 
-        // Generate structured answers for evaluation 3 to hit all severities (OK, Mild, Moderate, Severe)
-        $dimensions = \App\Models\Dimension::with('questions')->get();
+        // 4. Generate structured answers for evaluation3 to hit all severities
+        $dimensions = Dimension::with('questions.dimension.measurement')->get();
         $severityPattern = [0, 1, 2, 3]; // 0=OK, 1=Mild, 2=Moderate, 3=Severe
         $dimIndex = 0;
+        $answers3 = [];
 
         foreach ($dimensions as $dimension) {
             $baseScore = $severityPattern[$dimIndex % 4];
 
             foreach ($dimension->questions as $question) {
-                $draftAnswers3[$question->id] = $baseScore;
-                $answers3[] = [
+                $snapshot = $this->buildSnapshot($question);
+                $answers3[] = array_merge($snapshot, [
                     'evaluation_id' => $evaluation3->id,
-                    'question_id' => $question->id,
                     'score' => $baseScore,
                     'created_at' => now(),
                     'updated_at' => now(),
-                ];
+                ]);
             }
             $dimIndex++;
         }
 
-        // Bulk insert answers
+        // 5. Bulk insert answers
         foreach (array_chunk($answers1, 100) as $chunk) {
             EvaluationAnswer::insert($chunk);
         }
@@ -132,7 +124,7 @@ class DemoEvaluationSeeder extends Seeder
             EvaluationAnswer::insert($chunk);
         }
 
-        // 4. Create 3 historical evaluations per patient to demo Progress Tracking comparison
+        // 6. Create 3 historical evaluations per patient to demo Progress Tracking comparison
         $allPatients = [$patient1, $patient2, $patient3];
         $historicalAnswers = [];
 
@@ -141,20 +133,19 @@ class DemoEvaluationSeeder extends Seeder
                 $historicalEval = Evaluation::create([
                     'patient_id' => $patient->id,
                     'specialist_name' => 'أخصائي تجريبي',
-                    'title' => 'متابعة دورية ' . $i,
+                    'title' => 'متابعة دورية '.$i,
                     'evaluation_date' => now()->subMonths(5 - $i),
                     'child_age' => '6 سنوات',
                 ]);
 
-                foreach ($questions as $questionId) {
-                    $randomScore = $scores[array_rand($scores)];
-                    $historicalAnswers[] = [
+                foreach ($questions as $question) {
+                    $snapshot = $this->buildSnapshot($question);
+                    $historicalAnswers[] = array_merge($snapshot, [
                         'evaluation_id' => $historicalEval->id,
-                        'question_id' => $questionId,
-                        'score' => $randomScore,
+                        'score' => $scores[array_rand($scores)],
                         'created_at' => now(),
                         'updated_at' => now(),
-                    ];
+                    ]);
                 }
             }
         }
@@ -162,5 +153,22 @@ class DemoEvaluationSeeder extends Seeder
         foreach (array_chunk($historicalAnswers, 100) as $chunk) {
             EvaluationAnswer::insert($chunk);
         }
+    }
+
+    /**
+     * Build the snapshot array from a Question model.
+     *
+     * @return array<string, mixed>
+     */
+    private function buildSnapshot(Question $question): array
+    {
+        return [
+            'question_text' => $question->q_text,
+            'dimension_name' => $question->dimension->name,
+            'measurement_name' => $question->dimension->measurement->name,
+            'recommendations' => json_encode($question->recommendations ?? []),
+            'activities' => json_encode($question->activities ?? []),
+            'goals' => json_encode($question->goals ?? []),
+        ];
     }
 }

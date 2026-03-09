@@ -9,11 +9,11 @@ Route::get('/evaluations/{evaluation}/report', function (Evaluation $evaluation)
     $measurementId = request('measurement_id');
     $mpdf = $reportService->generate($evaluation, $measurementId);
 
-    $filename = 'تقرير_' . ($evaluation->patient->name ?? 'طفل') . '_' . $evaluation->evaluation_date?->format('Y-m-d') . '.pdf';
+    $filename = 'تقرير_'.($evaluation->patient->name ?? 'طفل').'_'.$evaluation->evaluation_date?->format('Y-m-d').'.pdf';
 
     return response($mpdf->Output($filename, 'S'), 200, [
         'Content-Type' => 'application/pdf',
-        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        'Content-Disposition' => 'attachment; filename="'.$filename.'"',
     ]);
 })->name('evaluations.report');
 
@@ -24,15 +24,13 @@ Route::get('/evaluations/{evaluation}/parent_report', function (Evaluation $eval
     // for testing only do not delete
     //    return response($reportService->renderParentReportHtml($evaluation, $measurementId))
     //        ->header('Content-Type', 'text/html; charset=utf-8');
-    $filename = 'تقرير_' . ($evaluation->patient->name ?? 'طفل') . '_' . $evaluation->evaluation_date?->format('Y-m-d') . '.pdf';
+    $filename = 'تقرير_'.($evaluation->patient->name ?? 'طفل').'_'.$evaluation->evaluation_date?->format('Y-m-d').'.pdf';
 
     return response($mpdf->Output($filename, 'S'), 200, [
         'Content-Type' => 'application/pdf',
-        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        'Content-Disposition' => 'attachment; filename="'.$filename.'"',
     ]);
 })->name('evaluations.parent_report');
-
-
 
 Route::get('/evaluations/{evaluation}/report/html', function (Evaluation $evaluation) {
     $reportService = app(ReportService::class);

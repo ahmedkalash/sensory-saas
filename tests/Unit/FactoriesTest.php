@@ -194,7 +194,9 @@ class FactoriesTest extends TestCase
 
         $this->assertInstanceOf(EvaluationAnswer::class, $answer);
         $this->assertNotNull($answer->evaluation_id);
-        $this->assertNotNull($answer->question_id);
+        $this->assertNotNull($answer->question_text);
+        $this->assertNotNull($answer->dimension_name);
+        $this->assertNotNull($answer->measurement_name);
         $this->assertInstanceOf(Score::class, $answer->score);
     }
 
@@ -214,15 +216,10 @@ class FactoriesTest extends TestCase
 
     public function test_evaluation_answer_factory_with_custom_score()
     {
-        $patient = Patient::factory()->create();
-        $measurement = Measurement::factory()->create();
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id]);
-        $question = Question::factory()->create(['dimension_id' => $dimension->id]);
-        $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
+        $evaluation = Evaluation::factory()->create();
 
         $answer = EvaluationAnswer::factory()->create([
             'evaluation_id' => $evaluation->id,
-            'question_id' => $question->id,
             'score' => Score::Often,
         ]);
 
@@ -232,36 +229,25 @@ class FactoriesTest extends TestCase
 
     public function test_evaluation_answer_factory_with_all_score_types()
     {
-        $patient = Patient::factory()->create();
-        $measurement = Measurement::factory()->create();
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id]);
-        $question = Question::factory()->create(['dimension_id' => $dimension->id]);
-        $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
+        $evaluation = Evaluation::factory()->create();
 
         $answerNever = EvaluationAnswer::factory()->create([
             'evaluation_id' => $evaluation->id,
-            'question_id' => $question->id,
             'score' => Score::Never,
         ]);
 
-        $question2 = Question::factory()->create(['dimension_id' => $dimension->id]);
         $answerSometimes = EvaluationAnswer::factory()->create([
             'evaluation_id' => $evaluation->id,
-            'question_id' => $question2->id,
             'score' => Score::Sometimes,
         ]);
 
-        $question3 = Question::factory()->create(['dimension_id' => $dimension->id]);
         $answerOften = EvaluationAnswer::factory()->create([
             'evaluation_id' => $evaluation->id,
-            'question_id' => $question3->id,
             'score' => Score::Often,
         ]);
 
-        $question4 = Question::factory()->create(['dimension_id' => $dimension->id]);
         $answerAlways = EvaluationAnswer::factory()->create([
             'evaluation_id' => $evaluation->id,
-            'question_id' => $question4->id,
             'score' => Score::Always,
         ]);
 
@@ -348,15 +334,9 @@ class FactoriesTest extends TestCase
 
         $measurement = Measurement::factory()->create();
         $dimension = Dimension::factory()->for($measurement)->create();
+        Question::factory()->count(10)->for($dimension)->create();
 
-        $questions = Question::factory()->count(10)->for($dimension)->create();
-
-        foreach ($questions as $question) {
-            EvaluationAnswer::factory()
-                ->for($evaluation)
-                ->for($question)
-                ->create();
-        }
+        EvaluationAnswer::factory()->count(10)->for($evaluation)->create();
 
         $this->assertEquals(1, Patient::count());
         $this->assertEquals(1, Evaluation::count());
@@ -368,16 +348,10 @@ class FactoriesTest extends TestCase
 
     public function test_factory_with_state_for_high_score_answers()
     {
-        $patient = Patient::factory()->create();
-        $evaluation = Evaluation::factory()->for($patient)->create();
-        $measurement = Measurement::factory()->create();
-        $dimension = Dimension::factory()->for($measurement)->create();
-        $question = Question::factory()->for($dimension)->create();
+        $evaluation = Evaluation::factory()->create();
 
-        // Create answers with high scores (weaknesses)
         $highScoreAnswer = EvaluationAnswer::factory()->create([
             'evaluation_id' => $evaluation->id,
-            'question_id' => $question->id,
             'score' => Score::Always,
         ]);
 
@@ -386,16 +360,10 @@ class FactoriesTest extends TestCase
 
     public function test_factory_with_state_for_low_score_answers()
     {
-        $patient = Patient::factory()->create();
-        $evaluation = Evaluation::factory()->for($patient)->create();
-        $measurement = Measurement::factory()->create();
-        $dimension = Dimension::factory()->for($measurement)->create();
-        $question = Question::factory()->for($dimension)->create();
+        $evaluation = Evaluation::factory()->create();
 
-        // Create answers with low scores (no weakness)
         $lowScoreAnswer = EvaluationAnswer::factory()->create([
             'evaluation_id' => $evaluation->id,
-            'question_id' => $question->id,
             'score' => Score::Never,
         ]);
 

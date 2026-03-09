@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\Severity;
-use App\Models\Dimension;
 use App\Models\Evaluation;
 use App\Models\Measurement;
 use Mpdf\Mpdf;
@@ -50,7 +48,7 @@ class ReportService
      */
     protected function newMpdf(): Mpdf
     {
-        $mpdf =  new Mpdf([
+        $mpdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => 'A4',
             'default_font' => 'tajawal',
@@ -79,10 +77,7 @@ class ReportService
      */
     public function renderGeneralReportHtml(Evaluation $evaluation, ?int $reportMeasurementId = null): string
     {
-        $evaluation->load([
-            'patient',
-            'answers.question.dimension.measurement',
-        ]);
+        $evaluation->load(['patient', 'answers']);
 
         $reportData = $this->buildReportData($evaluation, $reportMeasurementId);
 
@@ -91,6 +86,7 @@ class ReportService
 
     /**
      * Build the structured report data for the Blade view.
+     * Reads entirely from EvaluationAnswer snapshot columns — no live Question/Dimension/Measurement queries.
      *
      * @return array<string, mixed>
      */
@@ -101,77 +97,61 @@ class ReportService
         //  - dim
         //      - total questions score (sum answers.score)
         //      - Severity
-        //      - weakness(q_text) where answers.score >=2 (==2 or ==3)
+        //      - weakness(question_text) where answers.score >=2 (==2 or ==3)
         //      - total recommendations for weak score questions (weakness)
         //      - total goals for weak score questions (weakness)
         //      - total activities for weak score questions (weakness)
 
-        // Get unique measurements from the actual submitted answers
-        $evaluatedMeasurementIds = $evaluation->answers()
-            ->with('question.dimension')
-            ->get()
-            ->pluck('question.dimension.measurement_id')
-            ->unique()
-            ->toArray();
+        $answers = $evaluation->answers;
 
-        // Base query for measurements and their relations
-        $query = Measurement::with(['dimensions.questions']);
-
-        // Limit query: if a specific scale is requested, only query that one.
-        // If nothing is explicitly requested, only query the scales the child actually has answers for.
+        // Filter by measurement if a specific one was requested
         if ($reportMeasurementId !== null) {
-            $query->where('id', $reportMeasurementId);
-        } else {
-            $query->whereIn('id', $evaluatedMeasurementIds);
+            // We don't have a FK to measurement anymore, but we can filter by name
+            // by cross-referencing the measurement id → name. We kept Measurement model.
+            $measurementName = Measurement::find($reportMeasurementId)?->name;
+            if ($measurementName) {
+                $answers = $answers->where('measurement_name', $measurementName);
+            }
         }
 
-        $measurements = $query->get();
-
-        $answersByQuestion = $evaluation
-            ->answers
-            ->keyBy('question_id');
+        // Group by measurement_name → dimension_name
+        $grouped = $answers->groupBy('measurement_name');
 
         $measurementResults = [];
 
-        /**@var Measurement $measurement*/
-        foreach ($measurements as $measurement) {
+        foreach ($grouped as $measurementName => $measurementAnswers) {
+            $byDimension = $measurementAnswers->groupBy('dimension_name');
             $dimensionResults = [];
 
-            /**@var Dimension $dimension*/
-            foreach ($measurement->dimensions as $dimension) {
-                $dimensionAnswers = $dimension->questions
-                    ->map(fn($q) => $answersByQuestion->get($q->id))
-                    ->filter();
+            foreach ($byDimension as $dimensionName => $dimensionAnswers) {
+                $totalScore = $dimensionAnswers->sum(fn ($a) => $a->score->value);
+                $questionCount = $dimensionAnswers->count();
 
-                // Total questions score (sum answers.score)
-                $totalScore = $dimensionAnswers->sum(fn($a) => $a->score->value);
-
-                // Dim severity
-                $severity = $this->evaluationService->getSeverity($dimension, $totalScore);
+                $severity = $this->evaluationService->getSeverity($questionCount, $totalScore);
 
                 $weaknesses = $dimensionAnswers
-                    ->filter(fn($a) => $a->score->value >= 2) // weakness(q_text) where answers.score >=2 (==2 or ==3)
-                    ->map(fn($a) => [
-                        'question_text' => $a->question->q_text,
+                    ->filter(fn ($a) => $a->score->value >= 2)
+                    ->map(fn ($a) => [
+                        'question_text' => $a->question_text,
                         'score_label' => $a->score->label(),
-                        'recommendations' => $a->question->recommendations ?? [], // total recommendations for weak score questions (weakness)
-                        'goals' => $a->question->goals ?? [], // total goals for weak score questions (weakness)
-                        'activities' => $a->question->activities ?? [], // total activities for weak score questions (weakness)
+                        'recommendations' => $a->recommendations ?? [],
+                        'goals' => $a->goals ?? [],
+                        'activities' => $a->activities ?? [],
                     ])
                     ->values()
                     ->toArray();
 
                 $observations = $dimensionAnswers
-                    ->filter(fn($a) => !empty($a->notes))
-                    ->map(fn($a) => [
-                        'question_text' => $a->question->q_text,
+                    ->filter(fn ($a) => ! empty($a->notes))
+                    ->map(fn ($a) => [
+                        'question_text' => $a->question_text,
                         'notes' => $a->notes,
                     ])
                     ->values()
                     ->toArray();
 
                 $dimensionResults[] = [
-                    'name' => $dimension->name,
+                    'name' => $dimensionName,
                     'total_score' => $totalScore,
                     'severity' => $severity,
                     'weaknesses' => $weaknesses,
@@ -180,7 +160,7 @@ class ReportService
             }
 
             $measurementResults[] = [
-                'name' => $measurement->name,
+                'name' => $measurementName,
                 'dimensions' => $dimensionResults,
             ];
         }
@@ -194,10 +174,7 @@ class ReportService
 
     public function renderParentReportHtml(Evaluation $evaluation, ?int $reportMeasurementId): string
     {
-        $evaluation->load([
-            'patient',
-            'answers.question.dimension.measurement',
-        ]);
+        $evaluation->load(['patient', 'answers']);
 
         $reportData = $this->buildReportData($evaluation, $reportMeasurementId);
 
@@ -220,8 +197,8 @@ class ReportService
 
     public function renderProgressReportHtml(Evaluation $eval1, Evaluation $eval2): string
     {
-        $eval1->load(['patient', 'answers.question.dimension.measurement']);
-        $eval2->load(['patient', 'answers.question.dimension.measurement']);
+        $eval1->load(['patient', 'answers']);
+        $eval2->load(['patient', 'answers']);
 
         $reportData = $this->buildProgressReportData($eval1, $eval2);
 
@@ -267,11 +244,11 @@ class ReportService
                 if ($score2 < $score1) {
                     $status = 'تحسن';
                     $statusColor = '#10b981'; // green
-                    $statusLabel = 'تحسن (-' . ($score1 - $score2) . ')';
+                    $statusLabel = 'تحسن (-'.($score1 - $score2).')';
                 } elseif ($score2 > $score1) {
                     $status = 'تراجع';
                     $statusColor = '#ef4444'; // red
-                    $statusLabel = 'تراجع (+' . ($score2 - $score1) . ')';
+                    $statusLabel = 'تراجع (+'.($score2 - $score1).')';
                 }
 
                 $dimensionComparisons[] = [

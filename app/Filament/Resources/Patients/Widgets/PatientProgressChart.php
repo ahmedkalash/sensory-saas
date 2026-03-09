@@ -32,7 +32,7 @@ class PatientProgressChart extends ChartWidget
 
             // Calculate "Severity" sum as originally requested
             // 0 = No symptoms (Better), 3 = Major symptoms (Worse)
-            $totalSeverity = $evaluation->answers->sum(fn($a) => $a->score->value ?? 0);
+            $totalSeverity = $evaluation->answers->sum(fn ($a) => $a->score->value ?? 0);
             $data[] = $totalSeverity;
         }
 

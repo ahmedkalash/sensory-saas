@@ -58,17 +58,10 @@ class ModelsTest extends TestCase
     public function test_evaluation_model_has_answers_relationship()
     {
         $evaluation = Evaluation::factory()->create();
-        $patient = Patient::factory()->create();
-        $measurement = Measurement::factory()->create();
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id]);
-        $questions = Question::factory()->count(5)->create(['dimension_id' => $dimension->id]);
 
-        foreach ($questions as $q) {
-            EvaluationAnswer::factory()->create([
-                'evaluation_id' => $evaluation->id,
-                'question_id' => $q->id,
-            ]);
-        }
+        EvaluationAnswer::factory()->count(5)->create([
+            'evaluation_id' => $evaluation->id,
+        ]);
 
         $this->assertEquals(5, $evaluation->answers()->count());
         $this->assertInstanceOf(EvaluationAnswer::class, $evaluation->answers->first());
@@ -225,35 +218,35 @@ class ModelsTest extends TestCase
     public function test_evaluation_answer_model_has_evaluation_relationship()
     {
         $evaluation = Evaluation::factory()->create();
-        $patient = Patient::factory()->create();
-        $measurement = Measurement::factory()->create();
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id]);
-        $question = Question::factory()->create(['dimension_id' => $dimension->id]);
 
         $answer = EvaluationAnswer::factory()->create([
             'evaluation_id' => $evaluation->id,
-            'question_id' => $question->id,
+            'question_text' => 'Sample Question',
+            'dimension_name' => 'Sample Dimension',
+            'measurement_name' => 'Sample Measurement',
         ]);
 
         $this->assertInstanceOf(Evaluation::class, $answer->evaluation);
         $this->assertEquals($evaluation->id, $answer->evaluation->id);
     }
 
-    public function test_evaluation_answer_model_has_question_relationship()
+    public function test_evaluation_answer_model_snapshot_columns_are_stored()
     {
-        $evaluation = Evaluation::factory()->create();
-        $patient = Patient::factory()->create();
-        $measurement = Measurement::factory()->create();
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id]);
-        $question = Question::factory()->create(['dimension_id' => $dimension->id]);
-
         $answer = EvaluationAnswer::factory()->create([
-            'evaluation_id' => $evaluation->id,
-            'question_id' => $question->id,
+            'question_text' => 'Stored Question Text',
+            'dimension_name' => 'Stored Dimension',
+            'measurement_name' => 'Stored Measurement',
+            'recommendations' => ['Rec A'],
+            'activities' => ['Act A'],
+            'goals' => ['Goal A'],
         ]);
 
-        $this->assertInstanceOf(Question::class, $answer->question);
-        $this->assertEquals($question->id, $answer->question->id);
+        $this->assertEquals('Stored Question Text', $answer->question_text);
+        $this->assertEquals('Stored Dimension', $answer->dimension_name);
+        $this->assertEquals('Stored Measurement', $answer->measurement_name);
+        $this->assertEquals(['Rec A'], $answer->recommendations);
+        $this->assertEquals(['Act A'], $answer->activities);
+        $this->assertEquals(['Goal A'], $answer->goals);
     }
 
     /**
@@ -279,22 +272,12 @@ class ModelsTest extends TestCase
         $patient = Patient::factory()->create();
         $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
 
-        $measurement = Measurement::factory()->create();
-        $dimension = Dimension::factory()->create(['measurement_id' => $measurement->id]);
-
-        $questions = Question::factory()->count(10)->create(['dimension_id' => $dimension->id]);
-
-        foreach ($questions as $question) {
-            EvaluationAnswer::factory()->create([
-                'evaluation_id' => $evaluation->id,
-                'question_id' => $question->id,
-            ]);
-        }
+        EvaluationAnswer::factory()->count(10)->create([
+            'evaluation_id' => $evaluation->id,
+        ]);
 
         $this->assertEquals(1, $patient->evaluations()->count());
         $this->assertEquals(10, $evaluation->answers()->count());
-        $this->assertEquals(1, $measurement->dimensions()->count());
-        $this->assertEquals(10, $dimension->questions()->count());
     }
 
     public function test_multiple_evaluations_for_same_patient()

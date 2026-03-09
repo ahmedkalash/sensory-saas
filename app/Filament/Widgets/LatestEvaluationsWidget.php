@@ -3,18 +3,15 @@
 namespace App\Filament\Widgets;
 
 use Filament\Actions\Action;
-use Filament\Actions\BulkActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 class LatestEvaluationsWidget extends TableWidget
 {
     protected static ?int $sort = 4;
 
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     protected static ?string $heading = 'آخر التقييمات المُنفذة';
 
@@ -40,7 +37,7 @@ class LatestEvaluationsWidget extends TableWidget
                 Action::make('view')
                     ->label('عرض')
                     ->icon('heroicon-m-eye')
-                    ->url(fn(\App\Models\Evaluation $record): string => \App\Filament\Resources\Evaluations\EvaluationResource::getUrl('edit', ['record' => $record])),
+                    ->url(fn (\App\Models\Evaluation $record): string => \App\Filament\Resources\Evaluations\EvaluationResource::getUrl('edit', ['record' => $record])),
             ])
             ->paginated(false);
     }

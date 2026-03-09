@@ -13,25 +13,29 @@ class EvaluationAnswer extends Model
 
     protected $fillable = [
         'evaluation_id',
-        'question_id',
+        'question_text',
+        'dimension_name',
+        'measurement_name',
+        'recommendations',
+        'activities',
+        'goals',
         'score',
         'notes',
+        'updated_at',
     ];
 
     protected function casts(): array
     {
         return [
             'score' => Score::class,
+            'recommendations' => 'array',
+            'activities' => 'array',
+            'goals' => 'array',
         ];
     }
 
     public function evaluation(): BelongsTo
     {
         return $this->belongsTo(Evaluation::class);
-    }
-
-    public function question(): BelongsTo
-    {
-        return $this->belongsTo(Question::class);
     }
 }

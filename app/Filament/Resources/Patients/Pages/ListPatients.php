@@ -27,18 +27,18 @@ class ListPatients extends ListRecords
             'all' => Tab::make('الكل')
                 ->badge(Patient::query()->count()),
             'active' => Tab::make('نشط')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', PatientStatus::ACTIVE))
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', PatientStatus::ACTIVE))
                 ->badge(Patient::query()->where('status', PatientStatus::ACTIVE)->count()),
             'completed' => Tab::make('تم إنهاء العلاج')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', PatientStatus::COMPLETED))
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', PatientStatus::COMPLETED))
                 ->badge(Patient::query()->where('status', PatientStatus::COMPLETED)->count()),
             'archived' => Tab::make('مؤرشف')
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', PatientStatus::ARCHIVED))
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', PatientStatus::ARCHIVED))
                 ->badge(Patient::query()->where('status', PatientStatus::ARCHIVED)->count()),
         ];
     }
 
-    public function getDefaultActiveTab(): string | int | null
+    public function getDefaultActiveTab(): string|int|null
     {
         return 'active';
     }

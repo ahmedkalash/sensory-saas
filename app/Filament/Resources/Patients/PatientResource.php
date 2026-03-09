@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Patients;
 
 use App\Enums\PatientStatus;
-use App\Filament\Resources\Patients\Pages\ListPatients;
 use App\Models\Patient;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -21,7 +20,6 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Livewire;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -29,7 +27,7 @@ class PatientResource extends Resource
 {
     protected static ?string $model = Patient::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -82,8 +80,8 @@ class PatientResource extends Resource
                     ->schema([
                         Section::make('مؤشر التقدم')
                             ->schema([
-                                Livewire::make(\App\Filament\Resources\Patients\Widgets\PatientProgressChart::class)
-                            ])
+                                Livewire::make(\App\Filament\Resources\Patients\Widgets\PatientProgressChart::class),
+                            ]),
                     ]),
 
                 Section::make('الخطة العلاجية/الطبية')
@@ -137,32 +135,37 @@ class PatientResource extends Resource
                 //
             ])
             ->recordActions([
-                Action::make('compare_evaluations')
-                    ->label('مقارنة التقييمات')
-                    ->icon('heroicon-o-chart-bar-square')
-                    ->color('info')
-                    ->schema([
-                        Select::make('eval_1')
-                            ->label('التقييم الأول (الأساس)')
-                            ->options(fn(Patient $record) => $record->evaluations()->pluck('title', 'id'))
-                            ->required(),
-                        Select::make('eval_2')
-                            ->label('التقييم الثاني (المتابعة)')
-                            ->options(fn(Patient $record) => $record->evaluations()->pluck('title', 'id'))
-                            ->required()
-                            ->different('eval_1'),
-                    ])
-                    ->action(function (array $data, Patient $record) {
-                        return redirect()->route('reports.progress', [
-                            'patient' => $record->id,
-                            'eval_1' => $data['eval_1'],
-                            'eval_2' => $data['eval_2'],
-                        ]);
-                    })
-                    ->disabled(fn(Patient $record) => $record->evaluations()->count() < 2),
-                EditAction::make()->label(''),
-                DeleteAction::make()->label(''),
-                ViewAction::make()->label(''),
+                \Filament\Actions\ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    Action::make('compare_evaluations')
+                        ->label('مقارنة التقييمات')
+                        ->icon('heroicon-o-chart-bar-square')
+                        ->color('info')
+                        ->schema([
+                            Select::make('eval_1')
+                                ->label('التقييم الأول (الأساس)')
+                                ->options(fn (Patient $record) => $record->evaluations()->pluck('title', 'id'))
+                                ->required(),
+                            Select::make('eval_2')
+                                ->label('التقييم الثاني (المتابعة)')
+                                ->options(fn (Patient $record) => $record->evaluations()->pluck('title', 'id'))
+                                ->required()
+                                ->different('eval_1'),
+                        ])
+                        ->action(function (array $data, Patient $record) {
+                            return redirect()->route('reports.progress', [
+                                'patient' => $record->id,
+                                'eval_1' => $data['eval_1'],
+                                'eval_2' => $data['eval_2'],
+                            ]);
+                        })
+                        ->disabled(fn (Patient $record) => $record->evaluations()->count() < 2),
+                    DeleteAction::make(),
+                ])
+                    ->tooltip('الإجراءات')
+                    ->icon('heroicon-m-ellipsis-vertical')
+                    ->color('gray'),
             ])->recordAction('view')
             ->toolbarActions([
                 BulkActionGroup::make([

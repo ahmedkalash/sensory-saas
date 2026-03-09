@@ -1,0 +1,522 @@
+/* ═══════════════════════════════════════════════════
+   LOCAL FONTS — Offline-ready (no external CDN)
+   ═══════════════════════════════════════════════════ */
+
+/* Outfit */
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('/fonts/outfit/outfit-300.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/outfit/outfit-400.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/fonts/outfit/outfit-600.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/outfit/outfit-700.ttf') format('truetype');
+}
+
+/* Noto Kufi Arabic */
+@font-face {
+    font-family: 'Noto Kufi Arabic';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('/fonts/noto-kufi-arabic/noto-kufi-arabic-300.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Kufi Arabic';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/noto-kufi-arabic/noto-kufi-arabic-400.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Kufi Arabic';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/fonts/noto-kufi-arabic/noto-kufi-arabic-600.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Kufi Arabic';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/noto-kufi-arabic/noto-kufi-arabic-700.ttf') format('truetype');
+}
+
+:root {
+    --clinical-teal: #0891b2;
+    --clinical-indigo: #312e81;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+}
+
+/* Global Typography */
+body {
+    font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   SRPS HERO WIDGET — Dashboard Banner
+   ═══════════════════════════════════════════════════ */
+
+.srps-hero-widget {
+    position: relative;
+    background: linear-gradient(145deg, #0e4a5c 0%, #0c2d48 35%, #1a1a4e 65%, #312e81 100%);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    overflow: hidden;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+}
+
+/* Glow orbs */
+.srps-hero-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.srps-hero-glow--tl {
+    width: 300px;
+    height: 300px;
+    background: rgba(34, 211, 238, 0.2);
+    top: -80px;
+    left: -60px;
+}
+
+.srps-hero-glow--br {
+    width: 250px;
+    height: 250px;
+    background: rgba(129, 140, 248, 0.2);
+    bottom: -60px;
+    right: -40px;
+}
+
+.srps-hero-glow--center {
+    width: 200px;
+    height: 200px;
+    background: rgba(34, 211, 238, 0.12);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: srps-pulse 4s ease-in-out infinite;
+}
+
+@keyframes srps-pulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+}
+
+/* Content container */
+.srps-hero-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Brain SVG */
+.srps-hero-brain-container {
+    position: relative;
+    width: 100px;
+    height: 110px;
+    margin-bottom: 0.25rem;
+}
+
+.srps-hero-brain-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 130px;
+    height: 130px;
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: srps-brain-glow 3s ease-in-out infinite;
+}
+
+@keyframes srps-brain-glow {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+.srps-hero-brain {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* Neural sparkle animations */
+.srps-sparkle {
+    animation: srps-twinkle 2s ease-in-out infinite;
+}
+
+.srps-sparkle--1 {
+    animation-delay: 0s;
+}
+
+.srps-sparkle--2 {
+    animation-delay: 0.3s;
+}
+
+.srps-sparkle--3 {
+    animation-delay: 0.6s;
+}
+
+.srps-sparkle--4 {
+    animation-delay: 0.9s;
+}
+
+.srps-sparkle--5 {
+    animation-delay: 1.2s;
+}
+
+.srps-sparkle--6 {
+    animation-delay: 1.5s;
+}
+
+.srps-sparkle--7 {
+    animation-delay: 1.8s;
+}
+
+@keyframes srps-twinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        r: 1.5;
+    }
+
+    50% {
+        opacity: 1;
+        r: 2.5;
+    }
+}
+
+/* Title typography */
+.srps-hero-title {
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.srps-hero-title-eng {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    color: #22d3ee;
+    font-size: 1.5rem;
+}
+
+.srps-hero-subtitle {
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 0.95rem;
+    opacity: 0.7;
+    margin: 0;
+    font-weight: 300;
+}
+
+/* Sensory pills */
+.srps-hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 0.75rem;
+}
+
+.srps-hero-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: 0.85rem;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    transition: all 0.25s ease;
+    cursor: default;
+    color: var(--pill-color, white);
+}
+
+.srps-hero-pill:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--pill-color, rgba(255, 255, 255, 0.3));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.srps-hero-pill-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════
+   GLASSMORPHISM CARDS — Exclude the hero widget
+   ═══════════════════════════════════════════════════ */
+
+.fi-wi-stats-overview-stat-card {
+    background: var(--glass-bg) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07) !important;
+    border-radius: 16px !important;
+}
+
+/* Sections — but NOT inside the hero widget */
+.fi-section:not(.srps-hero-widget .fi-section) {
+    background: var(--glass-bg) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07) !important;
+    border-radius: 16px !important;
+}
+
+/* Make sure the hero widget's parent container has no extra bg */
+.fi-wi-dashboard-hero-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   HEADER & NAVIGATION
+   ═══════════════════════════════════════════════════ */
+
+.fi-topbar {
+    background: rgba(255, 255, 255, 0.8) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    backdrop-filter: blur(8px) !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+}
+
+.fi-topbar-item-active {
+    color: var(--clinical-teal) !important;
+    border-bottom: 2px solid var(--clinical-teal) !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   WIZARD STEPS
+   ═══════════════════════════════════════════════════ */
+
+.fi-wi-wizard-step-header {
+    border-radius: 12px !important;
+    margin-bottom: 1rem !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   SRPS BRANDING — Logo gradient
+   ═══════════════════════════════════════════════════ */
+
+.fi-logo {
+    font-weight: 700 !important;
+    letter-spacing: -0.05em !important;
+    background: linear-gradient(135deg, var(--clinical-teal), var(--clinical-indigo));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ═══════════════════════════════════════════════════
+   BANDED CARD TABLE — Variant B
+   Card-style rows with gaps and rounded corners
+   ═══════════════════════════════════════════════════ */
+
+/* Table container */
+.fi-ta-ctn {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(226, 232, 240, 0.6) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden !important;
+}
+
+/* Force separated rows for card gaps */
+table.fi-ta-table,
+.fi-ta-table {
+    border-collapse: separate !important;
+    border-spacing: 0 10px !important;
+}
+
+/* Content area padding so cards don't touch container edges */
+.fi-ta-content {
+    padding: 0 14px 8px 14px !important;
+}
+
+/* ─── Header Row ─── */
+.fi-ta-header-cell {
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.04em !important;
+    padding: 0.85rem 1rem !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    white-space: nowrap !important;
+}
+
+/* ─── Data Rows — Card Style ─── */
+/* Row itself must be transparent so cell gaps show through */
+.fi-ta-row {
+    background: transparent !important;
+}
+
+/* All cells — white card background + top/bottom borders */
+.fi-ta-row>td {
+    background-color: white !important;
+    border-top: 1px solid #e5e7eb !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    padding: 0.85rem 1rem !important;
+}
+
+/* Alternating teal-tint bands */
+.fi-ta-row:nth-child(even)>td {
+    background-color: #f7fffe !important;
+}
+
+/* RTL: first-child is the RIGHT side — rounded right corners + side border */
+.fi-ta-row>td:first-child {
+    border-right: 1px solid #e5e7eb !important;
+    border-top-right-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+}
+
+/* RTL: last-child is the LEFT side — rounded left corners + teal accent strip */
+.fi-ta-row>td:last-child {
+    border-left: 5px solid var(--clinical-teal) !important;
+    border-top-left-radius: 12px !important;
+    border-bottom-left-radius: 12px !important;
+}
+
+/* ─── Status Badges — Enhanced Pills ─── */
+.fi-ta-ctn .fi-badge {
+    font-weight: 600 !important;
+    padding: 0.3rem 0.85rem !important;
+    border-radius: 999px !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.02em !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ─── Action Group Button ─── */
+.fi-ta-row .fi-ac-group-trigger-btn {
+    border-radius: 8px !important;
+    width: 36px !important;
+    height: 36px !important;
+}
+
+.fi-ta-row .fi-ac-group-trigger-btn:hover {
+    background: rgba(8, 145, 178, 0.08) !important;
+    color: var(--clinical-teal) !important;
+}
+
+/* ─── Search Bar — Refined ─── */
+.fi-ta-search-input .fi-input {
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+.fi-ta-search-input .fi-input:focus-within {
+    border-color: var(--clinical-teal) !important;
+    box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1) !important;
+}
+
+/* ─── Pagination ─── */
+.fi-ta-ctn nav[role="navigation"] button,
+.fi-ta-ctn nav[role="navigation"] span {
+    border-radius: 8px !important;
+}
+
+/* ─── Checkbox ─── */
+.fi-ta-record-checkbox {
+    accent-color: var(--clinical-teal) !important;
+}
+
+/* ─── Status Filter Tabs ─── */
+.fi-tabs-item.fi-active {
+    border-color: var(--clinical-teal) !important;
+    color: var(--clinical-teal) !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   TOGGLE BUTTONS (Assessment Radio)
+   ═══════════════════════════════════════════════════ */
+
+.fi-fo-toggle-buttons-button-active {
+    box-shadow: 0 0 0 2px white, 0 0 0 4px currentColor !important;
+    transform: scale(1.02);
+    transition: all 0.2s ease-in-out;
+}
+
+/* ═══════════════════════════════════════════════════
+   PAGE-LEVEL BACKGROUND
+   ═══════════════════════════════════════════════════ */
+
+.fi-body {
+    background: linear-gradient(135deg, #f0f9ff 0%, #ede9fe 50%, #f0fdfa 100%) !important;
+}

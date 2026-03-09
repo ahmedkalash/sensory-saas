@@ -7,16 +7,15 @@ use App\Models\Evaluation;
 use App\Models\Measurement;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
@@ -35,7 +34,7 @@ class EvaluationResource extends Resource
 {
     protected static ?string $model = Evaluation::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-check';
 
     protected static ?string $navigationLabel = 'التقييمات';
 
@@ -99,7 +98,7 @@ class EvaluationResource extends Resource
             ]);
 
         foreach ($measurements as $measurement) {
-            $totalQuestionsForScale = $measurement->dimensions->sum(fn($d) => $d->questions->count());
+            $totalQuestionsForScale = $measurement->dimensions->sum(fn ($d) => $d->questions->count());
             $questionIndex = 1;
 
             foreach ($measurement->dimensions as $dimension) {
@@ -115,15 +114,28 @@ class EvaluationResource extends Resource
                                 ->state(new HtmlString("<div class='evaluation-wizard-progress'>السؤال {$questionIndex} من {$totalQuestionsForScale}</div>")),
                             TextEntry::make("context_{$question->id}")
                                 ->label("{$measurement->name} - {$dimension->name}"),
-                            Radio::make("draft_answers.{$question->id}")
+                            \Filament\Forms\Components\ToggleButtons::make("draft_answers.{$question->id}")
                                 ->label($question->q_text)
-                                ->columns(4)
+                                ->inline()
                                 ->options([
                                     Score::Never->value => Score::Never->label(),
-                                    Score::Sometimes->value => Score::Sometimes->label(), 
+                                    Score::Sometimes->value => Score::Sometimes->label(),
                                     Score::Often->value => Score::Often->label(),
                                     Score::Always->value => Score::Always->label(),
                                 ])
+                                ->colors([
+                                    Score::Never->value => 'gray',
+                                    Score::Sometimes->value => 'success',
+                                    Score::Often->value => 'warning',
+                                    Score::Always->value => 'danger',
+                                ])
+                                ->icons([
+                                    Score::Never->value => 'heroicon-o-x-circle',
+                                    Score::Sometimes->value => 'heroicon-o-minus-circle',
+                                    Score::Often->value => 'heroicon-o-exclamation-circle',
+                                    Score::Always->value => 'heroicon-o-check-circle',
+                                ])
+                                ->grouped()
                                 ->dehydrated(false)
                                 ->required(),
                             RichEditor::make("draft_notes.{$question->id}")
@@ -131,7 +143,7 @@ class EvaluationResource extends Resource
                                 ->dehydrated(false)
                                 ->columnSpanFull(),
                         ])
-                        ->visible(fn(Get $get) => $get('selected_scale') == $measurement->id);
+                        ->visible(fn (Get $get) => $get('selected_scale') == $measurement->id);
                     $questionIndex++;
                 }
             }
@@ -143,6 +155,7 @@ class EvaluationResource extends Resource
                 View::make('filament.components.no-copy'),
                 Wizard::make($wizardSteps)
                     ->view('filament.components.custom-wizard')
+                    ->startOnStep(1)
                     ->skippable()
                     ->persistStepInQueryString()
                     ->columnSpanFull(),
@@ -170,107 +183,109 @@ class EvaluationResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('child_age')
-                    ->label('عمر الطفل')
+                    ->label('عمر المريض وقت التقييم')
                     ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
-                Action::make('parent_report')
-                    ->label('تقرير ولي الأمر')
-                    ->icon('heroicon-o-document-text')
-                    ->color('info')
-                    ->modalSubmitActionLabel('عرض')
-                    ->schema(fn(Evaluation $record) => [
-                        Select::make('report_type')
-                            ->label('نوع التقرير')
-                            ->options(function () use ($record) {
-                                $options = ['all' => 'التقرير الشامل'];
-                                $evaluatedIds = $record->answers()->with('question.dimension.measurement')->get()->pluck('question.dimension.measurement_id')->unique();
-                                $measurements = Measurement::whereIn('id', $evaluatedIds)->pluck('name', 'id');
-                                foreach ($measurements as $id => $name) {
-                                    $options[$id] = "تقرير {$name}";
-                                }
+                ActionGroup::make([
+                    ViewAction::make()->label('عرض'),
+                    EditAction::make()->label('تعديل'),
+                    Action::make('parent_report')
+                        ->label('تقرير ولي الأمر')
+                        ->icon('heroicon-o-document-text')
+                        ->color('info')
+                        ->modalSubmitActionLabel('عرض')
+                        ->schema(fn (Evaluation $record) => [
+                            Select::make('report_type')
+                                ->label('نوع التقرير')
+                                ->options(function () use ($record) {
+                                    $options = ['all' => 'التقرير الشامل'];
+                                    $evaluatedIds = $record->answers()->with('question.dimension.measurement')->get()->pluck('question.dimension.measurement_id')->unique();
+                                    $measurements = Measurement::whereIn('id', $evaluatedIds)->pluck('name', 'id');
+                                    foreach ($measurements as $id => $name) {
+                                        $options[$id] = "تقرير {$name}";
+                                    }
 
-                                return $options;
-                            })
-                            ->default('all')
-                            ->required(),
-                    ])
-                    ->action(function (array $data, Evaluation $record) {
-                        $params = [];
-                        if ($data['report_type'] !== 'all') {
-                            $params['measurement_id'] = $data['report_type'];
-                        }
+                                    return $options;
+                                })
+                                ->default('all')
+                                ->required(),
+                        ])
+                        ->action(function (array $data, Evaluation $record) {
+                            $params = [];
+                            if ($data['report_type'] !== 'all') {
+                                $params['measurement_id'] = $data['report_type'];
+                            }
 
-                        return redirect()->route('evaluations.parent_report', array_merge(['evaluation' => $record], $params));
-                    })
-                    ->openUrlInNewTab(),
-                Action::make('htmlReport')
-                    ->label('عرض التقرير')
-                    ->icon('heroicon-o-document-text')
-                    ->color('info')
-                    ->modalSubmitActionLabel('عرض')
-                    ->schema(fn(Evaluation $record) => [
-                        Select::make('report_type')
-                            ->label('نوع التقرير')
-                            ->options(function () use ($record) {
-                                $options = ['all' => 'التقرير الشامل'];
-                                $evaluatedIds = $record->answers()->with('question.dimension.measurement')->get()->pluck('question.dimension.measurement_id')->unique();
-                                $measurements = Measurement::whereIn('id', $evaluatedIds)->pluck('name', 'id');
-                                foreach ($measurements as $id => $name) {
-                                    $options[$id] = "تقرير {$name}";
-                                }
+                            return redirect()->route('evaluations.parent_report', array_merge(['evaluation' => $record], $params));
+                        })
+                        ->openUrlInNewTab(),
+                    Action::make('htmlReport')
+                        ->label('عرض التقرير')
+                        ->icon('heroicon-o-document-text')
+                        ->color('info')
+                        ->modalSubmitActionLabel('عرض')
+                        ->schema(fn (Evaluation $record) => [
+                            Select::make('report_type')
+                                ->label('نوع التقرير')
+                                ->options(function () use ($record) {
+                                    $options = ['all' => 'التقرير الشامل'];
+                                    $evaluatedIds = $record->answers()->with('question.dimension.measurement')->get()->pluck('question.dimension.measurement_id')->unique();
+                                    $measurements = Measurement::whereIn('id', $evaluatedIds)->pluck('name', 'id');
+                                    foreach ($measurements as $id => $name) {
+                                        $options[$id] = "تقرير {$name}";
+                                    }
 
-                                return $options;
-                            })
-                            ->default('all')
-                            ->required(),
-                    ])
-                    ->action(function (array $data, Evaluation $record) {
-                        $params = [];
-                        if ($data['report_type'] !== 'all') {
-                            $params['measurement_id'] = $data['report_type'];
-                        }
+                                    return $options;
+                                })
+                                ->default('all')
+                                ->required(),
+                        ])
+                        ->action(function (array $data, Evaluation $record) {
+                            $params = [];
+                            if ($data['report_type'] !== 'all') {
+                                $params['measurement_id'] = $data['report_type'];
+                            }
 
-                        return redirect()->route('evaluations.report.html', array_merge(['evaluation' => $record], $params));
-                    })
-                    ->openUrlInNewTab(),
+                            return redirect()->route('evaluations.report.html', array_merge(['evaluation' => $record], $params));
+                        })
+                        ->openUrlInNewTab(),
+                    Action::make('downloadReport')
+                        ->label('تحميل التقرير')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('success')
+                        ->modalSubmitActionLabel('تحميل')
+                        ->schema(fn (Evaluation $record) => [
+                            Select::make('report_type')
+                                ->label('نوع التقرير')
+                                ->options(function () use ($record) {
+                                    $options = ['all' => 'التقرير الشامل'];
+                                    $evaluatedIds = $record->answers()->with('question.dimension.measurement')->get()->pluck('question.dimension.measurement_id')->unique();
+                                    $measurements = Measurement::whereIn('id', $evaluatedIds)->pluck('name', 'id');
+                                    foreach ($measurements as $id => $name) {
+                                        $options[$id] = "تقرير {$name}";
+                                    }
 
+                                    return $options;
+                                })
+                                ->default('all')
+                                ->required(),
+                        ])
+                        ->action(function (array $data, Evaluation $record) {
+                            $params = [];
+                            if ($data['report_type'] !== 'all') {
+                                $params['measurement_id'] = $data['report_type'];
+                            }
 
-                Action::make('downloadReport')
-                    ->label('تحميل التقرير')
-                    ->icon('heroicon-o-document-arrow-down')
-                    ->color('success')
-                    ->modalSubmitActionLabel('تحميل')
-                    ->schema(fn(Evaluation $record) => [
-                        Select::make('report_type')
-                            ->label('نوع التقرير')
-                            ->options(function () use ($record) {
-                                $options = ['all' => 'التقرير الشامل'];
-                                $evaluatedIds = $record->answers()->with('question.dimension.measurement')->get()->pluck('question.dimension.measurement_id')->unique();
-                                $measurements = Measurement::whereIn('id', $evaluatedIds)->pluck('name', 'id');
-                                foreach ($measurements as $id => $name) {
-                                    $options[$id] = "تقرير {$name}";
-                                }
-
-                                return $options;
-                            })
-                            ->default('all')
-                            ->required(),
-                    ])
-                    ->action(function (array $data, Evaluation $record) {
-                        $params = [];
-                        if ($data['report_type'] !== 'all') {
-                            $params['measurement_id'] = $data['report_type'];
-                        }
-
-                        return redirect()->route('evaluations.report', array_merge(['evaluation' => $record], $params));
-                    }),
-                ViewAction::make()->label(''),
-                EditAction::make()->label(''),
-                DeleteAction::make()->label(''),
+                            return redirect()->route('evaluations.report', array_merge(['evaluation' => $record], $params));
+                        }),
+                    DeleteAction::make()->label('حذف'),
+                ])
+                    ->icon('heroicon-m-ellipsis-vertical')
+                    ->tooltip('الإجراءات'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

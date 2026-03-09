@@ -24,7 +24,13 @@ class ProgressReportController extends Controller
             $eval2 = $temp;
         }
 
-        return response($reportService->renderProgressReportHtml($eval1, $eval2))
-            ->header('Content-Type', 'text/html; charset=utf-8');
+        $mpdf = $reportService->generateProgressReport($eval1, $eval2);
+
+        $filename = 'مقارنة_تقدم_' . ($patient->name ?? 'طفل') . '_' . now()->format('Y-m-d') . '.pdf';
+
+        return response($mpdf->Output($filename, 'S'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
     }
 }

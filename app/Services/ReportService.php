@@ -124,14 +124,14 @@ class ReportService
             $dimensionResults = [];
 
             foreach ($byDimension as $dimensionName => $dimensionAnswers) {
-                $totalScore = $dimensionAnswers->sum(fn ($a) => $a->score->value);
+                $totalScore = $dimensionAnswers->sum(fn($a) => $a->score->value);
                 $questionCount = $dimensionAnswers->count();
 
                 $severity = $this->evaluationService->getSeverity($questionCount, $totalScore);
 
                 $weaknesses = $dimensionAnswers
-                    ->filter(fn ($a) => $a->score->value >= 2)
-                    ->map(fn ($a) => [
+                    ->filter(fn($a) => $a->score->value >= 2)
+                    ->map(fn($a) => [
                         'question_text' => $a->question_text,
                         'score_label' => $a->score->label(),
                         'recommendations' => $a->recommendations ?? [],
@@ -142,8 +142,8 @@ class ReportService
                     ->toArray();
 
                 $observations = $dimensionAnswers
-                    ->filter(fn ($a) => ! empty($a->notes))
-                    ->map(fn ($a) => [
+                    ->filter(fn($a) => ! empty($a->notes))
+                    ->map(fn($a) => [
                         'question_text' => $a->question_text,
                         'notes' => $a->notes,
                     ])
@@ -244,11 +244,11 @@ class ReportService
                 if ($score2 < $score1) {
                     $status = 'تحسن';
                     $statusColor = '#10b981'; // green
-                    $statusLabel = 'تحسن (-'.($score1 - $score2).')';
+                    $statusLabel = 'تحسن (-' . ($score1 - $score2) . ')';
                 } elseif ($score2 > $score1) {
                     $status = 'تراجع';
                     $statusColor = '#ef4444'; // red
-                    $statusLabel = 'تراجع (+'.($score2 - $score1).')';
+                    $statusLabel = 'تراجع (+' . ($score2 - $score1) . ')';
                 }
 
                 $dimensionComparisons[] = [

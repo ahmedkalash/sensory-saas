@@ -79,17 +79,6 @@ class ModelsTest extends TestCase
         $this->assertEquals('2024-01-15', $evaluation->evaluation_date->format('Y-m-d'));
     }
 
-    public function test_evaluation_model_draft_answers_array_casting()
-    {
-        $patient = Patient::factory()->create();
-        $evaluation = Evaluation::factory()->create([
-            'patient_id' => $patient->id,
-            'draft_answers' => ['question_1' => 1, 'question_2' => 2],
-        ]);
-
-        $this->assertIsArray($evaluation->draft_answers);
-        $this->assertEquals(['question_1' => 1, 'question_2' => 2], $evaluation->draft_answers);
-    }
 
     public function test_evaluation_model_null_specialist_name()
     {

@@ -13,7 +13,15 @@ class NativeAppServiceProvider implements ProvidesPhpIni
      */
     public function boot(): void
     {
-        Window::open();
+        Window::open()
+            ->width(1200)
+            ->height(800)
+            ->minWidth(1000)
+            ->minHeight(700)
+            ->title('Sensory Processing Assessment Tool')
+            ->showDevTools(false)
+            ->rememberState()
+            ->hideMenu();
     }
 
     /**

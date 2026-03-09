@@ -375,7 +375,12 @@
         {{-- ======================================== --}}
         {{-- SECTION 1: Summary Matrix --}}
         {{-- ======================================== --}}
-        <div class="card">
+        @if(empty($measurements))
+            <div class="card">
+                <div class="no-weakness">لا توجد نقاط ضعف.</div>
+            </div>
+        @else
+            <div class="card">
             <div class="section-heading">أولاً: ملخص الدرجات ومستوى الشدة</div>
             <table class="grid-table thick-grid">
                 <thead>
@@ -419,8 +424,8 @@
                     @endforeach
                 </tbody>
             </table>
-
         </div>
+        @endif
 
         <div class="page-break"></div>
 

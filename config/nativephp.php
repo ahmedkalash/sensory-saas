@@ -86,10 +86,23 @@ return [
         'content',
         'node_modules',
         '*/tests',
+        '/.agents',
+        '/.ai',
+        '/.antigravity',
+        '/.cursor',
+        '/.gemini',
+        '/.github',
+        '/.junie',
+        '/.vscode',
+        '/.z',
+        '/قائمة المعالجة الحسية.نسخة برمجة (تم الحفظ تلقائيًا).docx',
+        '/قائمة المعالجة الحسية.نسخة برمجة (تم الحفظ تلقائيًا).htm',
+        '/قائمة المعالجة الحسية.نسخة برمجة (تم الحفظ تلقائيًا).pdf',
 
         // Developer-only license tools (not needed in production)
         'storage/license/private.pem',
         'storage/license/openssl.cnf',
+        'storage/license/activation.key',
         'app/Console/Commands/GenerateLicenseKeys.php',
         'app/Filament/Pages/GenerateLicensePage.php',
     ],
@@ -172,9 +185,7 @@ return [
         'npm run build',
         'php artisan optimize',
     ],
-    'postbuild' => [
-        'npm run release',
-    ],
+    'postbuild' => [],
     /**
      * Custom PHP binary path.
      */

@@ -8,6 +8,8 @@ class SensoryDisordersChart extends ChartWidget
 {
     protected static ?int $sort = 2;
 
+    protected static bool $isLazy = true;
+
     public function getHeading(): ?string
     {
         return 'توزيع الاضطرابات الحسية (الأكثر شيوعاً)';

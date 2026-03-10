@@ -11,6 +11,8 @@ class LatestEvaluationsWidget extends TableWidget
 {
     protected static ?int $sort = 4;
 
+    protected static bool $isLazy = true;
+
     protected int|string|array $columnSpan = 'full';
 
     protected static ?string $heading = 'آخر التقييمات المُنفذة';
@@ -37,7 +39,7 @@ class LatestEvaluationsWidget extends TableWidget
                 Action::make('view')
                     ->label('عرض')
                     ->icon('heroicon-m-eye')
-                    ->url(fn (\App\Models\Evaluation $record): string => \App\Filament\Resources\Evaluations\EvaluationResource::getUrl('edit', ['record' => $record])),
+                    ->url(fn(\App\Models\Evaluation $record): string => \App\Filament\Resources\Evaluations\EvaluationResource::getUrl('edit', ['record' => $record])),
             ])
             ->paginated(false);
     }

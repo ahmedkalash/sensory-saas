@@ -8,6 +8,18 @@ class LicensingService
 {
     private const CACHE_KEY = 'license_activated';
 
+    private const PUBLIC_KEY = <<<'PEM'
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4dS2yJ5TL3iFC5I2X8va
+PY+n6YDnnEg/Xf0iZW9VLO7kpG/cvOQNRazpbE+nEeDRi3GYfPUYix8ns5eU1bBK
+5Op4RHDKtg1vxt8LkA9olVCcaHfp0S2TTmhfcknmlqW2lub/Fy6OF2uU7hYfhMHH
+ikdYAQoGYDD4tyo9fJUbi9aOutq2ZhQycc5qvS8a9FVPC6M9IzO4WdnGuH0+xT/L
+UWOQ1qOntkX5+jKAaL+30kVyW+IVY60+WZAUnIgzJCxmhdjFEtTejQDCKdzaVnMF
+ZARVHHgkUHjatTz728oNhNpFnksHnyBIg3AWLI8p75NjPCzAnjyLPCPmLbf0wz3h
+RwIDAQAB
+-----END PUBLIC KEY-----
+PEM;
+
     /**
      * Get the BIOS UUID of the current Windows machine.
      */
@@ -33,13 +45,7 @@ class LicensingService
             return false;
         }
 
-        $publicKeyPath = storage_path('license/public.pem');
-
-        if (! file_exists($publicKeyPath)) {
-            return false;
-        }
-
-        $publicKey = openssl_pkey_get_public(file_get_contents($publicKeyPath));
+        $publicKey = openssl_pkey_get_public(self::PUBLIC_KEY);
 
         if (! $publicKey) {
             return false;

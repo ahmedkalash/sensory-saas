@@ -520,3 +520,11 @@ table.fi-ta-table,
 .fi-body {
     background: linear-gradient(135deg, #f0f9ff 0%, #ede9fe 50%, #f0fdfa 100%) !important;
 }
+
+/* ═══════════════════════════════════════════════════
+   HIDE USER MENU AVATAR
+   ═══════════════════════════════════════════════════ */
+
+.fi-user-menu {
+    display: none !important;
+}

@@ -8,6 +8,8 @@ class AgeDistributionChart extends ChartWidget
 {
     protected static ?int $sort = 3;
 
+    protected static bool $isLazy = true;
+
     public function getHeading(): ?string
     {
         return 'توزيع أعمار الأطفال';
@@ -20,8 +22,6 @@ class AgeDistributionChart extends ChartWidget
 
     protected function getData(): array
     {
-        $patients = \App\Models\Patient::all();
-
         $groups = [
             '0-2' => 0,
             '3-5' => 0,
@@ -30,21 +30,24 @@ class AgeDistributionChart extends ChartWidget
             '12+' => 0,
         ];
 
-        foreach ($patients as $patient) {
-            $age = \Carbon\Carbon::parse($patient->dob)->age;
+        \App\Models\Patient::query()
+            ->selectRaw('dob')
+            ->get()
+            ->each(function ($patient) use (&$groups) {
+                $age = \Carbon\Carbon::parse($patient->dob)->age;
 
-            if ($age <= 2) {
-                $groups['0-2']++;
-            } elseif ($age <= 5) {
-                $groups['3-5']++;
-            } elseif ($age <= 8) {
-                $groups['6-8']++;
-            } elseif ($age <= 11) {
-                $groups['9-11']++;
-            } else {
-                $groups['12+']++;
-            }
-        }
+                if ($age <= 2) {
+                    $groups['0-2']++;
+                } elseif ($age <= 5) {
+                    $groups['3-5']++;
+                } elseif ($age <= 8) {
+                    $groups['6-8']++;
+                } elseif ($age <= 11) {
+                    $groups['9-11']++;
+                } else {
+                    $groups['12+']++;
+                }
+            });
 
         return [
             'datasets' => [

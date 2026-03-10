@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Artisan;
 use Native\Desktop\Contracts\ProvidesPhpIni;
+use Native\Desktop\Facades\Menu;
 use Native\Desktop\Facades\Window;
 
 class NativeAppServiceProvider implements ProvidesPhpIni
@@ -14,7 +15,18 @@ class NativeAppServiceProvider implements ProvidesPhpIni
      */
     public function boot(): void
     {
-        // Open the window immediately — don't block startup with DB work.
+        Menu::create(
+            Menu::make(
+                Menu::link(url('/'), 'الرئيسية'),
+                Menu::separator(),
+                Menu::quit('إنهاء التطبيق'),
+            )->label('ملف'),
+
+            Menu::edit('تحرير'),
+            Menu::view('عرض'),
+            Menu::window('نافذة'),
+        );
+
         Window::open()
             ->width(1200)
             ->height(800)
@@ -22,7 +34,6 @@ class NativeAppServiceProvider implements ProvidesPhpIni
             ->minHeight(700)
             ->title('Sensory Processing Assessment Tool')
             ->backgroundColor('#f0f9ff')
-            ->showDevTools()
             ->rememberState();
 
         // Run pending migrations only once per app version.

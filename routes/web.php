@@ -48,8 +48,6 @@ Route::get('/evaluations/{evaluation}/report/html', function (Evaluation $evalua
 Route::get('/patients/{patient}/progress-report', [\App\Http\Controllers\ProgressReportController::class, 'download'])
     ->name('reports.progress');
 
-
-
 Route::any('login', function () {
     return redirect('/');
 })->name('login');

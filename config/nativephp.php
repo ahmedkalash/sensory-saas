@@ -86,6 +86,13 @@ return [
         'content',
         'node_modules',
         '*/tests',
+
+        // Developer-only license tools (not needed in production)
+        'storage/license/private.pem',
+        'storage/license/openssl.cnf',
+        'app/Console/Commands/GenerateLicenseKeys.php',
+        'app/Console/Commands/GenerateLicense.php',
+        'app/Filament/Pages/GenerateLicensePage.php',
     ],
 
     /**

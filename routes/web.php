@@ -1,8 +1,13 @@
 <?php
 
+use App\Http\Controllers\LicenseController;
 use App\Models\Evaluation;
 use App\Services\ReportService;
 use Illuminate\Support\Facades\Route;
+
+// License activation routes
+Route::get('/license', [LicenseController::class, 'show'])->name('license.show');
+Route::post('/license/activate', [LicenseController::class, 'activate'])->name('license.activate');
 
 Route::get('/evaluations/{evaluation}/report', function (Evaluation $evaluation) {
     $reportService = app(ReportService::class);

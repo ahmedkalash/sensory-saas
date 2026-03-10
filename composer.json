@@ -12,7 +12,8 @@
         "filament/filament": "~4.8.1",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "nativephp/desktop": "^2.1"
+        "nativephp/desktop": "^2.1",
+        "ext-openssl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

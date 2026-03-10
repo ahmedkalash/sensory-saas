@@ -148,6 +148,7 @@ class CreateEvaluation extends CreateRecord
                                         ->grouped()
                                         ->dehydrated(false)
                                         ->required()
+                                        ->validationAttribute('الإجابة')
                                         ->live(),
                                     Textarea::make("draft_notes.{$question->id}")
                                         ->label('ملاحظات (اختياري)')

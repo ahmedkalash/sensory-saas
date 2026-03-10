@@ -109,15 +109,15 @@ class EvaluationResource extends Resource
                                 ->default('all')
                                 ->required(),
                         ])
-                        ->action(function (array $data, Evaluation $record) {
-                            $params = [];
+                        ->action(function (array $data, Evaluation $record, \Livewire\Component $livewire) {
+                            $params = ['evaluation' => $record];
                             if ($data['report_type'] !== 'all') {
                                 $params['measurement_id'] = $data['report_type'];
                             }
 
-                            return redirect()->route('evaluations.report.html', array_merge(['evaluation' => $record], $params));
-                        })
-                        ->openUrlInNewTab(),
+                            $url = route('evaluations.report.html', $params);
+                            $livewire->js("window.open('" . $url . "', '_blank')");
+                        }),
                     Action::make('downloadReport')
                         ->label('تحميل التقرير')
                         ->icon('heroicon-o-document-arrow-down')

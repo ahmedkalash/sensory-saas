@@ -54,7 +54,10 @@ class ReportService
             'default_font' => 'tajawal',
             'default_font_size' => 11,
             'tempDir' => storage_path('app/mpdf-temp'),
-            'fontDir' => [storage_path('fonts/tajawal')],
+            'fontDir' => [
+                storage_path('fonts/tajawal'),
+                base_path('storage/fonts/tajawal'),
+            ],
             'fontdata' => [
                 'tajawal' => [
                     'R' => 'Tajawal-Regular.ttf',

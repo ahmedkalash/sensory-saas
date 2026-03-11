@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\AutoLoginMiddleware;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -133,7 +134,7 @@ HTML),
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                \App\Http\Middleware\AutoLoginMiddleware::class,
+                AutoLoginMiddleware::class,
             ]);
     }
 }

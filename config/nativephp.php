@@ -105,6 +105,9 @@ return [
         'storage/license/activation.key',
         'app/Console/Commands/GenerateLicenseKeys.php',
         'app/Filament/Pages/GenerateLicensePage.php',
+
+        // Admin-only: Questions CRUD (clients get questions via seeders)
+        'app/Filament/Resources/Questions',
     ],
 
     /**
@@ -170,12 +173,12 @@ return [
      * The queue workers that get auto-started on your application start.
      */
     'queue_workers' => [
-        'default' => [
-            'queues' => ['default'],
-            'memory_limit' => 128,
-            'timeout' => 60,
-            'sleep' => 3,
-        ],
+        // 'default' => [
+        //     'queues' => ['default'],
+        //     'memory_limit' => 128,
+        //     'timeout' => 60,
+        //     'sleep' => 3,
+        // ],
     ],
 
     /**

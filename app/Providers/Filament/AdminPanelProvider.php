@@ -12,7 +12,6 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -45,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->darkMode(false)
             ->renderHook(
                 'panels::topbar.start',
-                fn() => new HtmlString(<<<'HTML'
+                fn () => new HtmlString(<<<'HTML'
 <div id="nav-controls" style="display:flex; align-items:center; gap:2px; margin-inline-end:12px; -webkit-app-region:no-drag;">
     <button onclick="history.back()" title="الرجوع (Alt+←)" style="
         display:inline-flex; align-items:center; justify-content:center;
@@ -71,16 +70,24 @@ class AdminPanelProvider extends PanelProvider
     " onmouseover="this.style.background='#e2e8f0';this.style.color='#0891b2'" onmouseout="this.style.background='#f8fafc';this.style.color='#94a3b8'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
     </button>
+    <button onclick="window.location.reload()" title="تحديث (F5)" style="
+        display:inline-flex; align-items:center; justify-content:center;
+        width:30px; height:30px; border-radius:6px;
+        border:1px solid #e2e8f0; background:#f8fafc; cursor:pointer;
+        color:#94a3b8; transition:all 0.15s;
+    " onmouseover="this.style.background='#e2e8f0';this.style.color='#0891b2'" onmouseout="this.style.background='#f8fafc';this.style.color='#94a3b8'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+    </button>
 </div>
 HTML),
             )
             ->renderHook(
                 'panels::styles.after',
-                fn() => new HtmlString('<link rel="stylesheet" href="/css/custom-filament.css">'),
+                fn () => new HtmlString('<link rel="stylesheet" href="/css/custom-filament.css">'),
             )
             ->renderHook(
                 'panels::body.start',
-                fn() => new HtmlString(<<<'HTML'
+                fn () => new HtmlString(<<<'HTML'
 <div id="srps-loader" style="
     position: fixed; inset: 0; z-index: 99999;
     background: linear-gradient(135deg, #f0f9ff 0%, #ede9fe 50%, #f0fdfa 100%);
@@ -128,13 +135,14 @@ HTML),
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
-                AuthenticateSession::class,
+                // AuthenticateSession::class,
                 ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
+                // VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 AutoLoginMiddleware::class,
+                \App\Http\Middleware\LicenseMiddleware::class,
             ]);
     }
 }

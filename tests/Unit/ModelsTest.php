@@ -79,7 +79,6 @@ class ModelsTest extends TestCase
         $this->assertEquals('2024-01-15', $evaluation->evaluation_date->format('Y-m-d'));
     }
 
-
     public function test_evaluation_model_null_specialist_name()
     {
         $patient = Patient::factory()->create();
@@ -288,5 +287,26 @@ class ModelsTest extends TestCase
         $patient->delete();
 
         $this->assertEquals(0, Evaluation::whereIn('id', $evaluations->pluck('id'))->count());
+    }
+
+    public function test_patient_model_new_fields()
+    {
+        $patient = Patient::factory()->create([
+            'medical_plan' => ['surgery' => 'Tonsillectomy', 'date' => '2024-05-01'],
+            'status' => 'completed',
+        ]);
+
+        $this->assertIsArray($patient->medical_plan);
+        $this->assertEquals('Tonsillectomy', $patient->medical_plan['surgery']);
+        $this->assertEquals(\App\Enums\PatientStatus::COMPLETED, $patient->status);
+    }
+
+    public function test_evaluation_answer_model_new_fields()
+    {
+        $answer = EvaluationAnswer::factory()->create([
+            'notes' => 'The child struggled with this task.',
+        ]);
+
+        $this->assertEquals('The child struggled with this task.', $answer->notes);
     }
 }

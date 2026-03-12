@@ -18,6 +18,10 @@ class LicenseMiddleware
 
     public function handle(Request $request, Closure $next): Response
     {
+        if (static::$bypass) {
+            return $next($request);
+        }
+
         // Allow access to the activation routes
         if ($request->routeIs('license.*')) {
             return $next($request);

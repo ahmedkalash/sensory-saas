@@ -468,38 +468,44 @@
                             <div class="weakness-list">
                                 <h2 style="color: #4f46e5; margin-bottom: 15px;">توصيات لولي الامر:</h2>
                                 @foreach ($measurement['dimensions'] as $dim)
-                                    <h3 style="color: #4f46e5; margin-bottom: 15px;">{{ $dim['name'] }}</h3>
-                                    @foreach ($dim['weaknesses'] as $w)
-                                        <div style="margin-bottom: 6px;">
-                                            @foreach($w['recommendations'] as $recommendation)
-                                                - {{ $recommendation }}
-                                            @endforeach
-                                        </div>
-                                    @endforeach
+                                    @if(!empty($dim['weaknesses']))
+                                        <h3 style="color: #4f46e5; margin-bottom: 15px;">{{ $dim['name'] }}</h3>
+                                        @foreach ($dim['weaknesses'] as $w)
+                                            <div style="margin-bottom: 6px;">
+                                                @foreach($w['recommendations'] as $recommendation)
+                                                    - {{ $recommendation }}
+                                                @endforeach
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 @endforeach
 
                                 <h2 style="color: #4f46e5; margin-bottom: 15px;">أهداف:</h2>
                                 @foreach ($measurement['dimensions'] as $dim)
-                                    <h3 style="color: #4f46e5; margin-bottom: 15px;">{{ $dim['name'] }}</h3>
-                                    @foreach ($dim['weaknesses'] as $w)
-                                        <div style="margin-bottom: 6px;">
-                                            @foreach($w['goals'] as $goal)
-                                                - {{ $goal }}
-                                            @endforeach
-                                        </div>
-                                    @endforeach
+                                    @if(!empty($dim['weaknesses']))
+                                        <h3 style="color: #4f46e5; margin-bottom: 15px;">{{ $dim['name'] }}</h3>
+                                        @foreach ($dim['weaknesses'] as $w)
+                                            <div style="margin-bottom: 6px;">
+                                                @foreach($w['goals'] as $goal)
+                                                    - {{ $goal }}
+                                                @endforeach
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 @endforeach
 
                                 <h2 style="color: #4f46e5; margin-bottom: 15px;">أنشطة:</h2>
                                 @foreach ($measurement['dimensions'] as $dim)
-                                    <h3 style="color: #4f46e5; margin-bottom: 15px;">{{ $dim['name'] }}</h3>
-                                    @foreach ($dim['weaknesses'] as $w)
-                                        <div style="margin-bottom: 6px;">
-                                            @foreach($w['activities'] as $activity)
-                                                - {{ $activity }}
-                                            @endforeach
-                                        </div>
-                                    @endforeach
+                                    @if(!empty($dim['weaknesses']))
+                                        <h3 style="color: #4f46e5; margin-bottom: 15px;">{{ $dim['name'] }}</h3>
+                                        @foreach ($dim['weaknesses'] as $w)
+                                            <div style="margin-bottom: 6px;">
+                                                @foreach($w['activities'] as $activity)
+                                                    - {{ $activity }}
+                                                @endforeach
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 @endforeach
                             </div>
                         </div>

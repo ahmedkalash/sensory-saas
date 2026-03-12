@@ -256,4 +256,44 @@ class ReportServiceTest extends TestCase
         $this->assertStringContainsString('<!DOCTYPE html>', $html);
         $this->assertStringContainsString('dir="rtl"', $html);
     }
+
+    /**
+     * Regression test: dimensions with no weaknesses (score 0 or 1)
+     * should NOT render recommendation/goal/activity headers in the HTML.
+     */
+    public function test_dimension_without_weaknesses_omits_recommendation_headers_in_html(): void
+    {
+        $patient = Patient::factory()->create(['name' => 'No Weakness Patient']);
+        $evaluation = Evaluation::factory()->create(['patient_id' => $patient->id]);
+
+        // All answers score 0 (Never) — no weaknesses at all
+        $this->makeAnswer($evaluation, [
+            'measurement_name' => 'Clean Scale',
+            'dimension_name' => 'Healthy Dimension',
+            'question_text' => 'Normal behavior question',
+            'recommendations' => ['Should not appear'],
+            'goals' => ['Should not appear'],
+            'activities' => ['Should not appear'],
+            'score' => Score::Never,
+        ]);
+
+        // Also add a dimension WITH a weakness to confirm it DOES appear
+        $this->makeAnswer($evaluation, [
+            'measurement_name' => 'Clean Scale',
+            'dimension_name' => 'Problem Dimension',
+            'question_text' => 'Problem behavior question',
+            'recommendations' => ['Must appear'],
+            'goals' => ['Must appear goal'],
+            'activities' => ['Must appear activity'],
+            'score' => Score::Always,
+        ]);
+
+        $html = $this->service->renderGeneralReportHtml($evaluation);
+
+        // The "Problem Dimension" recommendations SHOULD appear
+        $this->assertStringContainsString('Must appear', $html);
+
+        // The "Healthy Dimension" recommendations should NOT appear
+        $this->assertStringNotContainsString('Should not appear', $html);
+    }
 }

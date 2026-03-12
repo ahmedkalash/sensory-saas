@@ -11,6 +11,12 @@ class ProgressReportTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        \App\Http\Middleware\LicenseMiddleware::$bypass = true;
+    }
+
     public function test_it_generates_progress_report_pdf_for_two_evaluations(): void
     {
         // 1. Setup Patient and Evaluations

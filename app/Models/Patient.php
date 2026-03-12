@@ -24,6 +24,7 @@ class Patient extends Model
     {
         return [
             'dob' => 'date',
+            'medical_plan' => 'array',
             'status' => \App\Enums\PatientStatus::class,
         ];
     }

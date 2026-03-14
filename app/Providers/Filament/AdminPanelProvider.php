@@ -36,6 +36,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('/')
             ->brandName('SRPS Clinical')
+            ->favicon(asset('favicon.ico'))
             ->font('Outfit')
             ->topNavigation()
             ->colors([
@@ -83,7 +84,10 @@ HTML),
             )
             ->renderHook(
                 'panels::styles.after',
-                fn () => new HtmlString('<link rel="stylesheet" href="/css/custom-filament.css">'),
+                fn () => new HtmlString('
+                    <link rel="manifest" href="/manifest.json">
+                    <link rel="stylesheet" href="/css/custom-filament.css">
+                '),
             )
             ->renderHook(
                 'panels::body.start',

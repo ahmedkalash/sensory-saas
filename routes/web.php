@@ -4,6 +4,13 @@ use App\Http\Controllers\LicenseController;
 use App\Models\Evaluation;
 use App\Services\ReportService;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
+
+Route::post('/clear-cache-recovery', function () {
+    Cache::forget('migrated_version');
+    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+    return redirect('/');
+})->name('recovery.clear-cache');
 
 // License activation routes
 Route::get('/license', [LicenseController::class, 'show'])->name('license.show');

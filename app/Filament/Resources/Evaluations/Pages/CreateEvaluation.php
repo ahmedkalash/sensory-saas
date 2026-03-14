@@ -38,10 +38,13 @@ class CreateEvaluation extends CreateRecord
      */
     public function form(Schema $schema): Schema
     {
-        return $schema->components([
-            View::make('filament.components.evaluation-wizard-css'),
-            View::make('filament.components.no-copy'),
+        return $schema->columns(['default' => 1, 'lg' => 3])->components([
+            View::make('filament.components.evaluation-wizard-css')->columnSpanFull(),
+            View::make('filament.components.no-copy')->columnSpanFull(),
+            
+            // RIGHT SIDE (Data Entry)
             Section::make('تحديد المقياس وبيانات المريض')
+                ->columnSpan(['default' => 3, 'lg' => 1])
                 ->schema([
                     TextInput::make('title')
                         ->label('عنوان التقييم')
@@ -88,8 +91,12 @@ class CreateEvaluation extends CreateRecord
                         ->label('عمر المريض وقت التقييم'),
                 ]),
 
-            Group::make()
-                ->schema(function (Get $get) {
+            // LEFT SIDE (Wizard & Loading)
+            Group::make([
+                    View::make('filament.components.loading-overlay'),
+                    
+                    Group::make()
+                        ->schema(function (Get $get) {
                     $selectedScaleId = $get('selected_scale');
 
                     if (! $selectedScaleId) {
@@ -117,13 +124,16 @@ class CreateEvaluation extends CreateRecord
                                 ->schema([
                                     TextEntry::make("progress_{$question->id}")
                                         ->hiddenLabel()
-                                        ->state(new HtmlString("<div class='evaluation-wizard-progress'>السؤال {$questionIndex} من {$totalQuestionsForScale}</div>")),
+                                        ->alignCenter()
+                                        ->state(new HtmlString("<div class='evaluation-wizard-progress' style='text-align: center; width: 100%;'>السؤال {$questionIndex} من {$totalQuestionsForScale}</div>")),
                                     TextEntry::make("context_{$question->id}")
                                         ->hiddenLabel()
-                                        ->state(new HtmlString("<div class='evaluation-context-badge'>{$measurement->name} &rsaquo; {$dimension->name}</div>")),
+                                        ->alignCenter()
+                                        ->state(new HtmlString("<div class='evaluation-context-badge' style='margin-inline: auto; text-align: center;'>{$measurement->name}</div>")),
                                     TextEntry::make("question_text_{$question->id}")
                                         ->hiddenLabel()
-                                        ->state(new HtmlString("<h2 style='font-size:1.5rem; font-weight:700; margin:0 0 0.75rem 0; color:#1e293b;'>{$question->q_text}</h2>")),
+                                        ->alignCenter()
+                                        ->state(new HtmlString("<h2 style='font-size:1.5rem; font-weight:700; margin:0 0 0.75rem 0; color:#1e293b; text-align: center;'>{$question->q_text}</h2>")),
                                     ToggleButtons::make("draft_answers.{$question->id}")
                                         ->hiddenLabel()
                                         ->inline()
@@ -169,6 +179,7 @@ class CreateEvaluation extends CreateRecord
                             ->columnSpanFull(),
                     ];
                 }),
+            ])->columnSpan(['default' => 3, 'lg' => 2]),
         ]);
     }
 

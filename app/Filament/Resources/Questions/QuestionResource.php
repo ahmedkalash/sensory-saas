@@ -31,6 +31,11 @@ class QuestionResource extends Resource
         return 'إعدادات الأسئلة';
     }
 
+    public static function canAccess(): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return QuestionForm::configure($schema);

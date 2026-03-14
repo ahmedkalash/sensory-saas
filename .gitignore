@@ -29,3 +29,5 @@ Thumbs.db
 /.antigravity/rules/copilot-instructions.md
 /.antigravity/rules/guidelines.md
 /nativephp/electron/dist/
+/Output/
+/xamp-php/

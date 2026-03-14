@@ -177,7 +177,17 @@
         <h1 class="error-title">@yield('title')</h1>
         <p class="error-subtitle">@yield('message')</p>
 
+        @hasSection('tips')
+        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 10px; margin-bottom: 2rem; font-size: 0.9rem; color: #475569; text-align: right; border: 1px dashed #cbd5e1; display: flex; align-items: flex-start; gap: 10px;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 24px; height: 24px; color: #eab308; flex-shrink: 0;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.829 1.508-2.336 1.145-.683 2.243-1.42 2.243-3.072C18 9.58 15.313 7.5 12 7.5c-3.314 0-6 2.08-6 4.9 0 1.652 1.098 2.389 2.243 3.072.85.507 1.508 1.353 1.508 2.336v.192m-3-2.383a1.5 1.5 0 0 1 3 0" />
+            </svg>
+            <div>@yield('tips')</div>
+        </div>
+        @endif
+
         <div class="error-actions">
+            @yield('extra-buttons')
             <a href="/" class="btn btn-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
                 العودة للرئيسية

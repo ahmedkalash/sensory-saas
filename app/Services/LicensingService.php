@@ -2,12 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Cache;
-
 class LicensingService
 {
-    private const CACHE_KEY = 'license_activated';
-
     private const PUBLIC_KEY = <<<'PEM'
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4dS2yJ5TL3iFC5I2X8va
@@ -62,21 +58,15 @@ PEM;
         return $result === 1;
     }
 
-    /**
-     * Check if the application is currently activated.
-     */
     public function isActivated(): bool
     {
-        // Use cache to avoid repeated disk reads and wmic calls
-        return Cache::remember(self::CACHE_KEY, 3600, function (): bool {
-            $licenseKey = $this->getStoredLicenseKey();
+        $licenseKey = $this->getStoredLicenseKey();
 
-            if (empty($licenseKey)) {
-                return false;
-            }
+        if (empty($licenseKey)) {
+            return false;
+        }
 
-            return $this->verifyLicense($licenseKey);
-        });
+        return $this->verifyLicense($licenseKey);
     }
 
     /**
@@ -90,15 +80,9 @@ PEM;
 
         $this->storeLicenseKey($licenseKey);
 
-        // Clear the cache so isActivated() picks up the new key
-        Cache::forget(self::CACHE_KEY);
-
         return true;
     }
 
-    /**
-     * Deactivate the application (for testing or reset).
-     */
     public function deactivate(): void
     {
         $path = $this->getLicenseFilePath();
@@ -106,8 +90,6 @@ PEM;
         if (file_exists($path)) {
             unlink($path);
         }
-
-        Cache::forget(self::CACHE_KEY);
     }
 
     /**

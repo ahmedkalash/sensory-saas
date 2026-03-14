@@ -67,8 +67,8 @@
 
             {{-- Title --}}
             <h1 class="srps-hero-title">
-                مقياس أنماط الاستجابة الحسية
-                <span class="srps-hero-title-eng">(SRPS)</span>
+                قائمة انماط الاستجابة الحسية                
+<span class="srps-hero-title-eng">(SRP)</span>
             </h1>
             <p class="srps-hero-subtitle">اللوحة الرئيسية للأداة الإكلينيكية</p>
 

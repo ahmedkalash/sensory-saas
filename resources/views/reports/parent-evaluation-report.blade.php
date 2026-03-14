@@ -446,7 +446,7 @@
         {{-- ======================================== --}}
         {{-- SECTION 2: Detailed Weaknesses --}}
         {{-- ======================================== --}}
-        <div class="section-heading">ثانياً: التوصيات - الأهداف - الأنشطة</div>
+        <div class="section-heading">ثانياً: التوصيات - الأنشطة</div>
 
         @foreach ($measurements as $index => $measurement)
             @php
@@ -474,20 +474,6 @@
                                             <div style="margin-bottom: 6px;">
                                                 @foreach($w['recommendations'] as $recommendation)
                                                     - {{ $recommendation }}
-                                                @endforeach
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                @endforeach
-
-                                <h2 style="color: #4f46e5; margin-bottom: 15px;">أهداف:</h2>
-                                @foreach ($measurement['dimensions'] as $dim)
-                                    @if(!empty($dim['weaknesses']))
-                                        <h3 style="color: #4f46e5; margin-bottom: 15px;">{{ $dim['name'] }}</h3>
-                                        @foreach ($dim['weaknesses'] as $w)
-                                            <div style="margin-bottom: 6px;">
-                                                @foreach($w['goals'] as $goal)
-                                                    - {{ $goal }}
                                                 @endforeach
                                             </div>
                                         @endforeach

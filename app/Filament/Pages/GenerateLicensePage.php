@@ -23,6 +23,11 @@ class GenerateLicensePage extends Page implements HasForms
 
     protected static ?int $navigationSort = 99;
 
+    public static function canAccess(): bool
+    {
+        return false;
+    }
+
     protected string $view = 'filament.pages.generate-license';
 
     public string $machineId = '';

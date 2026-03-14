@@ -130,10 +130,11 @@ class EditEvaluation extends EditRecord
 
         $totalAnswers = $answers->count();
 
-        return $schema->components([
-            View::make('filament.components.evaluation-wizard-css'),
-            View::make('filament.components.no-copy'),
+        return $schema->columns(['default' => 1, 'lg' => 3])->components([
+            View::make('filament.components.evaluation-wizard-css')->columnSpanFull(),
+            View::make('filament.components.no-copy')->columnSpanFull(),
             Section::make('تحديد المقياس وبيانات المريض')
+                ->columnSpan(['default' => 3, 'lg' => 1])
                 ->schema([
                     TextInput::make('title')
                         ->label('عنوان التقييم')
@@ -153,7 +154,8 @@ class EditEvaluation extends EditRecord
                         ->relationship('patient', 'name')
                         ->preload()
                         ->searchable()
-                        ->required(),
+                        ->required()
+                        ->disabled(),
                     TextInput::make('specialist_name')
                         ->label('اسم الأخصائي'),
                     DatePicker::make('evaluation_date')
@@ -163,9 +165,13 @@ class EditEvaluation extends EditRecord
                         ->label('عمر المريض وقت التقييم'),
                 ]),
 
-            Group::make()
-                ->schema(function (Get $get) use ($grouped, $measurements, $totalAnswers) {
-                    $selectedScaleId = $get('selected_scale');
+            // LEFT SIDE (Wizard & Loading)
+            Group::make([
+                View::make('filament.components.loading-overlay'),
+                
+                Group::make()
+                    ->schema(function (Get $get) use ($grouped, $measurements, $totalAnswers) {
+                        $selectedScaleId = $get('selected_scale');
 
                     if (! $selectedScaleId) {
                         return [];
@@ -188,9 +194,9 @@ class EditEvaluation extends EditRecord
                         foreach ($measurementAnswers as $answer) {
                             $answerId = $answer->id;
                             $qText = e($answer->question_text);
-                            $contextHtml = "<div class='evaluation-context-badge'>{$measurementName} &rsaquo; {$answer->dimension_name}</div>";
-                            $progressHtml = "<div class='evaluation-wizard-progress'>السؤال {$answerIndex} من {$totalAnswers}</div>";
-                            $questionHtml = "<h2 style='font-size:1.5rem; font-weight:700; margin:0 0 0.75rem 0; color:#1e293b;'>{$qText}</h2>";
+                            $contextHtml = "<div class='evaluation-context-badge' style='margin-inline: auto; text-align: center;'>{$measurementName}</div>";
+                            $progressHtml = "<div class='evaluation-wizard-progress' style='text-align: center; width: 100%;'>السؤال {$answerIndex} من {$totalAnswers}</div>";
+                            $questionHtml = "<h2 style='font-size:1.5rem; font-weight:700; margin:0 0 0.75rem 0; color:#1e293b; text-align: center;'>{$qText}</h2>";
 
                             $wizardSteps[] = Step::make("a_{$answerId}")
                                 ->label("Q{$answerIndex}")
@@ -200,12 +206,15 @@ class EditEvaluation extends EditRecord
                                 ->schema([
                                     TextEntry::make("progress_{$answerId}")
                                         ->hiddenLabel()
+                                        ->alignCenter()
                                         ->state(new HtmlString($progressHtml)),
                                     TextEntry::make("context_{$answerId}")
                                         ->hiddenLabel()
+                                        ->alignCenter()
                                         ->state(new HtmlString($contextHtml)),
                                     TextEntry::make("question_text_{$answerId}")
                                         ->hiddenLabel()
+                                        ->alignCenter()
                                         ->state(new HtmlString($questionHtml)),
                                     ToggleButtons::make("draft_answers.{$answerId}")
                                         ->hiddenLabel()
@@ -321,6 +330,7 @@ class EditEvaluation extends EditRecord
                             ->columnSpanFull(),
                     ];
                 }),
+            ])->columnSpan(['default' => 3, 'lg' => 2]),
         ]);
     }
 

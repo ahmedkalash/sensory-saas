@@ -19,30 +19,28 @@ DefaultDirName={localappdata}\{#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 ; "ArchitecturesAllowed=x64compatible" specifies that Setup cannot run
 ; on anything but x64 and Windows 11 on Arm.
-ArchitecturesAllowed=x64compatible
+; ArchitecturesAllowed=x64compatible
 ; "ArchitecturesInstallIn64BitMode=x64compatible" requests that the
 ; install be done in "64-bit mode" on x64 or Windows 11 on Arm,
 ; meaning it should use the native 64-bit Program Files directory and
 ; the 64-bit view of the registry.
-ArchitecturesInstallIn64BitMode=x64compatible
+; ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputBaseFilename=Sensory-Assessment
+OutputBaseFilename=Sensory-Assessment-Admin
 SolidCompression=yes
+Compression=lzma2/max
 WizardStyle=modern dynamic
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "arabic"; MessagesFile: "compiler:Languages\Arabic.isl"
 
-[Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-
 [Files]
 Source: "D:\Herd\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Herd\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "debug.log,setup.iss,.agents\*,.ai\*,.antigravity\*,.cursor\*,.gemini\*,.github\*,.idea\*,.junie\*,.vscode\*,.z\*,temp\*,www\storage\logs\*.log,www\storage\framework\views\*.php,www\bootstrap\cache\*.php,www\database\database.sqlite"
+Source: "D:\Herd\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Excludes: "debug.log,www\temp\*,webcache\*,www\setup.iss,www\prepare_build.bat,www\.agents\*,www\.ai\*,www\.antigravity\*,www\.cursor\*,www\.gemini\*,www\.github\*,www\.idea\*,www\.junie\*,www\.vscode\*,www\.z\*,www\.git\*,www\storage\logs\*.log,www\storage\framework\views\*.php,www\storage\framework\cache\data\*,www\storage\framework\sessions\*,www\database\database.sqlite,www\vendor\_laravel_ide,www\vendor\_laravel_idea,www\node_modules\*,www\tests\*,www\storage\license\activation.key,www\Output\*"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
@@ -58,12 +56,16 @@ Name: "{app}\www\bootstrap\cache"; Permissions: users-modify
 Name: "{app}\www\database"; Permissions: users-modify
 
 [Icons]
+; Start Menu shortcuts (always created)
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName} (Web Launcher)"; Filename: "{app}\www\web_launcher.exe"
+; Desktop shortcuts (always created)
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\{#MyAppName} (Web Launcher)"; Filename: "{app}\www\web_launcher.exe"
 
 [Registry]
 ; Force the installed application to ALWAYS run as Administrator
-Root: HKCU; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"; ValueType: string; ValueName: "{app}\{#MyAppExeName}"; ValueData: "RUNASADMIN"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"; ValueType: string; ValueName: "{app}\{#MyAppExeName}"; ValueData: "RUNASADMIN"; Flags: uninsdeletekey
 
-[Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+; [Run]
+; Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

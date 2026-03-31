@@ -25,7 +25,7 @@ class GenerateLicensePage extends Page implements HasForms
 
     public static function canAccess(): bool
     {
-        return false;
+        return true;
     }
 
     protected string $view = 'filament.pages.generate-license';
@@ -46,7 +46,7 @@ class GenerateLicensePage extends Page implements HasForms
             Textarea::make('generatedKey')
                 ->label('المفتاح المُولَّد')
                 ->readOnly()
-                ->visible(fn(): bool => $this->generatedKey !== '')
+                ->visible(fn (): bool => $this->generatedKey !== '')
                 ->rows(4)
                 ->extraAttributes(['dir' => 'ltr', 'style' => 'font-family: Consolas, monospace;']),
         ]);

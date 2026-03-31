@@ -31,3 +31,5 @@ Thumbs.db
 /nativephp/electron/dist/
 /Output/
 /xamp-php/
+/xamp-php/rr
+.rr.yaml

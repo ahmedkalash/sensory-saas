@@ -40,7 +40,7 @@ Name: "arabic"; MessagesFile: "compiler:Languages\Arabic.isl"
 
 [Files]
 Source: "D:\Herd\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Herd\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Excludes: "debug.log,www\temp\*,webcache\*,www\setup.iss,www\prepare_build.bat,www\.agents\*,www\.ai\*,www\.antigravity\*,www\.cursor\*,www\.gemini\*,www\.github\*,www\.idea\*,www\.junie\*,www\.vscode\*,www\.z\*,www\.git\*,www\storage\logs\*.log,www\storage\framework\views\*.php,www\storage\framework\cache\data\*,www\storage\framework\sessions\*,www\database\database.sqlite,www\vendor\_laravel_ide,www\vendor\_laravel_idea,www\node_modules\*,www\tests\*,www\storage\license\activation.key,www\Output\*"
+Source: "D:\Herd\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Excludes: "debug.log,www\temp\*,webcache\*,www\setup.iss,www\.agents\*,www\.ai\*,www\.antigravity\*,www\.cursor\*,www\.gemini\*,www\.github\*,www\.idea\*,www\.junie\*,www\.vscode\*,www\.z\*,www\.git\*,www\storage\logs\*.log,www\storage\framework\views\*.php,www\storage\framework\cache\data\*,www\storage\framework\sessions\*,www\database\database.sqlite,www\vendor\_laravel_ide,www\vendor\_laravel_idea,www\node_modules\*,www\tests\*,www\storage\license\activation.key,www\Output\*"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]

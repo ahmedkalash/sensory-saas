@@ -30,6 +30,10 @@ class LicenseMiddlewareTest extends TestCase
 
     public function test_unactivated_application_redirects_to_license_page_on_home(): void
     {
+        $this->partialMock(LicensingService::class, function ($mock) {
+            $mock->shouldReceive('isActivated')->andReturn(false);
+        });
+
         // Act
         $response = $this->get('/');
 
@@ -40,6 +44,10 @@ class LicenseMiddlewareTest extends TestCase
 
     public function test_unactivated_application_redirects_to_license_page_on_other_routes(): void
     {
+        $this->partialMock(LicensingService::class, function ($mock) {
+            $mock->shouldReceive('isActivated')->andReturn(false);
+        });
+
         // Act
         $response = $this->get('/patients');
 
@@ -50,7 +58,11 @@ class LicenseMiddlewareTest extends TestCase
 
     public function test_unactivated_application_allows_access_to_license_routes(): void
     {
-        // Act
+        $this->partialMock(LicensingService::class, function ($mock) {
+            $mock->shouldReceive('isActivated')->andReturn(false);
+        });
+
+        $this->withoutExceptionHandling();
         $response = $this->get(route('license.show'));
 
         // Assert
@@ -61,15 +73,14 @@ class LicenseMiddlewareTest extends TestCase
     public function test_activated_application_allows_access_to_routes(): void
     {
         // Arrange
-        \App\Http\Middleware\LicenseMiddleware::$bypass = true;
+        $this->partialMock(LicensingService::class, function ($mock) {
+            $mock->shouldReceive('isActivated')->andReturn(true);
+        });
 
         $user = \App\Models\User::factory()->create();
         $this->actingAs($user);
 
         // Act
-        // Filament redirects '/' to the dashboard URL internally or returns the dashboard.
-        // It's safer to test an API route or another standard route, but since it's just Filament,
-        // let's follow the redirects to see where it ends up.
         $this->withoutExceptionHandling();
         $response = $this->get('/');
 
@@ -79,8 +90,5 @@ class LicenseMiddlewareTest extends TestCase
 
         // Assert
         $response->assertStatus(200);
-
-        // Cleanup explicitly
-        \App\Http\Middleware\LicenseMiddleware::$bypass = false;
     }
 }

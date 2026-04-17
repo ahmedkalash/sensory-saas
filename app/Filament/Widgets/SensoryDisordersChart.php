@@ -31,6 +31,7 @@ class SensoryDisordersChart extends ChartWidget
         foreach ($measurements as $measurement) {
             // Count total questions scoring 2 (Often) or 3 (Always) for this measurement across all evaluations
             $weaknessCount = \App\Models\EvaluationAnswer::query()
+                ->whereHas('evaluation') // This will apply the UserScope from the Evaluation model
                 ->where('measurement_name', $measurement->name)
                 ->whereIn('score', [2, 3])
                 ->count();

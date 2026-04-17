@@ -15,13 +15,6 @@ class UserScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         if (Auth::hasUser()) {
-            $user = Auth::user();
-            
-            // If the user is an admin, they can see everything
-            if ($user->type === \App\Enums\UserType::Admin) {
-                return;
-            }
-
             $builder->where('user_id', Auth::id());
         }
     }

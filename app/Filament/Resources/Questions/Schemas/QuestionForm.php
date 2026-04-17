@@ -28,7 +28,8 @@ class QuestionForm
                                     ])
                             )
                             ->searchable()
-                            ->required(),
+                            ->required()
+                            ->disabled(fn (string $operation): bool => $operation === 'edit'),
                         Textarea::make('q_text')
                             ->label('نص السؤال')
                             ->required()

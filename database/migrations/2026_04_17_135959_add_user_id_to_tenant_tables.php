@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('type', ['customer', 'admin'])->default(\App\Enums\UserType::Customer->value)->after('email');
+        Schema::table('tenant_tables', function (Blueprint $table) {
+            //
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('type');
+        Schema::table('tenant_tables', function (Blueprint $table) {
+            //
         });
     }
 };

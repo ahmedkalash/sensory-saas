@@ -38,8 +38,6 @@ class AdminPanelProvider extends PanelProvider
             ->path('/')
             ->login()
             ->registration()
-            ->emailVerification()
-            ->passwordReset()
             ->brandName('SRPS Clinical')
             ->favicon(asset('favicon.ico'))
             ->font('Outfit')

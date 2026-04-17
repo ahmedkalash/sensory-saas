@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Questions;
 
+use App\Enums\UserType;
 use App\Filament\Resources\Questions\Pages\CreateQuestion;
 use App\Filament\Resources\Questions\Pages\EditQuestion;
 use App\Filament\Resources\Questions\Pages\ListQuestions;
@@ -33,7 +34,7 @@ class QuestionResource extends Resource
 
     public static function canAccess(): bool
     {
-        return true;
+        return auth()->user()?->type === UserType::Admin;
     }
 
     public static function form(Schema $schema): Schema

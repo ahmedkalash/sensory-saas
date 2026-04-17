@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\RelationManagers;
 
+use App\Models\Plan;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -16,7 +17,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
 
 class SubscriptionsRelationManager extends RelationManager
 {
@@ -24,7 +24,7 @@ class SubscriptionsRelationManager extends RelationManager
 
     protected static ?string $title = 'الاشتراكات';
 
-    protected static ?string $recordTitleAttribute = 'id';
+    protected static ?string $recordTitleAttribute = 'plan_name';
 
     public function form(Schema $schema): Schema
     {
@@ -32,14 +32,15 @@ class SubscriptionsRelationManager extends RelationManager
             ->components([
                 Select::make('plan_id')
                     ->label('الخطة')
-                    ->relationship('plan', 'name')
+                    ->relationship('plan', 'name', fn ($query) => $query->where('is_active', true))
                     ->required()
+                    ->columnSpanFull()
                     ->live()
                     ->afterStateUpdated(function (callable $set, ?string $state) {
                         if (! $state) {
                             return;
                         }
-                        $plan = \App\Models\Plan::find($state);
+                        $plan = Plan::find($state);
                         if ($plan) {
                             if ($plan->isYearly()) {
                                 $set('ends_at', now()->addDays($plan->duration_days)->format('Y-m-d'));
@@ -55,22 +56,27 @@ class SubscriptionsRelationManager extends RelationManager
                     ->label('موقوف مؤقتاً')
                     ->onIcon('heroicon-m-pause')
                     ->offIcon('heroicon-m-play')
-                    ->onColor('warning'),
+                    ->onColor('warning')
+                    ->default(false)
+                    ->columnSpanFull(),
 
                 DatePicker::make('ends_at')
                     ->label('تاريخ الانتهاء')
-                    ->visible(fn (callable $get) => filled($get('ends_at')) || (\App\Models\Plan::find($get('plan_id'))?->isYearly() ?? false)),
+                    ->columnSpanFull()
+                    ->visible(fn (callable $get) => filled($get('ends_at')) || (Plan::find($get('plan_id'))?->isYearly() ?? false)),
 
                 TextInput::make('quota_remaining')
                     ->label('الرصيد المتبقي')
                     ->numeric()
-                    ->visible(fn (callable $get) => filled($get('quota_remaining')) || (\App\Models\Plan::find($get('plan_id'))?->isQuota() ?? false)),
+                    ->columnSpanFull()
+                    ->visible(fn (callable $get) => filled($get('quota_remaining')) || (Plan::find($get('plan_id'))?->isQuota() ?? false)),
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('plan.name')
                     ->label('الخطة')
@@ -78,21 +84,22 @@ class SubscriptionsRelationManager extends RelationManager
 
                 TextColumn::make('status')
                     ->label('الحالة')
-                    ->badge()
-                    ->sortable(),
+                    ->badge(),
 
                 TextColumn::make('ends_at')
                     ->label('تاريخ الانتهاء')
                     ->date()
                     ->badge()
-                    ->color(fn ($state) => $state && Carbon::parse($state)->isPast() ? Color::Red : Color::Green)
+                    ->color(fn ($state) => $state !== null && $state->isPast() ? Color::Red : Color::Green)
+                    ->placeholder('-')
                     ->sortable(),
 
                 TextColumn::make('quota_remaining')
                     ->label('الرصيد')
                     ->numeric(locale: 'en')
                     ->badge()
-                    ->color(fn ($state) => $state <= 0 ? 'danger' : 'success')
+                    ->color(fn ($state) => $state !== null && $state <= 0 ? 'danger' : 'success')
+                    ->placeholder('-')
                     ->sortable(),
             ])
             ->filters([

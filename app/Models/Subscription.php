@@ -37,6 +37,11 @@ class Subscription extends Model
         return $this->belongsTo(Plan::class);
     }
 
+    public function getPlanNameAttribute(): string
+    {
+        return $this->plan?->name ?? 'اشتراك';
+    }
+
     public function isYearly(): bool
     {
         return $this->plan?->type === PlanType::Yearly;

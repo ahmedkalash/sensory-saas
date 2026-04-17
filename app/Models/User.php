@@ -73,7 +73,7 @@ class User extends Authenticatable implements FilamentUser
         return $this->subscriptions()->active()->exists();
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->type == UserType::Admin;
     }

@@ -28,6 +28,22 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
+    public static function canAccess(): bool
+    {
+        return \Auth::user()->isAdmin();
+    }
+
+    /** @return array<string> */
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email'];
+    }
+
+    public static function getGlobalSearchResultTitle(\Illuminate\Database\Eloquent\Model $record): string
+    {
+        return $record->name;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return UserForm::configure($schema);

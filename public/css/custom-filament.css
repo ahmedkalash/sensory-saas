@@ -348,11 +348,38 @@ body {
    HEADER & NAVIGATION
    ═══════════════════════════════════════════════════ */
 
+/*
+ * Firefox stacking context fix:
+ * backdrop-filter on a positioned element creates a new stacking context in Firefox,
+ * which clips absolutely-positioned children (e.g. the user menu dropdown).
+ * Solution: use a ::before pseudo-element for the blur effect so the topbar itself
+ * remains a clean stacking context parent for its dropdowns.
+ */
 .fi-topbar {
-    background: rgba(255, 255, 255, 0.8) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-    backdrop-filter: blur(8px) !important;
+    background: transparent !important;
     border-bottom: 1px solid var(--glass-border) !important;
+    position: sticky !important;
+    top: 0;
+    z-index: 40 !important;
+    /* Must be visible so absolutely-positioned dropdowns can overflow */
+    overflow: visible !important;
+}
+
+.fi-topbar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.85);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Ensure the user menu dropdown is above the topbar */
+.fi-user-menu-dropdown,
+[data-headlessui-state] {
+    z-index: 9999 !important;
 }
 
 .fi-topbar-item-active {
@@ -525,6 +552,7 @@ table.fi-ta-table,
    HIDE USER MENU AVATAR
    ═══════════════════════════════════════════════════ */
 
+/* User menu visible for SaaS */
 .fi-user-menu {
-    display: none !important;
+    display: flex !important;
 }

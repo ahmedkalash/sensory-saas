@@ -25,7 +25,7 @@ class GenerateLicensePage extends Page implements HasForms
 
     public static function canAccess(): bool
     {
-        return true;
+        return false;
     }
 
     protected string $view = 'filament.pages.generate-license';

@@ -16,7 +16,7 @@ Route::post('/clear-cache-recovery', function () {
 Route::get('/license', [LicenseController::class, 'show'])->name('license.show');
 Route::post('/license/activate', [LicenseController::class, 'activate'])->name('license.activate');
 
-Route::middleware([\App\Http\Middleware\LicenseMiddleware::class])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/evaluations/{evaluation}/report', function (Evaluation $evaluation) {
         $reportService = app(ReportService::class);
         $measurementId = request('measurement_id');
@@ -57,6 +57,3 @@ Route::middleware([\App\Http\Middleware\LicenseMiddleware::class])->group(functi
         ->name('reports.progress');
 });
 
-Route::any('login', function () {
-    return redirect('/');
-})->name('login');

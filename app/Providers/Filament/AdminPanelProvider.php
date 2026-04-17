@@ -2,12 +2,13 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\AutoLoginMiddleware;
-use Filament\Actions\Action;
+use App\Filament\Pages\Profile;
 use Filament\Forms\Components\Select;
+use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -35,6 +36,10 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('/')
+            ->login()
+            ->registration()
+            ->emailVerification()
+            ->passwordReset()
             ->brandName('SRPS Clinical')
             ->favicon(asset('favicon.ico'))
             ->font('Outfit')
@@ -127,8 +132,10 @@ HTML),
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->userMenuItems([
-                'profile' => Action::make('profile')->visible(false),
-                'logout' => Action::make('logout')->visible(false),
+                'profile' => MenuItem::make()
+                    ->label('الملف الشخصي')
+                    ->url(fn (): string => Profile::getUrl())
+                    ->icon('heroicon-o-user-circle'),
             ])
             ->pages([
                 Pages\Dashboard::class,
@@ -139,14 +146,16 @@ HTML),
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
-                // AuthenticateSession::class,
+                AuthenticateSession::class,
                 ShareErrorsFromSession::class,
-                // VerifyCsrfToken::class,
+                VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                AutoLoginMiddleware::class,
-                \App\Http\Middleware\LicenseMiddleware::class,
+            ])
+            ->authMiddleware([
+                Authenticate::class,
             ]);
+
     }
 }

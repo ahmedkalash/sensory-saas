@@ -17,8 +17,20 @@ class DemoEvaluationSeeder extends Seeder
      */
     public function run(): void
     {
+        // 0. Create/Update a demo user
+        $demoUser = \App\Models\User::updateOrCreate(
+            ['email' => 'demo@sensory.app'],
+            [
+                'name' => 'Demo User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'type' => \App\Enums\UserType::Customer,
+                'email_verified_at' => now(),
+            ]
+        );
+
         // 1. Create two demo patients
         $patient1 = Patient::create([
+            'user_id' => $demoUser->id,
             'name' => 'أحمد محمد',
             'dob' => now()->subYears(6)->subMonths(3),
             'gender' => 'ذكر',
@@ -27,6 +39,7 @@ class DemoEvaluationSeeder extends Seeder
         ]);
 
         $patient2 = Patient::create([
+            'user_id' => $demoUser->id,
             'name' => 'سارة علي',
             'dob' => now()->subYears(8)->subMonths(1),
             'gender' => 'أنثى',
@@ -36,6 +49,7 @@ class DemoEvaluationSeeder extends Seeder
 
         // 2. Create the evaluations
         $evaluation1 = Evaluation::create([
+            'user_id' => $demoUser->id,
             'patient_id' => $patient1->id,
             'specialist_name' => 'د. خالد عبدالله',
             'title' => 'التقييم المبدئي الشامل',
@@ -44,6 +58,7 @@ class DemoEvaluationSeeder extends Seeder
         ]);
 
         $evaluation2 = Evaluation::create([
+            'user_id' => $demoUser->id,
             'patient_id' => $patient2->id,
             'specialist_name' => 'أ. نورة صالح',
             'title' => 'متابعة ما بعد 3 أشهر',
@@ -52,6 +67,7 @@ class DemoEvaluationSeeder extends Seeder
         ]);
 
         $patient3 = Patient::create([
+            'user_id' => $demoUser->id,
             'name' => 'عمر المحمدي (حالة مختلطة)',
             'dob' => now()->subYears(7)->subMonths(5),
             'gender' => 'ذكر',
@@ -60,6 +76,7 @@ class DemoEvaluationSeeder extends Seeder
         ]);
 
         $evaluation3 = Evaluation::create([
+            'user_id' => $demoUser->id,
             'patient_id' => $patient3->id,
             'specialist_name' => 'د. سمر محمد',
             'title' => 'التقييم الدوري السنوي',
@@ -131,6 +148,7 @@ class DemoEvaluationSeeder extends Seeder
         foreach ($allPatients as $patient) {
             for ($i = 1; $i <= 3; $i++) {
                 $historicalEval = Evaluation::create([
+                    'user_id' => $demoUser->id,
                     'patient_id' => $patient->id,
                     'specialist_name' => 'أخصائي تجريبي',
                     'title' => 'متابعة دورية '.$i,

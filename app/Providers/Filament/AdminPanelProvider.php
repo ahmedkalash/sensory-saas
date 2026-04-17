@@ -153,6 +153,7 @@ HTML),
             ])
             ->authMiddleware([
                 Authenticate::class,
+                \App\Http\Middleware\EnsureActiveSubscription::class,
             ]);
 
     }

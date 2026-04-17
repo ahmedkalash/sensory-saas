@@ -14,12 +14,6 @@ class DashboardTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        \App\Http\Middleware\LicenseMiddleware::$bypass = true;
-    }
-
     public function test_dashboard_loads_successfully_for_authenticated_user(): void
     {
         $user = User::factory()->create();

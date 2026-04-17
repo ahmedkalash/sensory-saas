@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\LicenseController;
+
 use App\Models\Evaluation;
 use App\Services\ReportService;
 use Illuminate\Support\Facades\Route;
@@ -12,9 +12,6 @@ Route::post('/clear-cache-recovery', function () {
     return redirect('/');
 })->name('recovery.clear-cache');
 
-// License activation routes
-Route::get('/license', [LicenseController::class, 'show'])->name('license.show');
-Route::post('/license/activate', [LicenseController::class, 'activate'])->name('license.activate');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/evaluations/{evaluation}/report', function (Evaluation $evaluation) {

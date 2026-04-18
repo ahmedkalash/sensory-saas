@@ -8,7 +8,7 @@
     - [ ] remaining days, or
     - [ ] remaining quota
 - for the admin: 
-  - [ ] view all users and their plan status
-    - [ ] activate or deactivate a user plan
-    - [ ] update a user password and email
-    - [ ] edit current plans in the systems
+  - [x] view all users and their plan status
+  - [x] activate or deactivate a user plan
+  - [x] update a user password and email
+  - [x] edit current plans in the systems

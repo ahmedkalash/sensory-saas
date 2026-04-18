@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Users\RelationManagers;
 
 use App\Models\Plan;
+use App\Models\Subscription;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -10,6 +11,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Support\Colors\Color;
@@ -125,10 +127,42 @@ class SubscriptionsRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
-                    ->label('إضافة اشتراك'),
+                    ->label('إضافة اشتراك')
+                    ->before(function (RelationManager $livewire, CreateAction $action) {
+                        if ($livewire->getOwnerRecord()->hasActiveSubscription()) {
+                            Notification::make()
+                                ->danger()
+                                ->title('خطأ في العملية')
+                                ->body('لا يمكن إضافة اشتراك جديد للمستخدم لأنه يمتلك اشتراكاً نشطاً بالفعل.')
+                                ->send();
+
+                            $action->halt();
+                        }
+                    }),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->before(function (Subscription $record, array $data, EditAction $action) {
+                        // If the user is trying to unsuspend
+                        if ($record->is_suspended && ! ($data['is_suspended'] ?? true)) {
+                            // Check if another one is active
+                            $exists = Subscription::query()
+                                ->where('user_id', $record->user_id)
+                                ->where('id', '!=', $record->id)
+                                ->active()
+                                ->exists();
+
+                            if ($exists) {
+                                Notification::make()
+                                    ->danger()
+                                    ->title('خطأ في العملية')
+                                    ->body('لا يمكن تفعيل هذا الاشتراك؛ يوجد اشتراك نشط آخر لهذا المستخدم.')
+                                    ->send();
+
+                                $action->halt();
+                            }
+                        }
+                    }),
                 DeleteAction::make(),
             ])
             ->toolbarActions([

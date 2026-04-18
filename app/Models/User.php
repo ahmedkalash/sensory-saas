@@ -68,6 +68,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(Subscription::class)->latestOfMany();
     }
 
+    public function activeSubscription(): HasOne
+    {
+        return $this->hasOne(Subscription::class)->active();
+    }
+
     public function hasActiveSubscription(): bool
     {
         return $this->subscriptions()->active()->exists();

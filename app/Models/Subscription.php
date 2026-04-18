@@ -7,6 +7,7 @@ use App\Enums\SubscriptionStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class Subscription extends Model
 {
@@ -22,7 +23,9 @@ class Subscription extends Model
                     ->exists();
 
                 if ($exists) {
-                    throw new \Exception('لا يمكن تفعيل أكثر من اشتراك في نفس الوقت لهذا المستخدم.');
+                    throw ValidationException::withMessages([
+                        'plan_id' => 'لا يمكن تفعيل أكثر من اشتراك في نفس الوقت لهذا المستخدم.',
+                    ]);
                 }
             }
         });

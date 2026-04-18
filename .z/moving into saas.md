@@ -1,5 +1,6 @@
-- [ ] add plan/subscription implementation and enforce plan subscription to access the panel- no payment gateway integrations the client eill contact the admin to pay him amd them the admin will activate his plan from the admin account
-- [ ] add contact info to contact the admin
+- [x] add plan/subscription implementation and enforce plan subscription to access the panel- no payment gateway integrations
+   the client will contact the admin to pay him amd them the admin will activate his plan from the admin account
+- [ ] add contact info to contact the admin and the dev (footer)
 - [x] plans: 
       - per year [start date, end date]
       - per quota for number of evaluations made in a user account, they does not have end end date

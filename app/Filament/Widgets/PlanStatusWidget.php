@@ -29,7 +29,7 @@ class PlanStatusWidget extends StatsOverviewWidget
         }
 
         /** @var \App\Models\Subscription|null $subscription */
-        $subscription = $user->subscription()->with('plan')->first();
+        $subscription = $user->activeSubscription()->with('plan')->first();
 
         if (! $subscription || ! $subscription->isActive()) {
             return [

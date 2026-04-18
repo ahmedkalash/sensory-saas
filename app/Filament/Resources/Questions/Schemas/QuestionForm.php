@@ -23,20 +23,19 @@ class QuestionForm
                             ->options(
                                 Dimension::with('measurement')
                                     ->get()
-                                    ->mapWithKeys(fn (Dimension $d) => [
+                                    ->mapWithKeys(fn(Dimension $d) => [
                                         $d->id => "{$d->measurement->name} ← {$d->name}",
                                     ])
                             )
                             ->searchable()
                             ->required()
-                            ->disabled(fn (string $operation): bool => $operation === 'edit'),
+                            ->disabled(fn(string $operation): bool => $operation === 'edit'),
                         Textarea::make('q_text')
                             ->label('نص السؤال')
                             ->required()
                             ->rows(3)
                             ->columnSpanFull(),
-                    ])
-                    ->columns(1),
+                    ])->columnSpanFull(),
 
                 Section::make('التوصيات والأنشطة والأهداف')
                     ->description('يتم تضمين هذه البنود في التقرير لكل سؤال يحصل على درجة ٢ أو ٣.')
@@ -66,7 +65,7 @@ class QuestionForm
                             ->addActionLabel('إضافة هدف')
                             ->defaultItems(0)
                             ->columnSpanFull(),
-                    ]),
+                    ])->columnSpanFull(),
             ]);
     }
 }

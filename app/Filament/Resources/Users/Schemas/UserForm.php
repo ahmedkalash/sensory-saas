@@ -18,24 +18,21 @@ class UserForm
                 TextInput::make('name')
                     ->label('الاسم')
                     ->required()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
+                    ->maxLength(255),
 
                 TextInput::make('email')
                     ->label('البريد الإلكتروني')
                     ->email()
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->maxLength(255)
-                    ->columnSpanFull(),
+                    ->maxLength(255),
 
                 Select::make('type')
                     ->label('النوع')
                     ->options(UserType::class)
                     ->required()
                     ->default(UserType::Customer->value)
-                    ->disabled(fn (string $operation): bool => $operation === 'edit')
-                    ->columnSpanFull(),
+                    ->disabled(fn (string $operation): bool => $operation === 'edit'),
 
                 TextInput::make('password')
                     ->label('كلمة المرور')
@@ -44,15 +41,13 @@ class UserForm
                     ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create')
-                    ->rule(Password::default())
-                    ->columnSpanFull(),
+                    ->rule(Password::default()),
 
                 TextInput::make('password_confirmation')
                     ->label('تأكيد كلمة المرور')
                     ->password()
                     ->required(fn (string $operation): bool => $operation === 'create')
-                    ->dehydrated(false)
-                    ->columnSpanFull(),
+                    ->dehydrated(false),
             ]);
     }
 }

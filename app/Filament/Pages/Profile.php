@@ -43,7 +43,7 @@ class Profile extends Page implements HasForms
     public function form(Schema $schema): Schema
     {
         return $schema
-            ->schema([
+            ->components([
                 Section::make('الملف الشخصي')
                     ->description('إدارة معلومات حسابك وكلمة المرور')
                     ->schema([
@@ -55,11 +55,11 @@ class Profile extends Page implements HasForms
                             ->email()
                             ->required()
                             ->unique('users', 'email', auth()->user()),
-                    ]),
+                    ])
+                    ->columns(),
                 Section::make('كلمة المرور')
                     ->description('تغيير كلمة المرور الخاصة بك')
                     ->schema([
-
                         TextInput::make('new_password')
                             ->label('كلمة المرور الجديدة')
                             ->password()
@@ -73,7 +73,8 @@ class Profile extends Page implements HasForms
                             ->requiredWith('new_password')
                             ->dehydrated(false)
                             ->autocomplete('new-password'),
-                    ]),
+                    ])
+                    ->columns(),
             ])
             ->statePath('data');
     }

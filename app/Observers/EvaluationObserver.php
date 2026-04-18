@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Evaluation;
+use App\Models\Subscription;
 
 class EvaluationObserver
 {
@@ -16,8 +17,8 @@ class EvaluationObserver
             return;
         }
 
-        /** @var \App\Models\Subscription|null $subscription */
-        $subscription = $user->subscription()->first();
+        /** @var Subscription|null $subscription */
+        $subscription = $user->subscriptions()->active()->first();
         if ($subscription && $subscription->isQuota() && $subscription->quota_remaining > 0) {
             $subscription->decrement('quota_remaining');
         }

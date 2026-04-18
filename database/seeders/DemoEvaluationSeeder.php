@@ -2,13 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PlanType;
 use App\Enums\Score;
 use App\Enums\UserType;
 use App\Models\Dimension;
 use App\Models\Evaluation;
 use App\Models\EvaluationAnswer;
 use App\Models\Patient;
+use App\Models\Plan;
 use App\Models\Question;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -30,6 +33,20 @@ class DemoEvaluationSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        // 0.5. Add an active subscription for the demo user (100 Assessments Quota)
+        $quotaPlan = Plan::where('type', PlanType::Quota)->first();
+        if ($quotaPlan) {
+            Subscription::updateOrCreate(
+                ['user_id' => $demoUser->id],
+                [
+                    'plan_id' => $quotaPlan->id,
+                    'quota_remaining' => 100,
+                    'is_suspended' => false,
+                    'ends_at' => null,
+                ]
+            );
+        }
 
         // 1. Create two demo patients
         $patient1 = Patient::updateOrCreate([

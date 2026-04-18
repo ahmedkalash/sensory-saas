@@ -33,7 +33,7 @@
                     <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; font-weight: 700; line-height: 1;">الإدارة</div>
                     <div id="footer-admin-label" style="font-size: 0.875rem; color: #374151; font-weight: 700; transition: color 0.15s;"
                          onmouseover="this.style.color='#0891b2'" onmouseout="this.style.color='#374151'">الدعم العام</div>
-                    <div style="font-size: 0.75rem; color: #6b7280; font-family: monospace; line-height: 1; margin-top: 2px;">+{{ config('app.admin_whatsapp') }}</div>
+                    <div dir="ltr" style="font-size: 0.75rem; color: #6b7280; font-family: monospace; line-height: 1; margin-top: 2px; text-align: right;">{{ config('app.admin_whatsapp') }}</div>
                 </div>
                 <div style="padding: 8px; background: #ecfdf5; color: #059669; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.07); transition: all 0.15s; display:inline-flex;"
                      onmouseover="this.style.background='#059669';this.style.color='#fff'" onmouseout="this.style.background='#ecfdf5';this.style.color='#059669'">
@@ -56,7 +56,7 @@
                     <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; font-weight: 700; line-height: 1;">المبرمج</div>
                     <div style="font-size: 0.875rem; color: #374151; font-weight: 700; transition: color 0.15s;"
                          onmouseover="this.style.color='#0891b2'" onmouseout="this.style.color='#374151'">الدعم التقني</div>
-                    <div style="font-size: 0.75rem; color: #6b7280; font-family: monospace; line-height: 1; margin-top: 2px;">+{{ config('app.developer_whatsapp') }}</div>
+                    <div dir="ltr" style="font-size: 0.75rem; color: #6b7280; font-family: monospace; line-height: 1; margin-top: 2px; text-align: right;">{{ config('app.developer_whatsapp') }}</div>
                 </div>
                 <div style="padding: 8px; background: #ecfeff; color: #0891b2; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.07); transition: all 0.15s; display:inline-flex;"
                      onmouseover="this.style.background='#0891b2';this.style.color='#fff'" onmouseout="this.style.background='#ecfeff';this.style.color='#0891b2'">

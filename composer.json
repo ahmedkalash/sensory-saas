@@ -7,12 +7,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-openssl": "*",
         "barryvdh/laravel-dompdf": "*",
         "carlos-meneses/laravel-mpdf": "*",
         "filament/filament": "~4.8.1",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1",
-        "ext-openssl": "*"
+        "laravel/socialite": "*",
+        "laravel/tinker": "^2.10.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -4,6 +4,10 @@ use App\Models\Evaluation;
 use App\Services\ReportService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\SocialAuthController;
+
+Route::get('auth/{provider}/redirect', [SocialAuthController::class, 'redirectToProvider'])->name('auth.social.redirect');
+Route::get('auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('auth.social.callback');
 
 Route::post('/clear-cache-recovery', function () {
     Cache::forget('migrated_version');

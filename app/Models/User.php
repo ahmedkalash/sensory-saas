@@ -32,6 +32,11 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
         'type',
+        'provider_name',
+        'provider_id',
+        'social_token',
+        'social_refresh_token',
+        'social_expires_at',
     ];
 
     /**
@@ -55,6 +60,7 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'type' => UserType::class,
+            'social_expires_at' => 'datetime',
         ];
     }
 

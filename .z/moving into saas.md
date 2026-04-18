@@ -5,11 +5,15 @@
       - per year [start date, end date]
       - per quota for number of evaluations made in a user account, they does not have end end date
 - [ ] for quota based plan the remaining quota must be updated after adding new evaluations 
-- [ ] customer can view current plan status:
-    - [ ] remaining days, or
-    - [ ] remaining quota
+- [x] customer can view current plan status:
+    - [x] remaining days, or
+    - [x] remaining quota
 - for the admin: 
   - [x] view all users and their plan status
   - [x] activate or deactivate a user plan
   - [x] update a user password and email
   - [x] edit current plans in the systems
+
+- [ ] login via
+    [ ] Google 
+    [ ] Facebook 

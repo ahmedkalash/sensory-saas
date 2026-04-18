@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Subscription;
 use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PlanStatusWidget extends StatsOverviewWidget
 {
-    protected static ?int $sort = -3;
+    protected static ?int $sort = -9;
 
     protected int|string|array $columnSpan = 'full';
 
@@ -28,7 +29,7 @@ class PlanStatusWidget extends StatsOverviewWidget
             return [];
         }
 
-        /** @var \App\Models\Subscription|null $subscription */
+        /** @var Subscription|null $subscription */
         $subscription = $user->activeSubscription()->with('plan')->first();
 
         if (! $subscription || ! $subscription->isActive()) {

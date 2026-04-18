@@ -132,4 +132,6 @@ return [
     */
 
     'admin_whatsapp' => env('ADMIN_WHATSAPP'),
+
+    'developer_whatsapp' => env('DEVELOPER_WHATSAPP'),
 ];

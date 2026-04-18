@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Profile;
+use App\Http\Middleware\EnsureActiveSubscription;
 use Filament\Forms\Components\Select;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -92,6 +93,7 @@ HTML),
                     <link rel="stylesheet" href="/css/custom-filament.css">
                 '),
             )
+           
             ->renderHook(
                 'panels::body.start',
                 fn () => new HtmlString(<<<'HTML'
@@ -151,9 +153,13 @@ HTML),
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->renderHook(
+                'panels::footer',
+                fn () => view('filament.components.footer'),
+            )
             ->authMiddleware([
                 Authenticate::class,
-                \App\Http\Middleware\EnsureActiveSubscription::class,
+                EnsureActiveSubscription::class,
             ]);
 
     }

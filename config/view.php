@@ -28,9 +28,6 @@ return [
     |
     */
 
-    'compiled' => env(
-        'VIEW_COMPILED_PATH',
-        env('DISABLE_VIEW_CACHE', false) ? sys_get_temp_dir() : realpath(storage_path('framework/views'))
-    ),
+    'compiled' => env('VIEW_COMPILED_PATH', realpath(storage_path('framework/views'))),
 
 ];

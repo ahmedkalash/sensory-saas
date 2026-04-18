@@ -27,13 +27,6 @@ class UserForm
                     ->unique(ignoreRecord: true)
                     ->maxLength(255),
 
-                Select::make('type')
-                    ->label('النوع')
-                    ->options(UserType::class)
-                    ->required()
-                    ->default(UserType::Customer->value)
-                    ->disabled(fn (string $operation): bool => $operation === 'edit'),
-
                 TextInput::make('password')
                     ->label('كلمة المرور')
                     ->password()

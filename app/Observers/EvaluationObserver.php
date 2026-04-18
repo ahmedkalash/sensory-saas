@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\PlanType;
 use App\Models\Evaluation;
 use App\Models\Subscription;
 
@@ -13,13 +14,19 @@ class EvaluationObserver
     public function created(Evaluation $evaluation): void
     {
         $user = $evaluation->user;
+
         if (! $user) {
             return;
         }
 
         /** @var Subscription|null $subscription */
-        $subscription = $user->subscriptions()->active()->first();
-        if ($subscription && $subscription->isQuota() && $subscription->quota_remaining > 0) {
+        $subscription = Subscription::where('user_id', $user->id)
+            ->whereHas('plan', fn ($q) => $q->where('type', PlanType::Quota))
+            ->where('quota_remaining', '>', 0)
+            ->where('is_suspended', false)
+            ->first();
+
+        if ($subscription) {
             $subscription->decrement('quota_remaining');
         }
     }

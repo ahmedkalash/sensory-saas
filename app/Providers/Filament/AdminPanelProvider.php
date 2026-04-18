@@ -93,7 +93,7 @@ HTML),
                     <link rel="stylesheet" href="/css/custom-filament.css">
                 '),
             )
-           
+
             ->renderHook(
                 'panels::body.start',
                 fn () => new HtmlString(<<<'HTML'

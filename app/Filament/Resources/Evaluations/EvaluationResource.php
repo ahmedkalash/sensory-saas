@@ -116,7 +116,7 @@ class EvaluationResource extends Resource
                             }
 
                             $url = route('evaluations.report.html', $params);
-                            $livewire->js("window.open('" . $url . "', '_blank')");
+                            $livewire->js("window.open('".$url."', '_blank')");
                         }),
                     Action::make('downloadReport')
                         ->label('تحميل التقرير')

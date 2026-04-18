@@ -26,11 +26,11 @@ class ProgressReportController extends Controller
 
         $mpdf = $reportService->generateProgressReport($eval1, $eval2);
 
-        $filename = 'مقارنة_تقدم_' . ($patient->name ?? 'طفل') . '_' . now()->format('Y-m-d') . '.pdf';
+        $filename = 'مقارنة_تقدم_'.($patient->name ?? 'طفل').'_'.now()->format('Y-m-d').'.pdf';
 
         return response($mpdf->Output($filename, 'S'), 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
         ]);
     }
 }

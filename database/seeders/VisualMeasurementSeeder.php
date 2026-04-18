@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Measurement;
-use App\Models\Question;
 use Illuminate\Database\Seeder;
 
 class VisualMeasurementSeeder extends Seeder

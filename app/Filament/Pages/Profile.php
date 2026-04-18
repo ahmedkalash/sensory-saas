@@ -3,12 +3,12 @@
 namespace App\Filament\Pages;
 
 use App\Models\User;
-use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Pages\Page;
 use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
@@ -17,19 +17,19 @@ class Profile extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-circle';
 
     protected string $view = 'filament.pages.profile';
 
     // Set to true to show the page in the navigation sidebar
     protected static bool $shouldRegisterNavigation = true;
+
     protected static ?string $title = 'الملف الشخصي';
 
     protected static ?int $navigationSort = 99;
 
     // Add title for the navigation bar
     protected static ?string $navigationLabel = 'الملف الشخصي';
-
 
     public ?array $data = [];
 
@@ -91,7 +91,7 @@ class Profile extends Page implements HasForms
             'email' => $data['email'],
         ]);
 
-        if (!empty($data['new_password'])) {
+        if (! empty($data['new_password'])) {
             $user->update([
                 'password' => Hash::make($data['new_password']),
             ]);

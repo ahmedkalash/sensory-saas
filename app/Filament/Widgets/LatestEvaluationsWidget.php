@@ -39,7 +39,7 @@ class LatestEvaluationsWidget extends TableWidget
                 Action::make('view')
                     ->label('عرض')
                     ->icon('heroicon-m-eye')
-                    ->url(fn(\App\Models\Evaluation $record): string => \App\Filament\Resources\Evaluations\EvaluationResource::getUrl('edit', ['record' => $record])),
+                    ->url(fn (\App\Models\Evaluation $record): string => \App\Filament\Resources\Evaluations\EvaluationResource::getUrl('edit', ['record' => $record])),
             ])
             ->paginated(false);
     }

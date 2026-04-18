@@ -41,7 +41,7 @@ class CreateEvaluation extends CreateRecord
         return $schema->columns(['default' => 1, 'lg' => 3])->components([
             View::make('filament.components.evaluation-wizard-css')->columnSpanFull(),
             View::make('filament.components.no-copy')->columnSpanFull(),
-            
+
             // RIGHT SIDE (Data Entry)
             Section::make('تحديد المقياس وبيانات المريض')
                 ->columnSpan(['default' => 3, 'lg' => 1])
@@ -93,92 +93,92 @@ class CreateEvaluation extends CreateRecord
 
             // LEFT SIDE (Wizard & Loading)
             Group::make([
-                    View::make('filament.components.loading-overlay'),
-                    
-                    Group::make()
-                        ->schema(function (Get $get) {
-                    $selectedScaleId = $get('selected_scale');
+                View::make('filament.components.loading-overlay'),
 
-                    if (! $selectedScaleId) {
-                        return [];
-                    }
+                Group::make()
+                    ->schema(function (Get $get) {
+                        $selectedScaleId = $get('selected_scale');
 
-                    /** @var Measurement $measurement */
-                    $measurement = Measurement::with('dimensions.questions')->find($selectedScaleId);
-
-                    if (! $measurement) {
-                        return [];
-                    }
-
-                    $wizardSteps = [];
-                    $totalQuestionsForScale = $measurement->dimensions->sum(fn ($d) => $d->questions->count());
-                    $questionIndex = 1;
-
-                    foreach ($measurement->dimensions as $dimension) {
-                        foreach ($dimension->questions as $question) {
-                            $wizardSteps[] = Step::make("q_{$question->id}")
-                                ->label("Q{$questionIndex}")
-                                ->id("q_{$question->id}")
-                                ->icon(fn (Get $get) => $get("draft_answers.{$question->id}") !== null ? Heroicon::HandThumbUp : Heroicon::QuestionMarkCircle)
-                                ->completedIcon(Heroicon::HandThumbUp)
-                                ->schema([
-                                    TextEntry::make("progress_{$question->id}")
-                                        ->hiddenLabel()
-                                        ->alignCenter()
-                                        ->state(new HtmlString("<div class='evaluation-wizard-progress' style='text-align: center; width: 100%;'>السؤال {$questionIndex} من {$totalQuestionsForScale}</div>")),
-                                    TextEntry::make("context_{$question->id}")
-                                        ->hiddenLabel()
-                                        ->alignCenter()
-                                        ->state(new HtmlString("<div class='evaluation-context-badge' style='margin-inline: auto; text-align: center;'>{$measurement->name}</div>")),
-                                    TextEntry::make("question_text_{$question->id}")
-                                        ->hiddenLabel()
-                                        ->alignCenter()
-                                        ->state(new HtmlString("<h2 style='font-size:1.5rem; font-weight:700; margin:0 0 0.75rem 0; color:#1e293b; text-align: center;'>{$question->q_text}</h2>")),
-                                    ToggleButtons::make("draft_answers.{$question->id}")
-                                        ->hiddenLabel()
-                                        ->inline()
-                                        ->options([
-                                            Score::Never->value => Score::Never->label(),
-                                            Score::Sometimes->value => Score::Sometimes->label(),
-                                            Score::Often->value => Score::Often->label(),
-                                            Score::Always->value => Score::Always->label(),
-                                        ])
-                                        ->colors([
-                                            Score::Never->value => 'gray',
-                                            Score::Sometimes->value => 'success',
-                                            Score::Often->value => 'warning',
-                                            Score::Always->value => 'danger',
-                                        ])
-                                        ->icons([
-                                            Score::Never->value => 'heroicon-o-x-circle',
-                                            Score::Sometimes->value => 'heroicon-o-minus-circle',
-                                            Score::Often->value => 'heroicon-o-exclamation-circle',
-                                            Score::Always->value => 'heroicon-o-check-circle',
-                                        ])
-                                        ->grouped()
-                                        ->dehydrated(false)
-                                        ->required()
-                                        ->validationAttribute('الإجابة')
-                                        ->live(),
-                                    Textarea::make("draft_notes.{$question->id}")
-                                        ->label('ملاحظات (اختياري)')
-                                        ->dehydrated(false)
-                                        ->rows(2)
-                                        ->columnSpanFull(),
-                                ]);
-                            $questionIndex++;
+                        if (! $selectedScaleId) {
+                            return [];
                         }
-                    }
 
-                    return [
-                        Wizard::make($wizardSteps)
-                            ->view('filament.components.custom-wizard')
-                            ->startOnStep(1)
-                            ->skippable()
-                            ->persistStepInQueryString()
-                            ->columnSpanFull(),
-                    ];
-                }),
+                        /** @var Measurement $measurement */
+                        $measurement = Measurement::with('dimensions.questions')->find($selectedScaleId);
+
+                        if (! $measurement) {
+                            return [];
+                        }
+
+                        $wizardSteps = [];
+                        $totalQuestionsForScale = $measurement->dimensions->sum(fn ($d) => $d->questions->count());
+                        $questionIndex = 1;
+
+                        foreach ($measurement->dimensions as $dimension) {
+                            foreach ($dimension->questions as $question) {
+                                $wizardSteps[] = Step::make("q_{$question->id}")
+                                    ->label("Q{$questionIndex}")
+                                    ->id("q_{$question->id}")
+                                    ->icon(fn (Get $get) => $get("draft_answers.{$question->id}") !== null ? Heroicon::HandThumbUp : Heroicon::QuestionMarkCircle)
+                                    ->completedIcon(Heroicon::HandThumbUp)
+                                    ->schema([
+                                        TextEntry::make("progress_{$question->id}")
+                                            ->hiddenLabel()
+                                            ->alignCenter()
+                                            ->state(new HtmlString("<div class='evaluation-wizard-progress' style='text-align: center; width: 100%;'>السؤال {$questionIndex} من {$totalQuestionsForScale}</div>")),
+                                        TextEntry::make("context_{$question->id}")
+                                            ->hiddenLabel()
+                                            ->alignCenter()
+                                            ->state(new HtmlString("<div class='evaluation-context-badge' style='margin-inline: auto; text-align: center;'>{$measurement->name}</div>")),
+                                        TextEntry::make("question_text_{$question->id}")
+                                            ->hiddenLabel()
+                                            ->alignCenter()
+                                            ->state(new HtmlString("<h2 style='font-size:1.5rem; font-weight:700; margin:0 0 0.75rem 0; color:#1e293b; text-align: center;'>{$question->q_text}</h2>")),
+                                        ToggleButtons::make("draft_answers.{$question->id}")
+                                            ->hiddenLabel()
+                                            ->inline()
+                                            ->options([
+                                                Score::Never->value => Score::Never->label(),
+                                                Score::Sometimes->value => Score::Sometimes->label(),
+                                                Score::Often->value => Score::Often->label(),
+                                                Score::Always->value => Score::Always->label(),
+                                            ])
+                                            ->colors([
+                                                Score::Never->value => 'gray',
+                                                Score::Sometimes->value => 'success',
+                                                Score::Often->value => 'warning',
+                                                Score::Always->value => 'danger',
+                                            ])
+                                            ->icons([
+                                                Score::Never->value => 'heroicon-o-x-circle',
+                                                Score::Sometimes->value => 'heroicon-o-minus-circle',
+                                                Score::Often->value => 'heroicon-o-exclamation-circle',
+                                                Score::Always->value => 'heroicon-o-check-circle',
+                                            ])
+                                            ->grouped()
+                                            ->dehydrated(false)
+                                            ->required()
+                                            ->validationAttribute('الإجابة')
+                                            ->live(),
+                                        Textarea::make("draft_notes.{$question->id}")
+                                            ->label('ملاحظات (اختياري)')
+                                            ->dehydrated(false)
+                                            ->rows(2)
+                                            ->columnSpanFull(),
+                                    ]);
+                                $questionIndex++;
+                            }
+                        }
+
+                        return [
+                            Wizard::make($wizardSteps)
+                                ->view('filament.components.custom-wizard')
+                                ->startOnStep(1)
+                                ->skippable()
+                                ->persistStepInQueryString()
+                                ->columnSpanFull(),
+                        ];
+                    }),
             ])->columnSpan(['default' => 3, 'lg' => 2]),
         ]);
     }

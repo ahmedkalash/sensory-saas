@@ -1,17 +1,16 @@
 <?php
 
-
 use App\Models\Evaluation;
 use App\Services\ReportService;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 
 Route::post('/clear-cache-recovery', function () {
     Cache::forget('migrated_version');
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+
     return redirect('/');
 })->name('recovery.clear-cache');
-
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/evaluations/{evaluation}/report', function (Evaluation $evaluation) {
@@ -53,4 +52,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/patients/{patient}/progress-report', [\App\Http\Controllers\ProgressReportController::class, 'download'])
         ->name('reports.progress');
 });
-

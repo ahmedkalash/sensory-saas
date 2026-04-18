@@ -23,13 +23,13 @@ class QuestionForm
                             ->options(
                                 Dimension::with('measurement')
                                     ->get()
-                                    ->mapWithKeys(fn(Dimension $d) => [
+                                    ->mapWithKeys(fn (Dimension $d) => [
                                         $d->id => "{$d->measurement->name} ← {$d->name}",
                                     ])
                             )
                             ->searchable()
                             ->required()
-                            ->disabled(fn(string $operation): bool => $operation === 'edit'),
+                            ->disabled(fn (string $operation): bool => $operation === 'edit'),
                         Textarea::make('q_text')
                             ->label('نص السؤال')
                             ->required()

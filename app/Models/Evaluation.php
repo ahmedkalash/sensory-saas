@@ -24,6 +24,10 @@ class Evaluation extends Model
 
     protected static function booted(): void
     {
+        parent::booted();
+
+        static::observe(\App\Observers\EvaluationObserver::class);
+
         static::addGlobalScope(new UserScope);
 
         static::creating(function (Evaluation $evaluation) {

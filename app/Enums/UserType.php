@@ -9,7 +9,7 @@ enum UserType: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Admin => 'مدير',
             self::Customer => 'عميل',
         };

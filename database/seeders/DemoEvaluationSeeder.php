@@ -46,6 +46,9 @@ class DemoEvaluationSeeder extends Seeder
                     'ends_at' => null,
                 ]
             );
+
+            // Force cleanup to ensure 'created' event triggers and decrements quota
+            Evaluation::where('user_id', $demoUser->id)->delete();
         }
 
         // 1. Create two demo patients
@@ -71,8 +74,9 @@ class DemoEvaluationSeeder extends Seeder
         $evaluation1 = Evaluation::updateOrCreate([
             'user_id' => $demoUser->id,
             'patient_id' => $patient1->id,
-            'specialist_name' => 'د. خالد عبدالله',
             'title' => 'التقييم المبدئي الشامل',
+        ], [
+            'specialist_name' => 'د. خالد عبدالله',
             'evaluation_date' => now()->subDays(2),
             'child_age' => '6 سنوات و 3 أشهر',
         ]);
@@ -80,8 +84,9 @@ class DemoEvaluationSeeder extends Seeder
         $evaluation2 = Evaluation::updateOrCreate([
             'user_id' => $demoUser->id,
             'patient_id' => $patient2->id,
-            'specialist_name' => 'أ. نورة صالح',
             'title' => 'متابعة ما بعد 3 أشهر',
+        ], [
+            'specialist_name' => 'أ. نورة صالح',
             'evaluation_date' => now()->subDays(5),
             'child_age' => '8 سنوات و شهر',
         ]);
@@ -98,8 +103,9 @@ class DemoEvaluationSeeder extends Seeder
         $evaluation3 = Evaluation::updateOrCreate([
             'user_id' => $demoUser->id,
             'patient_id' => $patient3->id,
-            'specialist_name' => 'د. سمر محمد',
             'title' => 'التقييم الدوري السنوي',
+        ], [
+            'specialist_name' => 'د. سمر محمد',
             'evaluation_date' => now(),
             'child_age' => '7 سنوات و 5 أشهر',
         ]);
@@ -152,13 +158,13 @@ class DemoEvaluationSeeder extends Seeder
 
         // 5. Bulk insert answers
         foreach (array_chunk($answers1, 100) as $chunk) {
-            EvaluationAnswer::upsert($chunk,[] ,['updated_at']);
+            EvaluationAnswer::upsert($chunk, [], ['updated_at']);
         }
         foreach (array_chunk($answers2, 100) as $chunk) {
-            EvaluationAnswer::upsert($chunk,[] ,['updated_at']);
+            EvaluationAnswer::upsert($chunk, [], ['updated_at']);
         }
         foreach (array_chunk($answers3, 100) as $chunk) {
-            EvaluationAnswer::upsert($chunk,[] ,['updated_at']);
+            EvaluationAnswer::upsert($chunk, [], ['updated_at']);
         }
 
         // 6. Create 3 historical evaluations per patient to demo Progress Tracking comparison
@@ -170,8 +176,9 @@ class DemoEvaluationSeeder extends Seeder
                 $historicalEval = Evaluation::updateOrCreate([
                     'user_id' => $demoUser->id,
                     'patient_id' => $patient->id,
-                    'specialist_name' => 'أخصائي تجريبي',
                     'title' => 'متابعة دورية '.$i,
+                ], [
+                    'specialist_name' => 'أخصائي تجريبي',
                     'evaluation_date' => now()->subMonths(5 - $i),
                     'child_age' => '6 سنوات',
                 ]);
@@ -189,7 +196,7 @@ class DemoEvaluationSeeder extends Seeder
         }
 
         foreach (array_chunk($historicalAnswers, 100) as $chunk) {
-            EvaluationAnswer::upsert($chunk,[] ,['updated_at']);
+            EvaluationAnswer::upsert($chunk, [], ['updated_at']);
         }
     }
 

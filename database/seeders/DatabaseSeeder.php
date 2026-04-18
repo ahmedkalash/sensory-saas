@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     private array $seeders = [
         AdminSeeder::class,
+
         AuditoryMeasurementSeeder::class,
         TactileMeasurementSeeder::class,
         VestibularMeasurementSeeder::class,
@@ -23,7 +24,10 @@ class DatabaseSeeder extends Seeder
         OlfactoryMeasurementSeeder::class,
         GustatoryMeasurementSeeder::class,
         VisualMeasurementSeeder::class,
+
         DemoEvaluationSeeder::class,
+
+        PlanSeeder::class,
     ];
 
     /**

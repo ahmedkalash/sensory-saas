@@ -15,6 +15,7 @@ class Plan extends Model
     protected $fillable = [
         'name',
         'type',
+        'price',
         'duration_days',
         'quota_count',
         'description',
@@ -25,6 +26,7 @@ class Plan extends Model
     {
         return [
             'type' => PlanType::class,
+            'price' => 'decimal:2',
             'is_active' => 'boolean',
         ];
     }

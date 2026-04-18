@@ -3,12 +3,15 @@
 namespace Database\Seeders;
 
 use App\Enums\Score;
+use App\Enums\UserType;
 use App\Models\Dimension;
 use App\Models\Evaluation;
 use App\Models\EvaluationAnswer;
 use App\Models\Patient;
 use App\Models\Question;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DemoEvaluationSeeder extends Seeder
 {
@@ -18,18 +21,18 @@ class DemoEvaluationSeeder extends Seeder
     public function run(): void
     {
         // 0. Create/Update a demo user
-        $demoUser = \App\Models\User::updateOrCreate(
+        $demoUser = User::updateOrCreate(
             ['email' => 'demo@sensory.app'],
             [
                 'name' => 'Demo User',
-                'password' => \Illuminate\Support\Facades\Hash::make('password'),
-                'type' => \App\Enums\UserType::Customer,
+                'password' => Hash::make('password'),
+                'type' => UserType::Customer,
                 'email_verified_at' => now(),
             ]
         );
 
         // 1. Create two demo patients
-        $patient1 = Patient::create([
+        $patient1 = Patient::updateOrCreate([
             'user_id' => $demoUser->id,
             'name' => 'أحمد محمد',
             'dob' => now()->subYears(6)->subMonths(3),
@@ -38,7 +41,7 @@ class DemoEvaluationSeeder extends Seeder
             'grade' => 'الروضة',
         ]);
 
-        $patient2 = Patient::create([
+        $patient2 = Patient::updateOrCreate([
             'user_id' => $demoUser->id,
             'name' => 'سارة علي',
             'dob' => now()->subYears(8)->subMonths(1),
@@ -48,7 +51,7 @@ class DemoEvaluationSeeder extends Seeder
         ]);
 
         // 2. Create the evaluations
-        $evaluation1 = Evaluation::create([
+        $evaluation1 = Evaluation::updateOrCreate([
             'user_id' => $demoUser->id,
             'patient_id' => $patient1->id,
             'specialist_name' => 'د. خالد عبدالله',
@@ -57,7 +60,7 @@ class DemoEvaluationSeeder extends Seeder
             'child_age' => '6 سنوات و 3 أشهر',
         ]);
 
-        $evaluation2 = Evaluation::create([
+        $evaluation2 = Evaluation::updateOrCreate([
             'user_id' => $demoUser->id,
             'patient_id' => $patient2->id,
             'specialist_name' => 'أ. نورة صالح',
@@ -66,7 +69,7 @@ class DemoEvaluationSeeder extends Seeder
             'child_age' => '8 سنوات و شهر',
         ]);
 
-        $patient3 = Patient::create([
+        $patient3 = Patient::updateOrCreate([
             'user_id' => $demoUser->id,
             'name' => 'عمر المحمدي (حالة مختلطة)',
             'dob' => now()->subYears(7)->subMonths(5),
@@ -75,7 +78,7 @@ class DemoEvaluationSeeder extends Seeder
             'grade' => 'الصف الأول',
         ]);
 
-        $evaluation3 = Evaluation::create([
+        $evaluation3 = Evaluation::updateOrCreate([
             'user_id' => $demoUser->id,
             'patient_id' => $patient3->id,
             'specialist_name' => 'د. سمر محمد',
@@ -132,13 +135,13 @@ class DemoEvaluationSeeder extends Seeder
 
         // 5. Bulk insert answers
         foreach (array_chunk($answers1, 100) as $chunk) {
-            EvaluationAnswer::insert($chunk);
+            EvaluationAnswer::upsert($chunk,[] ,['updated_at']);
         }
         foreach (array_chunk($answers2, 100) as $chunk) {
-            EvaluationAnswer::insert($chunk);
+            EvaluationAnswer::upsert($chunk,[] ,['updated_at']);
         }
         foreach (array_chunk($answers3, 100) as $chunk) {
-            EvaluationAnswer::insert($chunk);
+            EvaluationAnswer::upsert($chunk,[] ,['updated_at']);
         }
 
         // 6. Create 3 historical evaluations per patient to demo Progress Tracking comparison
@@ -147,7 +150,7 @@ class DemoEvaluationSeeder extends Seeder
 
         foreach ($allPatients as $patient) {
             for ($i = 1; $i <= 3; $i++) {
-                $historicalEval = Evaluation::create([
+                $historicalEval = Evaluation::updateOrCreate([
                     'user_id' => $demoUser->id,
                     'patient_id' => $patient->id,
                     'specialist_name' => 'أخصائي تجريبي',
@@ -169,7 +172,7 @@ class DemoEvaluationSeeder extends Seeder
         }
 
         foreach (array_chunk($historicalAnswers, 100) as $chunk) {
-            EvaluationAnswer::insert($chunk);
+            EvaluationAnswer::upsert($chunk,[] ,['updated_at']);
         }
     }
 

@@ -10,6 +10,24 @@ use Illuminate\Support\Carbon;
 
 class Subscription extends Model
 {
+    protected static function booted(): void
+    {
+        static::saving(function (Subscription $subscription) {
+            // If the subscription is being saved as active
+            if ($subscription->isActive()) {
+                $exists = Subscription::query()
+                    ->where('user_id', $subscription->user_id)
+                    ->where('id', '!=', $subscription->id)
+                    ->active()
+                    ->exists();
+
+                if ($exists) {
+                    throw new \Exception('لا يمكن تفعيل أكثر من اشتراك في نفس الوقت لهذا المستخدم.');
+                }
+            }
+        });
+    }
+
     protected $fillable = [
         'user_id',
         'plan_id',

@@ -125,4 +125,11 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Contact Information
+    |--------------------------------------------------------------------------
+    */
+
+    'admin_whatsapp' => env('ADMIN_WHATSAPP'),
 ];

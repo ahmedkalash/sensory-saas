@@ -17,6 +17,12 @@ class PlansTable
                     ->label('اسم الخطة')
                     ->searchable(),
 
+                TextColumn::make('price')
+                    ->label('السعر')
+                    ->suffix(' ج.م')
+                    ->numeric(locale: 'en')
+                    ->sortable(),
+
                 TextColumn::make('type')
                     ->label('النوع')
                     ->badge()

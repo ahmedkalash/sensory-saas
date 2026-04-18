@@ -18,6 +18,7 @@ class PlanSeeder extends Seeder
                 'quota_count' => null,
                 'description' => 'وصول كامل لمدة سنة كاملة',
                 'is_active' => true,
+                'price' => 2000,
             ]
         );
 
@@ -29,6 +30,7 @@ class PlanSeeder extends Seeder
                 'quota_count' => 100,
                 'description' => 'حصة 100 تقييم بدون تاريخ انتهاء',
                 'is_active' => true,
+                'price' => 500,
             ]
         );
     }

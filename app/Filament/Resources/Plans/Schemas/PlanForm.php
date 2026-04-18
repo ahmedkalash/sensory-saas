@@ -20,6 +20,13 @@ class PlanForm
                     ->required()
                     ->maxLength(255),
 
+                TextInput::make('price')
+                    ->label('السعر')
+                    ->numeric()
+                    ->prefix('ج.م')
+                    ->required()
+                    ->default(0),
+
                 Select::make('type')
                     ->label('نوع الخطة')
                     ->options(PlanType::class)

@@ -25,9 +25,9 @@ class DatabaseSeeder extends Seeder
         GustatoryMeasurementSeeder::class,
         VisualMeasurementSeeder::class,
 
-        DemoEvaluationSeeder::class,
-
         PlanSeeder::class,
+
+        DemoEvaluationSeeder::class,
     ];
 
     /**

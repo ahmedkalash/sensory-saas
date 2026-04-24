@@ -35,7 +35,7 @@ class PlanResource extends Resource
 
     public static function canCreate(): bool
     {
-        return false;
+        return \Auth::user()->isAdmin();
     }
 
     public static function form(Schema $schema): Schema

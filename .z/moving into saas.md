@@ -14,6 +14,11 @@
   - [x] update a user password and email
   - [x] edit current plans in the systems
 
-- [ ] login via
-    [ ] Google 
-    [ ] Facebook 
+-[x] Single Concurrent Session
+- [x] login via
+    [x] Google 
+    [x] Facebook 
+
+- [ ] landing page
+- [ ] add new plans
+- [ ] disable evaluations edits

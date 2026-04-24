@@ -36,14 +36,14 @@ class PlanForm
                 TextInput::make('duration_days')
                     ->label('المدة بالأيام (مطلوب للسنوي)')
                     ->numeric()
-                    ->required(fn (callable $get) => $get('type') === PlanType::Yearly->value)
-                    ->visible(fn (callable $get) => $get('type') === PlanType::Yearly->value),
+                    ->required(fn ($get) => $get('type') == PlanType::Yearly)
+                    ->visible(fn ($get) => $get('type') == PlanType::Yearly),
 
                 TextInput::make('quota_count')
                     ->label('عدد التقييمات (مطلوب للحصص)')
                     ->numeric()
-                    ->required(fn (callable $get) => $get('type') === PlanType::Quota->value)
-                    ->visible(fn (callable $get) => $get('type') === PlanType::Quota->value),
+                    ->required(fn ($get) => $get('type') == PlanType::Quota)
+                    ->visible(fn ($get) => $get('type') == PlanType::Quota),
 
                 Textarea::make('description')
                     ->label('الوصف')

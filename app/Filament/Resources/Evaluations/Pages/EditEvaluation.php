@@ -133,7 +133,7 @@ class EditEvaluation extends EditRecord
         return $schema->columns(['default' => 1, 'lg' => 3])->components([
             View::make('filament.components.evaluation-wizard-css')->columnSpanFull(),
             View::make('filament.components.no-copy')->columnSpanFull(),
-            Section::make('تحديد المقياس وبيانات المريض')
+                        Section::make('تحديد المقياس وبيانات المريض')
                 ->columnSpan(['default' => 3, 'lg' => 1])
                 ->schema([
                     TextInput::make('title')
@@ -144,7 +144,11 @@ class EditEvaluation extends EditRecord
                         ->maxLength(255),
                     Select::make('selected_scale')
                         ->label('تحديد المقياس المنفذ')
-                        ->options($measurements->flip()) // [id => name]
+                        ->options(function () use ($grouped, $measurements) {
+                            return $measurements->flip()->map(function ($name) use ($grouped) {
+                                return $grouped->has($name) ? "{$name} (تم التقييم)" : $name;
+                            });
+                        })
                         ->required()
                         ->live()
                         ->dehydrated(false)
@@ -240,16 +244,28 @@ class EditEvaluation extends EditRecord
                                             ->grouped()
                                             ->dehydrated(false)
                                             ->required()
-                                            ->validationAttribute('الإجابة')
+                                            ->validationAttribute('الاجابة')
+                                            ->disabled() // LOCKED
                                             ->live(),
                                         Textarea::make("draft_notes.{$answerId}")
                                             ->label('ملاحظات (اختياري)')
                                             ->dehydrated(false)
                                             ->rows(2)
+                                            ->disabled() // LOCKED
                                             ->columnSpanFull(),
                                     ]);
                                 $answerIndex++;
                             }
+
+                            return [
+                                View::make('filament.components.locked-scale-notice'),
+                                Wizard::make($wizardSteps)
+                                    ->view('filament.components.custom-wizard')
+                                    ->startOnStep(1)
+                                    ->skippable()
+                                    ->persistStepInQueryString()
+                                    ->columnSpanFull(),
+                            ];
                         } else {
                             // No existing answers — load questions from DB (create mode)
                             /** @var Measurement $measurement */

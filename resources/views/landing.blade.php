@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRPS Clinical - المقياس الحسي</title>
+    <title>SRPA Clinical - المقياس الحسي</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,9 +45,9 @@
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
                 <div class="flex items-center gap-3">
-                    <img src="/icon.png" alt="SRPS Logo" class="h-10 w-10 rounded-xl shadow-sm">
+                    <img src="/icon.png" alt="SRPA Logo" class="h-10 w-10 rounded-xl shadow-sm">
                     <div class="flex flex-col">
-                        <span class="font-en font-bold text-xl text-slate-800 tracking-tight leading-none">SRPS Clinical</span>
+                        <span class="font-en font-bold text-xl text-slate-800 tracking-tight leading-none">SRPA Clinical</span>
                         <span class="text-xs text-cyan-600 font-medium mt-1">مقياس حسي</span>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
                 <!-- Hero Image -->
                 <div class="relative mx-auto w-full max-w-lg lg:max-w-none">
                     <div class="relative bg-white rounded-3xl p-2 shadow-soft border border-slate-100/50">
-                        <img src="/icon.png" alt="SRPS Dashboard Mockup" class="rounded-2xl w-full object-cover">
+                        <img src="/icon.png" alt="SRPA Dashboard Mockup" class="rounded-2xl w-full object-cover">
                         
                         <!-- Floating Badges for aesthetics -->
                         <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-card border border-slate-50 flex items-center gap-4 hidden sm:flex">
@@ -314,12 +314,12 @@
     <footer class="bg-white border-t border-slate-100 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-2">
-                <img src="/icon.png" alt="SRPS Logo" class="h-8 w-8 rounded-lg opacity-80">
-                <span class="font-en font-bold text-slate-700">SRPS Clinical</span>
+                <img src="/icon.png" alt="SRPA Logo" class="h-8 w-8 rounded-lg opacity-80">
+                <span class="font-en font-bold text-slate-700">SRPA Clinical</span>
             </div>
             
             <p class="text-slate-500 text-sm">
-                &copy; {{ date('Y') }} SRPS Clinical. جميع الحقوق محفوظة.
+                &copy; {{ date('Y') }} SRPA Clinical. جميع الحقوق محفوظة.
             </p>
             
             <div class="flex gap-4">

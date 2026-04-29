@@ -1,16 +1,16 @@
 <x-filament-widgets::widget>
-    <div class="srps-hero-widget">
+    <div class="srpa-hero-widget">
         {{-- Background Glow Effects --}}
-        <div class="srps-hero-glow srps-hero-glow--tl"></div>
-        <div class="srps-hero-glow srps-hero-glow--br"></div>
-        <div class="srps-hero-glow srps-hero-glow--center"></div>
+        <div class="srpa-hero-glow srpa-hero-glow--tl"></div>
+        <div class="srpa-hero-glow srpa-hero-glow--br"></div>
+        <div class="srpa-hero-glow srpa-hero-glow--center"></div>
 
         {{-- Main Content --}}
-        <div class="srps-hero-content">
+        <div class="srpa-hero-content">
             {{-- Brain SVG with Glow --}}
-            <div class="srps-hero-brain-container">
-                <div class="srps-hero-brain-glow"></div>
-                <svg class="srps-hero-brain" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div class="srpa-hero-brain-container">
+                <div class="srpa-hero-brain-glow"></div>
+                <svg class="srpa-hero-brain" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
                     {{-- Brain outline with neural pathways --}}
                     <g opacity="0.9">
                         {{-- Left hemisphere --}}
@@ -47,13 +47,13 @@
                             stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round" />
                     </g>
                     {{-- Neural sparkle dots --}}
-                    <circle cx="40" cy="40" r="2" fill="rgba(34,211,238,0.8)" class="srps-sparkle srps-sparkle--1" />
-                    <circle cx="80" cy="40" r="2" fill="rgba(129,140,248,0.8)" class="srps-sparkle srps-sparkle--2" />
-                    <circle cx="35" cy="70" r="1.5" fill="rgba(52,211,153,0.7)" class="srps-sparkle srps-sparkle--3" />
-                    <circle cx="85" cy="70" r="1.5" fill="rgba(251,191,36,0.7)" class="srps-sparkle srps-sparkle--4" />
-                    <circle cx="60" cy="55" r="2.5" fill="rgba(255,255,255,0.9)" class="srps-sparkle srps-sparkle--5" />
-                    <circle cx="45" cy="90" r="1.5" fill="rgba(34,211,238,0.6)" class="srps-sparkle srps-sparkle--6" />
-                    <circle cx="75" cy="90" r="1.5" fill="rgba(129,140,248,0.6)" class="srps-sparkle srps-sparkle--7" />
+                    <circle cx="40" cy="40" r="2" fill="rgba(34,211,238,0.8)" class="srpa-sparkle srpa-sparkle--1" />
+                    <circle cx="80" cy="40" r="2" fill="rgba(129,140,248,0.8)" class="srpa-sparkle srpa-sparkle--2" />
+                    <circle cx="35" cy="70" r="1.5" fill="rgba(52,211,153,0.7)" class="srpa-sparkle srpa-sparkle--3" />
+                    <circle cx="85" cy="70" r="1.5" fill="rgba(251,191,36,0.7)" class="srpa-sparkle srpa-sparkle--4" />
+                    <circle cx="60" cy="55" r="2.5" fill="rgba(255,255,255,0.9)" class="srpa-sparkle srpa-sparkle--5" />
+                    <circle cx="45" cy="90" r="1.5" fill="rgba(34,211,238,0.6)" class="srpa-sparkle srpa-sparkle--6" />
+                    <circle cx="75" cy="90" r="1.5" fill="rgba(129,140,248,0.6)" class="srpa-sparkle srpa-sparkle--7" />
                     <defs>
                         <linearGradient id="brainGrad1" x1="18" y1="15" x2="102" y2="135"
                             gradientUnits="userSpaceOnUse">
@@ -66,17 +66,17 @@
             </div>
 
             {{-- Title --}}
-            <h1 class="srps-hero-title">
+            <h1 class="srpa-hero-title">
                 قائمة انماط الاستجابة الحسية                
-<span class="srps-hero-title-eng">(SRP)</span>
+<span class="srpa-hero-title-eng">(SRP)</span>
             </h1>
-            <p class="srps-hero-subtitle">اللوحة الرئيسية للأداة الإكلينيكية</p>
+            <p class="srpa-hero-subtitle">اللوحة الرئيسية للأداة الإكلينيكية</p>
 
             {{-- Sensory Category Pills — All 7 Scales --}}
-            <div class="srps-hero-pills">
+            <div class="srpa-hero-pills">
                 {{-- 1. Visual بصري --}}
-                <div class="srps-hero-pill" style="--pill-color: #22d3ee;">
-                    <svg class="srps-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="srpa-hero-pill" style="--pill-color: #22d3ee;">
+                    <svg class="srpa-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.5">
                         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" stroke-linecap="round"
                             stroke-linejoin="round" />
@@ -85,8 +85,8 @@
                     <span>بصري</span>
                 </div>
                 {{-- 2. Auditory سمعي --}}
-                <div class="srps-hero-pill" style="--pill-color: #818cf8;">
-                    <svg class="srps-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="srpa-hero-pill" style="--pill-color: #818cf8;">
+                    <svg class="srpa-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.5">
                         <path d="M9 18V5l12-2v13" stroke-linecap="round" stroke-linejoin="round" />
                         <circle cx="6" cy="18" r="3" />
@@ -95,8 +95,8 @@
                     <span>سمعي</span>
                 </div>
                 {{-- 3. Tactile لمسي --}}
-                <div class="srps-hero-pill" style="--pill-color: #34d399;">
-                    <svg class="srps-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="srpa-hero-pill" style="--pill-color: #34d399;">
+                    <svg class="srpa-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.5">
                         <path
                             d="M18 11V6a2 2 0 00-2-2 2 2 0 00-2 2v0M14 10V4a2 2 0 00-2-2 2 2 0 00-2 2v2M10 10.5V6a2 2 0 00-2-2 2 2 0 00-2 2v8"
@@ -107,8 +107,8 @@
                     <span>لمسي</span>
                 </div>
                 {{-- 4. Vestibular دهليزي --}}
-                <div class="srps-hero-pill" style="--pill-color: #f472b6;">
-                    <svg class="srps-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="srpa-hero-pill" style="--pill-color: #f472b6;">
+                    <svg class="srpa-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.5">
                         <circle cx="12" cy="12" r="10" stroke-linecap="round" />
                         <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"
@@ -118,8 +118,8 @@
                     <span>دهليزي</span>
                 </div>
                 {{-- 5. Proprioceptive حس عضلي --}}
-                <div class="srps-hero-pill" style="--pill-color: #fb923c;">
-                    <svg class="srps-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="srpa-hero-pill" style="--pill-color: #fb923c;">
+                    <svg class="srpa-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.5">
                         <path d="M18 20V6.5a2.5 2.5 0 00-5 0V6a2 2 0 00-4 0v0.5a2.5 2.5 0 00-5 0V20"
                             stroke-linecap="round" stroke-linejoin="round" />
@@ -131,8 +131,8 @@
                     <span>حس عضلي</span>
                 </div>
                 {{-- 6. Olfactory شمي --}}
-                <div class="srps-hero-pill" style="--pill-color: #a78bfa;">
-                    <svg class="srps-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="srpa-hero-pill" style="--pill-color: #a78bfa;">
+                    <svg class="srpa-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.5">
                         <path d="M8 18c0 2 1 4 4 4s4-2 4-4" stroke-linecap="round" stroke-linejoin="round" />
                         <path d="M16 14c2-1 4-3.5 4-6a8 8 0 00-16 0c0 2.5 2 5 4 6" stroke-linecap="round"
@@ -144,8 +144,8 @@
                     <span>شمي</span>
                 </div>
                 {{-- 7. Gustatory تذوقي --}}
-                <div class="srps-hero-pill" style="--pill-color: #fbbf24;">
-                    <svg class="srps-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <div class="srpa-hero-pill" style="--pill-color: #fbbf24;">
+                    <svg class="srpa-hero-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.5">
                         <path d="M12 22c-4 0-7-2-7-5 0-2 1-3 3-4 1-.5 2-1.5 2-3V2" stroke-linecap="round"
                             stroke-linejoin="round" />

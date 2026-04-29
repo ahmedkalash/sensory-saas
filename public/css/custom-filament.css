@@ -81,10 +81,10 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
-   SRPS HERO WIDGET — Dashboard Banner
+   SRPA HERO WIDGET — Dashboard Banner
    ═══════════════════════════════════════════════════ */
 
-.srps-hero-widget {
+.srpa-hero-widget {
     position: relative;
     background: linear-gradient(145deg, #0e4a5c 0%, #0c2d48 35%, #1a1a4e 65%, #312e81 100%);
     border-radius: 20px;
@@ -99,7 +99,7 @@ body {
 }
 
 /* Glow orbs */
-.srps-hero-glow {
+.srpa-hero-glow {
     position: absolute;
     border-radius: 50%;
     filter: blur(80px);
@@ -107,7 +107,7 @@ body {
     z-index: 0;
 }
 
-.srps-hero-glow--tl {
+.srpa-hero-glow--tl {
     width: 300px;
     height: 300px;
     background: rgba(34, 211, 238, 0.2);
@@ -115,7 +115,7 @@ body {
     left: -60px;
 }
 
-.srps-hero-glow--br {
+.srpa-hero-glow--br {
     width: 250px;
     height: 250px;
     background: rgba(129, 140, 248, 0.2);
@@ -123,17 +123,17 @@ body {
     right: -40px;
 }
 
-.srps-hero-glow--center {
+.srpa-hero-glow--center {
     width: 200px;
     height: 200px;
     background: rgba(34, 211, 238, 0.12);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    animation: srps-pulse 4s ease-in-out infinite;
+    animation: srpa-pulse 4s ease-in-out infinite;
 }
 
-@keyframes srps-pulse {
+@keyframes srpa-pulse {
 
     0%,
     100% {
@@ -148,7 +148,7 @@ body {
 }
 
 /* Content container */
-.srps-hero-content {
+.srpa-hero-content {
     position: relative;
     z-index: 1;
     display: flex;
@@ -158,14 +158,14 @@ body {
 }
 
 /* Brain SVG */
-.srps-hero-brain-container {
+.srpa-hero-brain-container {
     position: relative;
     width: 100px;
     height: 110px;
     margin-bottom: 0.25rem;
 }
 
-.srps-hero-brain-glow {
+.srpa-hero-brain-glow {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -174,10 +174,10 @@ body {
     height: 130px;
     background: radial-gradient(circle, rgba(34, 211, 238, 0.25) 0%, transparent 70%);
     border-radius: 50%;
-    animation: srps-brain-glow 3s ease-in-out infinite;
+    animation: srpa-brain-glow 3s ease-in-out infinite;
 }
 
-@keyframes srps-brain-glow {
+@keyframes srpa-brain-glow {
 
     0%,
     100% {
@@ -191,7 +191,7 @@ body {
     }
 }
 
-.srps-hero-brain {
+.srpa-hero-brain {
     width: 100%;
     height: 100%;
     position: relative;
@@ -199,39 +199,39 @@ body {
 }
 
 /* Neural sparkle animations */
-.srps-sparkle {
-    animation: srps-twinkle 2s ease-in-out infinite;
+.srpa-sparkle {
+    animation: srpa-twinkle 2s ease-in-out infinite;
 }
 
-.srps-sparkle--1 {
+.srpa-sparkle--1 {
     animation-delay: 0s;
 }
 
-.srps-sparkle--2 {
+.srpa-sparkle--2 {
     animation-delay: 0.3s;
 }
 
-.srps-sparkle--3 {
+.srpa-sparkle--3 {
     animation-delay: 0.6s;
 }
 
-.srps-sparkle--4 {
+.srpa-sparkle--4 {
     animation-delay: 0.9s;
 }
 
-.srps-sparkle--5 {
+.srpa-sparkle--5 {
     animation-delay: 1.2s;
 }
 
-.srps-sparkle--6 {
+.srpa-sparkle--6 {
     animation-delay: 1.5s;
 }
 
-.srps-sparkle--7 {
+.srpa-sparkle--7 {
     animation-delay: 1.8s;
 }
 
-@keyframes srps-twinkle {
+@keyframes srpa-twinkle {
 
     0%,
     100% {
@@ -246,7 +246,7 @@ body {
 }
 
 /* Title typography */
-.srps-hero-title {
+.srpa-hero-title {
     font-family: 'Noto Kufi Arabic', sans-serif;
     font-size: 1.75rem;
     font-weight: 700;
@@ -256,14 +256,14 @@ body {
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
-.srps-hero-title-eng {
+.srpa-hero-title-eng {
     font-family: 'Outfit', sans-serif;
     font-weight: 600;
     color: #22d3ee;
     font-size: 1.5rem;
 }
 
-.srps-hero-subtitle {
+.srpa-hero-subtitle {
     font-family: 'Noto Kufi Arabic', sans-serif;
     font-size: 0.95rem;
     opacity: 0.7;
@@ -272,7 +272,7 @@ body {
 }
 
 /* Sensory pills */
-.srps-hero-pills {
+.srpa-hero-pills {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
@@ -280,7 +280,7 @@ body {
     margin-top: 0.75rem;
 }
 
-.srps-hero-pill {
+.srpa-hero-pill {
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -297,14 +297,14 @@ body {
     color: var(--pill-color, white);
 }
 
-.srps-hero-pill:hover {
+.srpa-hero-pill:hover {
     background: rgba(255, 255, 255, 0.15);
     border-color: var(--pill-color, rgba(255, 255, 255, 0.3));
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.srps-hero-pill-icon {
+.srpa-hero-pill-icon {
     width: 18px;
     height: 18px;
     flex-shrink: 0;
@@ -324,7 +324,7 @@ body {
 }
 
 /* Sections — but NOT inside the hero widget */
-.fi-section:not(.srps-hero-widget .fi-section) {
+.fi-section:not(.srpa-hero-widget .fi-section) {
     background: var(--glass-bg) !important;
     -webkit-backdrop-filter: blur(12px) !important;
     backdrop-filter: blur(12px) !important;
@@ -397,7 +397,7 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
-   SRPS BRANDING — Logo gradient
+   SRPA BRANDING — Logo gradient
    ═══════════════════════════════════════════════════ */
 
 .fi-logo {

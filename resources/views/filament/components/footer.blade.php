@@ -17,7 +17,7 @@
             </span>
             <span>
                 جميع الحقوق محفوظة &copy; {{ date('Y') }}
-                <strong style="color: #111827; font-weight: 700;">SRPS Clinical</strong>
+                <strong style="color: #111827; font-weight: 700;">SRPA Clinical</strong>
             </span>
         </div>
 

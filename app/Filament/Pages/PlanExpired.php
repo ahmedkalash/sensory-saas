@@ -23,7 +23,7 @@ class PlanExpired extends Page implements HasSchemas
 
     protected static bool $shouldRegisterNavigation = false;
 
-    protected static ?string $title = 'نظام SRPS - تنبيه الاشتراك';
+    protected static ?string $title = 'نظام SRPA - تنبيه الاشتراك';
 
     protected ?string $heading = 'تنبيه: حالة الحساب غير نشطة';
 

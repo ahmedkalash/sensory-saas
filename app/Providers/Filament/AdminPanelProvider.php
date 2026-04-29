@@ -40,7 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('app')
             ->login()
             ->registration()
-            ->brandName('SRPS Clinical')
+            ->brandName('SRPA Clinical')
             ->favicon(asset('favicon.ico'))
             ->font('Outfit')
             ->topNavigation()
@@ -98,7 +98,7 @@ HTML),
             ->renderHook(
                 'panels::body.start',
                 fn () => new HtmlString(<<<'HTML'
-<div id="srps-loader" style="
+<div id="srpa-loader" style="
     position: fixed; inset: 0; z-index: 99999;
     background: linear-gradient(135deg, #f0f9ff 0%, #ede9fe 50%, #f0fdfa 100%);
     display: flex; flex-direction: column;
@@ -115,13 +115,13 @@ HTML),
         <path d="M28 36 C28 38 30 42 32 42 C34 42 36 38 36 36" stroke="#0891b2" stroke-width="2" fill="none" stroke-linecap="round"/>
     </svg>
     <div style="text-align:center; font-family: 'Outfit', sans-serif;">
-        <div style="font-size: 1.4rem; font-weight: 700; color: #0e4a5c; letter-spacing: -0.02em;">SRPS Clinical</div>
+        <div style="font-size: 1.4rem; font-weight: 700; color: #0e4a5c; letter-spacing: -0.02em;">SRPA Clinical</div>
         <div style="font-size: 0.85rem; color: #64748b; margin-top: 4px; font-family: 'Noto Kufi Arabic', sans-serif;">جارٍ تحميل التطبيق...</div>
     </div>
 </div>
 <script>
     window.addEventListener('load', function () {
-        const loader = document.getElementById('srps-loader');
+        const loader = document.getElementById('srpa-loader');
         if (loader) {
             loader.style.opacity = '0';
             setTimeout(function () { loader.remove(); }, 450);

@@ -22,7 +22,7 @@ class SocialAuthController extends Controller
             /** @var \Laravel\Socialite\Two\User $socialUser */
             $socialUser = Socialite::driver($provider)->user();
         } catch (\Exception $e) {
-            return redirect('/admin/login')->with('error', 'Authentication failed.');
+            return redirect('login')->with('error', 'Authentication failed.');
         }
 
         // Try to find user by social ID
@@ -60,6 +60,6 @@ class SocialAuthController extends Controller
 
         Auth::login($user);
 
-        return redirect('/admin');
+        return redirect('/');
     }
 }

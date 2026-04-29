@@ -25,6 +25,10 @@ class SocialAuthController extends Controller
             return redirect('login')->with('error', 'Authentication failed.');
         }
 
+        if (! $socialUser->getEmail()) {
+            return redirect('login')->with('error', 'An email address is required to log in.');
+        }
+
         // Try to find user by social ID
         $user = User::where('provider_name', $provider)
             ->where('provider_id', $socialUser->getId())

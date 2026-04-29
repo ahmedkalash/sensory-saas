@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SRPA Clinical - المقياس الحسي</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Tailwind CSS (Vite) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+
     <style>
         body {
             font-family: 'Noto Kufi Arabic', sans-serif;
@@ -22,7 +22,7 @@
         .font-en {
             font-family: 'Outfit', sans-serif;
         }
-        
+
         /* Soft Drop Shadows (Option 7 Aesthetic) */
         .shadow-soft {
             box-shadow: 0 10px 40px -10px rgba(14, 116, 144, 0.08);
@@ -48,7 +48,7 @@
                     <img src="/icon.png" alt="SRPA Logo" class="h-10 w-10 rounded-xl shadow-sm">
                     <div class="flex flex-col">
                         <span class="font-en font-bold text-xl text-slate-800 tracking-tight leading-none">SRPA Clinical</span>
-                        <span class="text-xs text-cyan-600 font-medium mt-1">مقياس حسي</span>
+                        <span class="text-xs text-cyan-600 font-medium mt-1">مِقْيَاسٌ حِسّيٌ</span>
                     </div>
                 </div>
 
@@ -94,7 +94,7 @@
                     <p class="text-lg text-slate-500 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                         أداة احترافية مصممة لمساعدة الأخصائيين والأطباء في تقييم ومعالجة الاضطرابات الحسية لدى الأطفال عبر 7 مقاييس دقيقة وتقارير آلية شاملة.
                     </p>
-                    
+
                     <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                         <a href="/app/register" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-900 text-white px-8 py-3.5 rounded-xl font-medium shadow-soft transition-all text-center flex justify-center items-center gap-2">
                             ابدأ الاستخدام الآن
@@ -110,7 +110,7 @@
                 <div class="relative mx-auto w-full max-w-lg lg:max-w-none">
                     <div class="relative bg-white rounded-3xl p-2 shadow-soft border border-slate-100/50">
                         <img src="/icon.png" alt="SRPA Dashboard Mockup" class="rounded-2xl w-full object-cover">
-                        
+
                         <!-- Floating Badges for aesthetics -->
                         <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-card border border-slate-50 flex items-center gap-4 hidden sm:flex">
                             <div class="bg-emerald-100 text-emerald-600 p-2.5 rounded-xl">
@@ -299,7 +299,7 @@
                         <div class="inline-block px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-sm font-medium mb-4">
                             مبتكر المقياس
                         </div>
-                        <h2 class="text-3xl font-bold mb-2">د. أحمد خليف</h2>
+                        <h2 class="text-3xl font-bold mb-2">د.أَحْمَدٌ خُلِيفٌ</h2>
                         <p class="text-cyan-400 font-medium mb-6">خبير واختصاصي في الاضطرابات الحسية والتطورية</p>
                         <p class="text-slate-300 leading-relaxed text-lg">
                             تم تصميم هذا المقياس حصيلة سنوات من الخبرة السريرية والبحث العلمي في مجال التكامل الحسي. نهدف إلى توفير أداة تقييم دقيقة وعملية تساعد الزملاء الأخصائيين على فهم التحديات التي يواجهها الأطفال ووضع خطط علاجية مبنية على أدلة وتقارير واضحة.
@@ -317,11 +317,11 @@
                 <img src="/icon.png" alt="SRPA Logo" class="h-8 w-8 rounded-lg opacity-80">
                 <span class="font-en font-bold text-slate-700">SRPA Clinical</span>
             </div>
-            
+
             <p class="text-slate-500 text-sm">
                 &copy; {{ date('Y') }} SRPA Clinical. جميع الحقوق محفوظة.
             </p>
-            
+
             <div class="flex gap-4">
                 <a href="/app/login" class="text-slate-400 hover:text-cyan-600 transition-colors">تسجيل الدخول</a>
                 <span class="text-slate-300">|</span>

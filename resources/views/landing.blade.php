@@ -312,21 +312,77 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-2">
-                <img src="/icon.png" alt="SRPA Logo" class="h-8 w-8 rounded-lg opacity-80">
-                <span class="font-en font-bold text-slate-700">SRPA Clinical</span>
+    <footer class="bg-slate-50 border-t border-slate-200 py-12 lg:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 items-start">
+                
+                <!-- Logo & Info -->
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-3">
+                        <img src="/icon.png" alt="SRPA Logo" class="h-10 w-10 rounded-xl shadow-sm">
+                        <span class="font-en font-bold text-2xl text-slate-800">SRPA Clinical</span>
+                    </div>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-sm">
+                        المنصة السحابية المتكاملة لتقييم الاضطرابات الحسية والتطورية لدى الأطفال بمهنية وموثوقية عالية.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="flex flex-col gap-3 md:items-center">
+                    <h3 class="font-bold text-slate-800 mb-2">روابط سريعة</h3>
+                    <a href="/app/login" class="text-slate-500 hover:text-cyan-600 transition-colors font-medium">تسجيل الدخول للنظام</a>
+                    <a href="/app/register" class="text-slate-500 hover:text-cyan-600 transition-colors font-medium">إنشاء حساب جديد</a>
+                </div>
+
+                <!-- Support Channels -->
+                <div class="flex flex-col gap-4 md:items-end">
+                    <h3 class="font-bold text-slate-800 mb-2">تواصل معنا</h3>
+                    
+                    <div class="flex flex-col gap-3 w-full sm:w-80 md:w-auto">
+                        @if(config('app.admin_whatsapp'))
+                        <a href="https://wa.me/{{ config('app.admin_whatsapp') }}?text={{ urlencode('مرحباً د. أحمد، لدي استفسار عام بخصوص مقياس SRPA Clinical.') }}" target="_blank" rel="noopener" class="group flex items-center gap-4 p-3 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-300">
+                            <div class="bg-emerald-50 text-emerald-600 p-2.5 rounded-xl group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                            </div>
+                            <div class="text-right flex-1">
+                                <div class="text-[10px] text-slate-400 font-bold tracking-wider mb-0.5">الإدارة</div>
+                                <div class="text-sm font-bold text-slate-700 group-hover:text-emerald-600 transition-colors">الدعم العام</div>
+                                <div class="text-xs text-slate-500 font-mono mt-0.5" dir="ltr">{{ config('app.admin_whatsapp') }}</div>
+                            </div>
+                        </a>
+                        @endif
+
+                        @if(config('app.developer_whatsapp'))
+                        <a href="https://wa.me/{{ config('app.developer_whatsapp') }}?text={{ urlencode('مرحباً، أواجه مشكلة تقنية / لدي استفسار فني في منصة SRPA Clinical.') }}" target="_blank" rel="noopener" class="group flex items-center gap-4 p-3 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-cyan-200 transition-all duration-300">
+                            <div class="bg-cyan-50 text-cyan-600 p-2.5 rounded-xl group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                                </svg>
+                            </div>
+                            <div class="text-right flex-1">
+                                <div class="text-[10px] text-slate-400 font-bold tracking-wider mb-0.5">المبرمج</div>
+                                <div class="text-sm font-bold text-slate-700 group-hover:text-cyan-600 transition-colors">الدعم التقني</div>
+                                <div class="text-xs text-slate-500 font-mono mt-0.5" dir="ltr">{{ config('app.developer_whatsapp') }}</div>
+                            </div>
+                        </a>
+                        @endif
+                    </div>
+                </div>
+
             </div>
 
-            <p class="text-slate-500 text-sm">
-                &copy; {{ date('Y') }} SRPA Clinical. جميع الحقوق محفوظة.
-            </p>
-
-            <div class="flex gap-4">
-                <a href="/app/login" class="text-slate-400 hover:text-cyan-600 transition-colors">تسجيل الدخول</a>
-                <span class="text-slate-300">|</span>
-                <a href="/app/register" class="text-slate-400 hover:text-cyan-600 transition-colors">إنشاء حساب</a>
+            <div class="mt-12 pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-slate-500 text-sm font-medium">
+                    &copy; {{ date('Y') }} <span class="font-en">SRPA Clinical</span>. جميع الحقوق محفوظة.
+                </p>
+                <div class="flex items-center gap-2 text-sm text-slate-400">
+                    <span>صُنع بعناية لتطوير التقييم الحسي</span>
+                    <svg class="w-4 h-4 text-rose-400 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
             </div>
         </div>
     </footer>

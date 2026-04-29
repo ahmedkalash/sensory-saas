@@ -53,7 +53,7 @@
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex space-x-8 space-x-reverse items-center">
+                <div class="hidden md:flex gap-8 items-center">
                     <a href="#about" class="text-slate-500 hover:text-cyan-600 font-medium transition-colors">عن المقياس</a>
                     <a href="#features" class="text-slate-500 hover:text-cyan-600 font-medium transition-colors">المميزات</a>
                     <a href="#screenshots" class="text-slate-500 hover:text-cyan-600 font-medium transition-colors">واجهة التطبيق</a>

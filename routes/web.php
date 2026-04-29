@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\SocialAuthController;
 
+Route::view('/', 'landing')->name('landing');
+
 Route::get('auth/{provider}/redirect', [SocialAuthController::class, 'redirectToProvider'])->name('auth.social.redirect');
 Route::get('auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('auth.social.callback');
 
@@ -13,7 +15,7 @@ Route::post('/clear-cache-recovery', function () {
     Cache::forget('migrated_version');
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
 
-    return redirect('/');
+    return redirect('/app');
 })->name('recovery.clear-cache');
 
 Route::middleware(['auth'])->group(function () {

@@ -22,11 +22,11 @@ class SocialAuthController extends Controller
             /** @var \Laravel\Socialite\Two\User $socialUser */
             $socialUser = Socialite::driver($provider)->user();
         } catch (\Exception $e) {
-            return redirect('login')->with('error', 'Authentication failed.');
+            return redirect('app/login')->with('error', 'Authentication failed.');
         }
 
         if (! $socialUser->getEmail()) {
-            return redirect('login')->with('error', 'An email address is required to log in.');
+            return redirect('app/login')->with('error', 'An email address is required to log in.');
         }
 
         // Try to find user by social ID
@@ -64,6 +64,6 @@ class SocialAuthController extends Controller
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect('/app');
     }
 }

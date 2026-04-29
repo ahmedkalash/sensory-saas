@@ -37,7 +37,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('/')
+            ->path('app')
             ->login()
             ->registration()
             ->brandName('SRPS Clinical')

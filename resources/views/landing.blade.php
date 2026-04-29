@@ -88,10 +88,12 @@
                         الإصدار السحابي الجديد
                     </div>
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 leading-tight mb-6">
-                        المقياس الحسي الأقوى <br/>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-emerald-500">للتقييم السريري</span>
+                        مقياس أنماط <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-emerald-500">الاستجابة الحسية</span>
                     </h1>
                     <p class="text-lg text-slate-500 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                       <b>أول مقياس إلكتروني عربي مقنن لقياس أنماط الاستجابة الحسية</b>
+                        <br>
                         أداة احترافية مصممة لمساعدة الأخصائيين والأطباء في تقييم ومعالجة الاضطرابات الحسية لدى الأطفال عبر 7 مقاييس دقيقة وتقارير آلية شاملة.
                     </p>
 
@@ -292,15 +294,14 @@
             <div class="bg-slate-700/40 border border-slate-600/50 rounded-3xl p-8 sm:p-12 backdrop-blur-md max-w-4xl mx-auto">
                 <div class="flex flex-col md:flex-row items-center gap-10">
                     <div class="w-32 h-32 md:w-40 md:h-40 shrink-0 bg-slate-600 rounded-full border-4 border-slate-500 flex items-center justify-center overflow-hidden shadow-xl">
-                        <!-- Placeholder for Doctor's Photo. Using an abstract icon or initials for now -->
-                        <span class="text-4xl font-bold text-slate-300 font-en">AK</span>
+                        <img src="/dr-ahmed.jpg" alt="د. أحمد خليف" class="w-full h-full object-cover">
                     </div>
                     <div class="text-center md:text-right flex-1">
                         <div class="inline-block px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-sm font-medium mb-4">
-                            مبتكر المقياس
+                            معد القائمة
                         </div>
                         <h2 class="text-3xl font-bold mb-2">د.أَحْمَدٌ خُلِيفٌ</h2>
-                        <p class="text-cyan-400 font-medium mb-6">خبير واختصاصي في الاضطرابات الحسية والتطورية</p>
+                        <p class="text-cyan-400 font-medium mb-6">دكتوراه علم النفس جامعة عين شمس واختصاصي التكامل الحسي</p>
                         <p class="text-slate-300 leading-relaxed text-lg">
                             تم تصميم هذا المقياس حصيلة سنوات من الخبرة السريرية والبحث العلمي في مجال التكامل الحسي. نهدف إلى توفير أداة تقييم دقيقة وعملية تساعد الزملاء الأخصائيين على فهم التحديات التي يواجهها الأطفال ووضع خطط علاجية مبنية على أدلة وتقارير واضحة.
                         </p>

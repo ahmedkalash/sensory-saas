@@ -9,7 +9,7 @@
     - [x] remaining days, or
     - [x] remaining quota
 - for the admin: 
-  - [x] view all users and their plan status
+  - [x] view all users and their plan status[start_app - Copy.bat](../../sensory/www/start_app%20-%20Copy.bat)
   - [x] activate or deactivate a user plan
   - [x] update a user password and email
   - [x] edit current plans in the systems
@@ -19,6 +19,6 @@
     [x] Google 
     [x] Facebook 
 
-- [ ] landing page
-- [ ] add new plans
-- [ ] disable evaluations edits
+- [x] landing page
+- [x] add new plans
+- [x] disable evaluations edits

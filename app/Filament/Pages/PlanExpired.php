@@ -154,11 +154,6 @@ class PlanExpired extends Page implements HasSchemas
                                 ->map(fn (Plan $plan) => Section::make($plan->name)
                                     ->compact()
                                     ->schema([
-                                        Text::make('price')
-                                            ->label('السعر')
-                                            ->state(fn () => number_format($plan->price, 2).' ج.م')
-                                            ->color('success')
-                                            ->weight('bold'),
                                         Text::make('details')
                                             ->label('التفاصيل')
                                             ->state(fn () => $plan->isYearly() ? "صلاحية لمدة {$plan->duration_days} يوم" : "رصيد {$plan->quota_count} تقييمات"),

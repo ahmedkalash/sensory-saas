@@ -258,29 +258,12 @@
                         <div class="w-3 h-3 rounded-full bg-amber-400"></div>
                         <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
                     </div>
-                    <!-- Fake App Content (We use styling to make it look like an app dashboard) -->
-                    <div class="bg-slate-50/50 p-6 sm:p-10 flex flex-col md:flex-row gap-8">
-                        <!-- Sidebar mockup -->
-                        <div class="w-full md:w-64 bg-white p-4 rounded-xl border border-slate-100 shadow-sm hidden md:block">
-                            <div class="h-8 bg-slate-100 rounded mb-8 w-3/4"></div>
-                            <div class="space-y-4">
-                                <div class="h-10 bg-cyan-50 rounded-lg border-r-4 border-cyan-500"></div>
-                                <div class="h-10 bg-slate-50 rounded-lg"></div>
-                                <div class="h-10 bg-slate-50 rounded-lg"></div>
-                            </div>
-                        </div>
-                        <!-- Main content mockup -->
-                        <div class="flex-1 space-y-6">
-                            <div class="h-12 bg-white border border-slate-100 rounded-xl shadow-sm flex items-center px-4">
-                                <div class="h-4 bg-slate-200 rounded w-1/4"></div>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div class="h-24 bg-white border border-slate-100 rounded-xl shadow-sm"></div>
-                                <div class="h-24 bg-white border border-slate-100 rounded-xl shadow-sm"></div>
-                                <div class="h-24 bg-white border border-slate-100 rounded-xl shadow-sm"></div>
-                            </div>
-                            <div class="h-64 bg-white border border-slate-100 rounded-xl shadow-sm"></div>
-                        </div>
+                    <!-- App Video Demo -->
+                    <div class="bg-slate-50/50 p-2 sm:p-4">
+                        <video controls class="w-full h-auto rounded-xl shadow-sm border border-slate-100 bg-white">
+                            <source src="{{ asset('storage/srpa-demo.mp4') }}" type="video/mp4">
+                            متصفحك لا يدعم تشغيل الفيديو.
+                        </video>
                     </div>
                 </div>
             </div>
